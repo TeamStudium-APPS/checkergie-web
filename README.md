@@ -14,7 +14,11 @@ packages/
 docs/          협업 문서
 ```
 
-각 프로젝트의 소스 코드는 `src/`에 작성하며 `@/*` 별칭으로 접근합니다.
+각 프로젝트의 소스 코드는 `src/`에 작성하며 `src/*` 별칭으로 접근합니다.
+
+```ts
+import Example from "src/components/Example";
+```
 
 ## 시작하기
 
