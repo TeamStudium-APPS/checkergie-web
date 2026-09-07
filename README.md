@@ -22,6 +22,9 @@ import Example from "src/components/Example";
 
 ## 시작하기
 
+- Node.js 24.14.0 (`.nvmrc` 참고)
+- pnpm 11.9.0
+
 ```bash
 pnpm install
 pnpm dev
@@ -32,8 +35,9 @@ pnpm dev
 ## 검사
 
 ```bash
-pnpm lint
-pnpm build
+pnpm check
 ```
+
+`pnpm check`는 현재 구현된 랜딩 앱의 lint, typecheck, production build를 순서대로 실행합니다.
 
 협업 규칙은 [Git 규칙](./docs/git-convention.md)과 [브랜치 규칙](./docs/branch-convention.md)을 확인해주세요.

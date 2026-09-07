@@ -7,5 +7,6 @@ export default {
       ["feat", "fix", "refactor", "style", "chore", "note", "docs"],
     ],
     "header-max-length": [2, "always", 100],
+    "subject-case": [0],
   },
 };
