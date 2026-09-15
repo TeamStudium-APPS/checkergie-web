@@ -12,11 +12,11 @@
 
 ## 브랜치 이름
 
-브랜치 이름은 `작업 유형/간단한-영문-설명` 형식으로 작성합니다.
+브랜치 이름은 `작업 유형/간단한-영문-설명` 형식으로 작성하며 이슈 번호는 포함하지 않습니다.
 
 | 유형 | 용도 | 예시 |
 | --- | --- | --- |
-| `feat` | 기능 추가 | `feat/landing-hero` |
+| `feature` | 기능 추가 | `feature/landing-hero` |
 | `fix` | 오류 수정 | `fix/form-submit` |
 | `refactor` | 기능 변화 없는 구조 개선 | `refactor/api-client` |
 | `chore` | 설정 및 환경 작업 | `chore/monorepo-setup` |
@@ -25,8 +25,8 @@
 ## 작업 흐름
 
 1. 최신 `develop`을 기준으로 작업 브랜치를 만듭니다.
-2. 한 브랜치에서는 한 가지 목적의 작업만 진행합니다.
+2. 한 브랜치와 Pull Request에서는 한 가지 목적의 작업만 진행합니다.
 3. 작업 중에도 `lint`, `typecheck`, `build`를 확인합니다.
-4. 검토가 끝난 변경은 `develop`으로 squash merge합니다.
+4. 리뷰 승인을 받은 변경은 `develop`으로 병합하며 특정 merge 방식은 강제하지 않습니다.
 5. 병합된 작업 브랜치는 삭제합니다.
 6. 배포 시 `develop`을 `main`으로 병합합니다.
