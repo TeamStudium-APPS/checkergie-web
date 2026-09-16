@@ -1,0 +1,46 @@
+## GitHub Workflow
+
+### Issues
+
+- 이슈 제목은 작업 내용을 한글로 간결하게 작성한다.
+- 모든 이슈에는 작업 성격에 맞는 Label을 지정한다.
+    - `feature`: 새로운 기능 및 체커 추가
+    - `fix`: 오류 및 버그 수정
+    - `refactor`: 기능 변화 없는 구조 개선
+    - `chore`: 의존성, 도구, 설정 등 유지보수
+    - `docs`: 문서 추가 및 수정
+- Priority는 작업 중요도에 따라 `P0` ~ `P3`로 지정한다.
+- 새 이슈는 GitHub Project의 `Backlog`에 자동으로 추가된다.
+
+### Branches
+
+브랜치는 다음 형식을 사용한다.
+
+`<type>/<task-name>`
+
+예:
+- `feature/checker-result`
+- `fix/url-validation`
+- `refactor/checker-logic`
+
+이슈 번호는 브랜치명에 포함하지 않는다.
+
+### Pull Requests
+
+- PR 제목은 브랜치명과 동일하게 작성한다.
+- 이슈 하나는 PR 하나와 연결하고, PR 하나도 이슈 하나만 종료한다.
+- 작업을 여러 PR로 나누면 동일한 수의 이슈로 범위를 나누며 하나의 포괄 이슈를 여러 PR에서 재사용하지 않는다.
+- PR 본문에는 해당 PR만 담당하는 이슈를 `Closes #<issue-number>`로 작성해 이슈의 Development에 연결한다. 단순 URL이나 `Refs`는 사용하지 않는다.
+- PR 생성 후 GitHub의 closing issue 연결을 확인한다.
+- PR이 이슈에 연결되면 Project 상태는 `Review`로 자동 변경된다.
+- PR이 병합되면 Project 상태는 `Done`으로 자동 변경된다.
+
+### Project Status
+
+`Backlog → Todo → In Progress → Review → Done`
+
+- `Backlog`: 아직 착수하지 않은 작업
+- `Todo`: 작업하기로 결정된 작업
+- `In Progress`: 현재 작업 중
+- `Review`: PR 리뷰 및 병합 대기
+- `Done`: 완료된 작업
