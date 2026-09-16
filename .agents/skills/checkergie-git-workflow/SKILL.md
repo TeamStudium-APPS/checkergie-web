@@ -19,6 +19,8 @@ Follow the user's requested scope exactly. GitHub mutations require explicit use
 - Create every ordinary work branch from the latest `origin/develop` and open every ordinary pull request with `develop` as its base.
 - Never use another feature or chore branch as a pull request base unless the user explicitly requests stacked pull requests in the current conversation.
 - If the user asks for multiple pull requests, create that exact number of independent branches from `origin/develop`. Give each branch one clear purpose and minimize overlapping files.
+- Keep a strict one-to-one relationship between issues and pull requests. One issue must be closed by exactly one pull request, and one pull request must close exactly one issue.
+- When splitting work into multiple pull requests, create or update the same number of independently scoped issues before editing pull request bodies. Do not reuse a broad parent issue as the closing issue for multiple pull requests.
 - Use the branch name as the pull request title and follow the organization pull request template for the body.
 - A dependency or preferred merge order does not change a pull request's base. Keep `develop` as the base and document the merge order when needed.
 
@@ -30,8 +32,9 @@ Before each push or pull request mutation, verify:
 2. `git log origin/develop..HEAD` contains only the intended commits.
 3. `git diff --stat origin/develop...HEAD` matches the pull request's stated purpose.
 4. The branch does not contain commits assigned to another pull request.
+5. The pull request body contains one `Closes #N`, and that issue is not closed by another open pull request.
 
-After creating or editing each pull request, query GitHub and confirm that `baseRefName` is `develop`, `headRefName` is the intended branch, and the remote file list is scoped correctly. Do not report completion until every requested pull request passes these checks.
+After creating or editing each pull request, query GitHub and confirm that `baseRefName` is `develop`, `headRefName` is the intended branch, the remote file list is scoped correctly, and the linked issue matches only that pull request. Do not report completion until every requested pull request passes these checks.
 
 ## Correct a pushed mistake
 

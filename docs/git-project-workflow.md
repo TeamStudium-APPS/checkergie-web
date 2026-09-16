@@ -28,7 +28,9 @@
 ### Pull Requests
 
 - PR 제목은 브랜치명과 동일하게 작성한다.
-- 관련 이슈가 있다면 PR 본문에 `Closes #<issue-number>`를 작성한다.
+- 이슈 하나는 PR 하나와 연결하고, PR 하나도 이슈 하나만 종료한다.
+- 작업을 여러 PR로 나누면 동일한 수의 이슈로 범위를 나누며 하나의 포괄 이슈를 여러 PR에서 재사용하지 않는다.
+- PR 본문에는 해당 PR만 담당하는 이슈를 `Closes #<issue-number>`로 작성한다.
 - PR이 이슈에 연결되면 Project 상태는 `Review`로 자동 변경된다.
 - PR이 병합되면 Project 상태는 `Done`으로 자동 변경된다.
 
