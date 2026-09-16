@@ -1,0 +1,36 @@
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { describe, expect, it, vi } from "vitest";
+import { ComponentName } from "../src/path/to/component";
+
+describe("ComponentName", () => {
+  it("renders with an accessible name", () => {
+    render(<ComponentName>Label</ComponentName>);
+
+    expect(screen.getByRole("button", { name: "Label" })).toBeVisible();
+  });
+
+  it("supports its primary interaction", async () => {
+    const user = userEvent.setup();
+    const onAction = vi.fn();
+    render(<ComponentName onAction={onAction}>Label</ComponentName>);
+
+    await user.click(screen.getByRole("button", { name: "Label" }));
+
+    expect(onAction).toHaveBeenCalledOnce();
+  });
+
+  it("blocks interaction when unavailable", async () => {
+    const user = userEvent.setup();
+    const onAction = vi.fn();
+    render(
+      <ComponentName disabled onAction={onAction}>
+        Label
+      </ComponentName>,
+    );
+
+    await user.click(screen.getByRole("button", { name: "Label" }));
+
+    expect(onAction).not.toHaveBeenCalled();
+  });
+});
