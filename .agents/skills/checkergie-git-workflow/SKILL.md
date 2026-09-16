@@ -21,6 +21,7 @@ Follow the user's requested scope exactly. GitHub mutations require explicit use
 - If the user asks for multiple pull requests, create that exact number of independent branches from `origin/develop`. Give each branch one clear purpose and minimize overlapping files.
 - Keep a strict one-to-one relationship between issues and pull requests. One issue must be closed by exactly one pull request, and one pull request must close exactly one issue.
 - When splitting work into multiple pull requests, create or update the same number of independently scoped issues before editing pull request bodies. Do not reuse a broad parent issue as the closing issue for multiple pull requests.
+- Put `Closes #N` in the pull request body so GitHub adds the pull request to the issue's Development section. A plain issue URL, `Refs #N`, or a note in the issue body is not a substitute for this Development link.
 - Use the branch name as the pull request title and follow the organization pull request template for the body.
 - A dependency or preferred merge order does not change a pull request's base. Keep `develop` as the base and document the merge order when needed.
 
@@ -34,7 +35,9 @@ Before each push or pull request mutation, verify:
 4. The branch does not contain commits assigned to another pull request.
 5. The pull request body contains one `Closes #N`, and that issue is not closed by another open pull request.
 
-After creating or editing each pull request, query GitHub and confirm that `baseRefName` is `develop`, `headRefName` is the intended branch, the remote file list is scoped correctly, and the linked issue matches only that pull request. Do not report completion until every requested pull request passes these checks.
+After creating or editing each pull request, query GitHub and confirm that `baseRefName` is `develop`, `headRefName` is the intended branch, and the remote file list is scoped correctly. Query the pull request's GraphQL `closingIssuesReferences` and confirm it contains exactly the intended issue; this is the authoritative check for the Development connection.
+
+Project status and Development connection are separate checks. If project fields cannot be read because the GitHub token lacks `read:project`, report that limitation instead of guessing, but still verify `closingIssuesReferences`. Do not report completion until every requested pull request passes the checks available with the current authorization.
 
 ## Correct a pushed mistake
 
