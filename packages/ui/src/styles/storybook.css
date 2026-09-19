@@ -1,0 +1,15 @@
+@import "tailwindcss";
+@import "./theme.css";
+@source "../**/*.{ts,tsx}";
+
+body {
+  margin: 0;
+  background: var(--color-cg-canvas);
+  color: var(--color-cg-ink);
+  font-family: var(--font-cg-sans);
+}
+
+#storybook-root {
+  width: 100%;
+  min-height: 100dvh;
+}
