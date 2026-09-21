@@ -2,10 +2,10 @@ import { z } from "zod";
 
 import { ApiValidationError } from "./errors";
 
-export function parseWithSchema<Schema extends z.ZodType>(
+export const parseWithSchema = <Schema extends z.ZodType>(
   schema: Schema,
   data: unknown,
-): z.infer<Schema> {
+): z.infer<Schema> => {
   const result = schema.safeParse(data);
 
   if (!result.success) {
@@ -13,4 +13,4 @@ export function parseWithSchema<Schema extends z.ZodType>(
   }
 
   return result.data;
-}
+};
