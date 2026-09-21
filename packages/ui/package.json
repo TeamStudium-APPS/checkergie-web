@@ -17,6 +17,9 @@
     "react": "19.2.8",
     "react-dom": "19.2.8"
   },
+  "dependencies": {
+    "lucide-react": "^1.46.0"
+  },
   "devDependencies": {
     "@storybook/addon-docs": "10.6.0",
     "@storybook/nextjs-vite": "10.6.0",
