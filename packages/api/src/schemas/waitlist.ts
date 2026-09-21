@@ -6,7 +6,7 @@ export const waitlistSubscribeRequestSchema = z.object({
 
 
 export const waitlistSubscribeResponseSchema = z.object({
-  queuePosition: z.number().int().positive(),
+  success: z.literal(true),
 });
 
 export const ageGroupSchema = z.enum(["10대", "20대", "30대", "40대", "50대 이상"]);
