@@ -4,8 +4,9 @@
   "private": true,
   "type": "module",
   "exports": {
-    "./query": "./src/query/index.ts"
-  },
+    "./query": "./src/query/index.ts",
+    ".": "./src/index.ts"
+  "main": "./src/index.ts",
   "scripts": {
     "lint": "eslint src",
     "typecheck": "tsc --noEmit"
@@ -17,5 +18,8 @@
   },
   "peerDependencies": {
     "react": "19.2.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.43"
   }
 }
