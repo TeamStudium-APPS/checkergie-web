@@ -1,6 +1,5 @@
 "use client";
 
-import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Check } from "lucide-react";
@@ -12,14 +11,6 @@ export interface LandingHeaderProps {
   signupHref?: string;
   completed?: boolean;
 }
-
-const NavigationButton = ({ href, ...props }: {
-  href?: string;
-  children: ReactNode;
-  className?: string;
-  variant?: "ghost";
-  trailingIcon?: ReactNode;
-}) => href ? <Button as="a" href={href} {...props} /> : <Button {...props} />;
 
 const LandingHeader = ({ featuresHref, routineHref, signupHref, completed = false }: LandingHeaderProps) => (
   <header className="sticky top-0 z-cg-sticky border-b border-cg-border bg-cg-surface">
@@ -41,15 +32,15 @@ const LandingHeader = ({ featuresHref, routineHref, signupHref, completed = fals
         </span>
       </Link>
       <nav aria-label="주요 메뉴" className="flex flex-wrap items-center gap-cg-1 sm:gap-cg-4">
-        <NavigationButton href={featuresHref} variant="ghost" className="landing-brand-hover hover:bg-cg-subtle">강의 찾기</NavigationButton>
-        <NavigationButton href={routineHref} variant="ghost" className="landing-brand-hover hover:bg-cg-subtle">루틴화</NavigationButton>
-        <NavigationButton
+        <Button<"a"> href={featuresHref} variant="ghost" className="landing-brand-hover hover:bg-cg-subtle">강의 찾기</Button>
+        <Button<"a"> href={routineHref} variant="ghost" className="landing-brand-hover hover:bg-cg-subtle">루틴화</Button>
+        <Button<"a">
           href={signupHref}
           trailingIcon={completed ? <Check size={20} /> : undefined}
           className={completed
             ? "border border-[var(--landing-accent)]/50 [&&]:bg-[var(--landing-accent)]/15 [&&]:text-[var(--landing-accent)] [&&]:hover:bg-[var(--landing-accent)]/25 [&&]:hover:text-[var(--landing-accent)]"
             : "hover:bg-cg-subtle landing-brand-hover"}
-        >{completed ? "신청 완료" : "베타 대기"}</NavigationButton>
+        >{completed ? "신청 완료" : "베타 대기"}</Button>
       </nav>
     </div>
   </header>
