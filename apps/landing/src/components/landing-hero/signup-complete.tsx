@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Check, Share2, Sparkles } from "lucide-react";
 import { Button } from "@checkergie/ui";
-import styles from "./signup-complete.module.css";
 
 export interface SignupCompleteProps {
   id?: string;
@@ -59,15 +58,15 @@ const SignupComplete = ({
   return (
     <section
       id={id}
-      className={`${styles.complete} grid place-items-center text-cg-surface ${
+      className={`[--landing-receipt:#287dbe] [--completion-mint:var(--landing-accent)] [scroll-margin-top:var(--landing-header-height,112px)] [background:radial-gradient(ellipse_at_92%_0%,color-mix(in_srgb,var(--landing-accent)_18.04%,transparent),transparent_38%),linear-gradient(120deg,var(--color-cg-brand),var(--landing-gradient-deep)_65%,var(--landing-gradient-end))] grid place-items-center text-cg-surface ${
         compact
-          ? `${styles.compact} min-h-0 px-cg-6`
+          ? `py-14 min-h-0 px-cg-6`
           : "min-h-[calc(100svh_-_var(--landing-header-height,_112px))] px-cg-6 py-cg-16"
       }`}
       aria-labelledby={`${id}-title`}
     >
       <div
-        className={`${styles.content} w-full max-w-[680px] text-center`}
+        className="[&_:is(h1,h2)]:outline-none [&_:is(h1,h2)_span]:text-[var(--completion-mint)] [@media(width<=560px)]:[&_:is(h1,h2)]:text-cg-display-sm w-full max-w-[680px] text-center"
       >
         <Heading
           ref={heading}
@@ -78,13 +77,13 @@ const SignupComplete = ({
           자리, <span>맡아뒀어요.</span>
         </Heading>
 
-        <p className={`${styles.description} text-cg-body-md`}>
+        <p className="mt-cg-5 mx-auto mb-9 text-[var(--landing-text-inverse)] text-cg-body-md">
           이제 기다리기만 하면 돼요. 같이 완강할 친구에게도 알려주세요.
         </p>
 
-        <div className={`${styles.receipt} max-w-[560px] m-auto rounded-cg-lg`}>
+        <div className="py-7 px-cg-5 border border-[var(--landing-accent)]/[0.302] bg-[var(--landing-receipt)]/20 [&_strong]:text-[var(--completion-mint)] [&_p]:mt-2.5 [&_p]:text-[var(--landing-text-inverse)] max-w-[560px] m-auto rounded-cg-lg">
           <span
-            className={`${styles.receiptIcon} text-cg-heading-md grid place-items-center rounded-cg-full`}
+            className="size-9 mx-auto mb-3.5 bg-[var(--completion-mint)] text-[var(--landing-on-accent)] text-cg-heading-md grid place-items-center rounded-cg-full"
             aria-hidden="true"
           >
             <Check size={24} />
@@ -100,7 +99,7 @@ const SignupComplete = ({
         </div>
 
         <div
-          className={`${styles.actions} flex flex-wrap justify-center gap-cg-3`}
+          className="mt-cg-5 mb-cg-4 flex flex-wrap justify-center gap-cg-3"
         >
           <Button
             onClick={share}
@@ -114,7 +113,7 @@ const SignupComplete = ({
             <Button
               variant="outline"
               trailingIcon={<Sparkles size={16} />}
-              className={styles.profileButton}
+              className="[&&]:bg-cg-surface/[0.051] [&&]:text-cg-surface [&&]:border-cg-surface/[0.251]"
               onClick={onOpenProfile}
             >
               맞춤 추천 받기
@@ -124,7 +123,7 @@ const SignupComplete = ({
 
         <button
           type="button"
-          className={`${styles.resetButton} text-cg-caption-sm underline underline-offset-[4px] cursor-pointer p-cg-2 rounded-cg-sm`}
+          className="text-[var(--landing-text-inverse)] disabled:cursor-not-allowed disabled:opacity-cg-disabled focus-visible:outline-2 focus-visible:outline-[var(--completion-mint)] focus-visible:outline-offset-[3px] text-cg-caption-sm underline underline-offset-[4px] cursor-pointer p-cg-2 rounded-cg-sm"
           onClick={onReset}
           disabled={!onReset}
         >
@@ -132,7 +131,7 @@ const SignupComplete = ({
         </button>
 
         <p
-          className={`${styles.status} text-cg-body-sm min-h-[24px] mt-cg-3`}
+          className="text-[var(--landing-text-inverse)] text-cg-body-sm min-h-[24px] mt-cg-3"
           role="status"
         >
           {message}

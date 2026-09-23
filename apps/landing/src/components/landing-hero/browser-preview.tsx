@@ -10,7 +10,6 @@ import {
   Search,
   Sunrise,
 } from "lucide-react";
-import styles from "./browser-preview.module.css";
 
 const tabs = ["강의 찾기", "내 큐레이션", "완강 루틴"];
 const courses = [
@@ -78,7 +77,7 @@ const BrowserPreview = () => {
 
   return (
     <div
-      className={`${styles.preview} overflow-clip rounded-cg-lg shadow-cg-modal text-cg-subtle`}
+      className="[--preview-surface:#353738] [--preview-card:#414344] [--preview-muted:#b8babb] [--preview-browser-chrome:#1d2021] [--preview-address:#0d1011] [--preview-window-close:#f26a5f] [--preview-window-minimize:#f5c34c] [--preview-window-expand:#61c454] [--preview-positive:#86e4ce] [--preview-negative:#ffc19f] [--preview-negative-background:#ff9560] bg-[var(--preview-surface)] border border-cg-surface/[0.2196] lg:h-full [&_button]:cursor-pointer [&_button:disabled]:cursor-default [&_button:focus-visible]:outline-2 [&_button:focus-visible]:outline-[var(--hero-mint)] [&_button:focus-visible]:outline-offset-[-3px] overflow-clip rounded-cg-lg shadow-cg-modal text-cg-subtle"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onFocusCapture={() => setFocused(true)}
@@ -87,9 +86,9 @@ const BrowserPreview = () => {
           setFocused(false);
       }}
     >
-      <div className={`${styles.browserChrome} flex items-center`}>
+      <div className="h-14 px-cg-5 gap-cg-6 bg-[var(--preview-browser-chrome)] [@media(width<=560px)]:h-11 [@media(width<=560px)]:px-cg-3 [@media(width<=560px)]:gap-cg-3 flex items-center">
         <span
-          className={`${styles.windowControls} flex gap-cg-2`}
+          className="[&_i]:size-[11px] [&_i]:rounded-cg-full [&_i]:bg-[var(--preview-window-close)] [&_i:nth-child(2)]:bg-[var(--preview-window-minimize)] [&_i:nth-child(3)]:bg-[var(--preview-window-expand)] flex gap-cg-2"
           aria-hidden="true"
         >
           <i />
@@ -97,13 +96,13 @@ const BrowserPreview = () => {
           <i />
         </span>
         <span
-          className={`${styles.addressBar} text-cg-label-md flex-1 max-w-[360px] m-auto text-center rounded-cg-sm`}
+          className="py-1.5 px-cg-3 bg-[var(--preview-address)] text-[var(--landing-footer-surface)] text-cg-label-md flex-1 max-w-[360px] m-auto text-center rounded-cg-sm"
         >
           checkergi.rehab
         </span>
       </div>
-      <div className={styles.previewContent}>
-        <div className={`${styles.previewHeader} flex items-center gap-cg-5`}>
+      <div className="p-cg-5 [@media(width<=560px)]:p-cg-3">
+        <div className="mb-[18px] border-b border-cg-surface/[0.051] [@media(width<=560px)]:gap-cg-3 flex items-center gap-cg-5">
           <span className="text-cg-label-md flex gap-cg-2 items-center whitespace-nowrap [@media(width<=560px)]:text-cg-caption-sm">
             <Image
               src="/logo.svg"
@@ -117,7 +116,7 @@ const BrowserPreview = () => {
           <div
             role="tablist"
             aria-label="서비스 미리보기"
-            className={`${styles.tabList} flex gap-cg-4`}
+            className="[&_button]:text-[var(--preview-muted)] [&_button]:whitespace-nowrap [&_button]:border-b-2 [&_button]:border-transparent [&_button[aria-selected=true]]:text-[var(--hero-mint)] [&_button[aria-selected=true]]:border-[var(--hero-mint)] flex gap-cg-4"
           >
             {tabs.map((label, index) => (
               <button
@@ -163,12 +162,12 @@ const BrowserPreview = () => {
               aria-labelledby={`preview-tab-${index}`}
               hidden={active !== index}
               tabIndex={0}
-              className={styles.tabPanel}
+              className="focus-visible:outline-2 focus-visible:outline-[var(--hero-mint)] focus-visible:outline-offset-[-3px] [&:not([hidden])]:animate-[landing-preview-panel-enter_var(--duration-cg-slow)_var(--ease-cg-standard)] motion-reduce:[&:not([hidden])]:animate-none"
             >
               {index === 0 && (
                 <>
                   <div
-                    className={`${styles.searchBox} text-cg-body-sm flex items-center p-cg-4 rounded-cg-md`}
+                    className="gap-2.5 bg-[var(--preview-card)] text-[var(--preview-muted)] [&_small]:inline-flex [&_small]:items-center [&_small]:gap-cg-1 [&_small]:ml-auto [&_small]:whitespace-nowrap [@media(width<=560px)]:p-cg-3 [@media(width<=560px)]:[&_small]:hidden text-cg-body-sm flex items-center p-cg-4 rounded-cg-md"
                   >
                     <Search size={18} aria-hidden="true" />
                     <span>토익 700점 목표 · 평일 저녁 40분</span>
@@ -176,7 +175,7 @@ const BrowserPreview = () => {
                       <ArrowDownUp size={14} aria-hidden="true" /> 평점순
                     </small>
                   </div>
-                  <div className={`${styles.tags} flex flex-wrap`}>
+                  <div className="gap-[7px] my-cg-3 [&>span]:py-cg-2 [&>span]:px-2.5 [&>span]:bg-[var(--preview-card)] [&>span]:rounded-cg-full [&>span[data-selected=true]]:text-[var(--landing-on-accent)] [&>span[data-selected=true]]:bg-[var(--hero-mint)] [&>span[data-selected=true]]:font-cg-bold flex flex-wrap">
                     {[
                       "난이도 3",
                       "강의형",
@@ -194,11 +193,11 @@ const BrowserPreview = () => {
               {index === 1 && (
                 <>
                   <div
-                    className={`${styles.searchBox} text-cg-body-sm flex items-center p-cg-4 rounded-cg-md`}
+                    className="gap-2.5 bg-[var(--preview-card)] text-[var(--preview-muted)] [&_small]:inline-flex [&_small]:items-center [&_small]:gap-cg-1 [&_small]:ml-auto [&_small]:whitespace-nowrap [@media(width<=560px)]:p-cg-3 [@media(width<=560px)]:[&_small]:hidden text-cg-body-sm flex items-center p-cg-4 rounded-cg-md"
                   >
                     내가 넣은 조건 <small>조건 수정</small>
                   </div>
-                  <div className={`${styles.tags} flex flex-wrap`}>
+                  <div className="gap-[7px] my-cg-3 [&>span]:py-cg-2 [&>span]:px-2.5 [&>span]:bg-[var(--preview-card)] [&>span]:rounded-cg-full [&>span[data-selected=true]]:text-[var(--landing-on-accent)] [&>span[data-selected=true]]:bg-[var(--hero-mint)] [&>span[data-selected=true]]:font-cg-bold flex flex-wrap">
                     {[
                       "목표 · 토익 700",
                       "수준 · 난이도 2~3",
@@ -212,21 +211,21 @@ const BrowserPreview = () => {
               {index < 2 ? (
                 <>
                   <div
-                    className={`${styles.resultMeta} text-cg-caption-sm flex justify-between`}
+                    className="gap-2.5 my-3.5 text-[var(--preview-muted)] text-cg-caption-sm flex justify-between"
                   >
                     <span>
                       {index === 0 ? "1,284개 중 37개" : "조건에 맞는 강의 6개"}
                     </span>
                     <span>{index === 0 ? "조건 2개 적용" : "매칭도순"}</span>
                   </div>
-                  <div className={`${styles.cardList} grid`}>
+                  <div className="gap-2.5 grid">
                     {courses.map((course, i) => (
                       <div
-                        className={`${styles.contentCard} flex items-center rounded-cg-md`}
+                        className="min-h-[100px] gap-3.5 p-3.5 bg-[var(--preview-card)] border border-cg-surface/[0.0471] [@media(width<=560px)]:gap-cg-2 [@media(width<=560px)]:p-cg-3 flex items-center rounded-cg-md"
                         key={course.title}
                       >
                         <span
-                          className={`${styles.courseIcon} text-cg-heading-md shrink-0 grid place-items-center rounded-cg-sm`}
+                          className="size-[46px] border border-cg-surface/[0.1255] text-[var(--preview-muted)] [@media(width<=560px)]:hidden text-cg-heading-md shrink-0 grid place-items-center rounded-cg-sm"
                           aria-hidden="true"
                         >
                           {i === 0 ? (
@@ -241,13 +240,13 @@ const BrowserPreview = () => {
                           <strong className="text-cg-label-md">{course.title}</strong>
                           <p className="text-cg-caption-sm">{course.meta}</p>
                           <div
-                            className={`${styles.prosCons} text-cg-caption-sm flex flex-wrap mt-cg-2`}
+                            className="gap-1.5 [&_span]:py-cg-1 [&_span]:px-1.5 [&_span]:text-[var(--preview-positive)] [&_span]:bg-[color-mix(in_srgb,var(--landing-accent)_10.98%,transparent)] [&_span]:rounded-cg-xs [&_span+span]:text-[var(--preview-negative)] [&_span+span]:bg-[color-mix(in_srgb,var(--preview-negative-background)_13.33%,transparent)] text-cg-caption-sm flex flex-wrap mt-cg-2"
                           >
                             <span>PRO {course.pro}</span>
                             {index === 0 && <span>CON {course.con}</span>}
                           </div>
                         </div>
-                        <div className={`${styles.score} grid text-right`}>
+                        <div className="gap-1.5 [&_small]:text-[var(--preview-muted)] grid text-right">
                           <strong className="text-cg-title-lg">
                             {index === 0 ? course.score : course.match}
                           </strong>
@@ -261,7 +260,7 @@ const BrowserPreview = () => {
                 </>
               ) : (
                 <>
-                  <div className={`${styles.routineWeek} grid`}>
+                  <div className="grid-cols-7 gap-[5px] [&>span]:grid [&>span]:gap-cg-2 [&>span]:py-cg-3 [&>span]:text-center [&>span]:bg-[var(--preview-card)] [&>span]:rounded-cg-sm [&>span]:text-cg-caption-sm [&_b]:font-cg-medium [&>span[data-done=true]]:text-[var(--hero-mint)] [&>span[data-done=true]]:bg-[color-mix(in_srgb,var(--landing-accent)_9.41%,transparent)] grid">
                     {["월", "화", "수", "목", "금", "토", "일"].map(
                       (day, i) => (
                         <span key={day} data-done={i < 4}>
@@ -284,23 +283,23 @@ const BrowserPreview = () => {
                     )}
                   </div>
                   <div
-                    className={`${styles.resultMeta} text-cg-caption-sm flex justify-between`}
+                    className="gap-2.5 my-3.5 text-[var(--preview-muted)] text-cg-caption-sm flex justify-between"
                   >
                     <span>이번 주 3/5 완료</span>
                     <span>오늘 40분 예정</span>
                   </div>
-                  <div className={`${styles.cardList} grid`}>
+                  <div className="gap-2.5 grid">
                     {[
                       "RC Part 5 — 접속사 정리",
                       "LC Part 2 — 의문사 문제",
                       "어제 틀린 문장 5개 복습",
                     ].map((task, i) => (
                       <div
-                        className={`${styles.contentCard} flex items-center rounded-cg-md`}
+                        className="min-h-[100px] gap-3.5 p-3.5 bg-[var(--preview-card)] border border-cg-surface/[0.0471] [@media(width<=560px)]:gap-cg-2 [@media(width<=560px)]:p-cg-3 flex items-center rounded-cg-md"
                         key={task}
                       >
                         <span
-                          className={styles.routineCheck}
+                          className="inline-grid place-items-center shrink-0 size-cg-5 border border-cg-surface/25 rounded-[6px] data-[completed=true]:bg-[var(--landing-accent)] data-[completed=true]:border-[var(--landing-accent)] data-[completed=true]:text-[var(--landing-on-accent)]"
                           data-completed={i === 0}
                           role="img"
                           aria-label={i === 0 ? "완료" : "미완료"}
@@ -329,7 +328,7 @@ const BrowserPreview = () => {
                       </div>
                     ))}
                   </div>
-                  <div className={`${styles.tags} flex flex-wrap`}>
+                  <div className="gap-[7px] my-cg-3 [&>span]:py-cg-2 [&>span]:px-2.5 [&>span]:bg-[var(--preview-card)] [&>span]:rounded-cg-full [&>span[data-selected=true]]:text-[var(--landing-on-accent)] [&>span[data-selected=true]]:bg-[var(--hero-mint)] [&>span[data-selected=true]]:font-cg-bold flex flex-wrap">
                     <span>12일 연속</span>
                     <span>완주 뱃지 3/4</span>
                     <span>주 5회 목표</span>

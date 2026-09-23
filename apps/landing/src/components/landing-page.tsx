@@ -1,10 +1,10 @@
 "use client";
 
 import { useRef, useState, type ReactNode } from "react";
-import { LandingHeader } from "./landing-header";
-import { LandingHero } from "./landing-hero";
-import { LandingSignup } from "./landing-signup";
-import { LandingFooter } from "./landing-footer";
+import LandingHeader from "./landing-header/landing-header";
+import LandingHero from "./landing-hero/landing-hero";
+import LandingSignup from "./landing-signup/landing-signup";
+import LandingFooter from "./landing-footer/landing-footer";
 import type { LandingFooterProps } from "./landing-footer/landing-footer";
 
 export interface SurveyConnection {
