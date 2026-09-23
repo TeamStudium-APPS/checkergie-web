@@ -6,6 +6,7 @@
   "exports": {
     "./query": "./src/query/index.ts",
     ".": "./src/index.ts"
+  },
   "main": "./src/index.ts",
   "scripts": {
     "lint": "eslint src",
