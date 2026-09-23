@@ -13,6 +13,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// 메타데이터 확정되면 수정 예정
 export const metadata: Metadata = {
   title: "체커기 | CHECKERGIE",
   description: "여러 플랫폼에 흩어진 강의를 한 곳에서 비교하고, 검증된 후기로 진짜 강의 상태를 확인하세요.",
