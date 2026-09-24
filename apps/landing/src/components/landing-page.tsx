@@ -3,6 +3,8 @@
 import { useRef, useState, type ReactNode } from "react";
 import LandingHeader from "./landing-header/landing-header";
 import LandingHero from "./landing-hero/landing-hero";
+import LandingSet1 from "./landing-set1/landing-set1";
+import LandingSet2 from "./landing-set2/landing-set2";
 import LandingSignup from "./landing-signup/landing-signup";
 import LandingFooter from "./landing-footer/landing-footer";
 import type { LandingFooterProps } from "./landing-footer/landing-footer";
@@ -64,9 +66,13 @@ const LandingPage = ({ submitSignup, renderSurvey, onOpenTerms, onOpenPrivacy }:
   const common = { completed, profileSaved, onOpenProfile: renderSurvey ? () => { setSource("hero"); setOpen(true); } : undefined };
 
   return <>
-    <LandingHeader signupHref="#hero-signup-btm" completed={completed} />
+    <LandingHeader signupHref="#hero-signup-btm" featuresHref="#set1" routineHref="#set2" completed={completed} />
     <main id="main-content" className="flex-1" aria-label="체커기 랜딩">
       <LandingHero key={`hero-${formVersion}`} {...common} onReset={() => reset("hero")} onRequestSignup={submitSignup ? (value) => request(value, "hero") : undefined} />
+      <div className="flex flex-col gap-cg-8 py-cg-6">
+        <LandingSet1 />
+        <LandingSet2 />
+      </div>
       <LandingSignup key={`beta-${formVersion}`} {...common} onReset={() => reset("beta")} onRequestSignup={submitSignup ? (value) => request(value, "beta") : undefined} />
     </main>
     <LandingFooter onOpenTerms={onOpenTerms} onOpenPrivacy={onOpenPrivacy} />
