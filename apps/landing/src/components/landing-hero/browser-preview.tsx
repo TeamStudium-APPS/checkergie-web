@@ -98,7 +98,7 @@ const BrowserPreview = () => {
         <span
           className="py-1.5 px-cg-3 bg-[var(--preview-address)] text-[var(--landing-footer-surface)] text-cg-label-md flex-1 max-w-[360px] m-auto text-center rounded-cg-sm"
         >
-          checkergi.rehab
+          checkergie.rehab
         </span>
       </div>
       <div className="p-cg-5 [@media(width<=560px)]:p-cg-3">
@@ -116,7 +116,7 @@ const BrowserPreview = () => {
           <div
             role="tablist"
             aria-label="서비스 미리보기"
-            className="[&_button]:text-[var(--preview-muted)] [&_button]:whitespace-nowrap [&_button]:border-b-2 [&_button]:border-transparent [&_button[aria-selected=true]]:text-[var(--hero-mint)] [&_button[aria-selected=true]]:border-[var(--hero-mint)] flex gap-cg-4"
+            className="[&_button]:text-[11px] [&_button]:text-[var(--preview-muted)] [&_button]:whitespace-nowrap [&_button]:border-b-2 [&_button]:border-transparent [&_button[aria-selected=true]]:text-[var(--hero-mint)] [&_button[aria-selected=true]]:border-[var(--hero-mint)] flex gap-cg-4"
           >
             {tabs.map((label, index) => (
               <button
@@ -153,16 +153,16 @@ const BrowserPreview = () => {
             ))}
           </div>
         </div>
-        <div className="overflow-hidden">
+        <div className="grid overflow-hidden">
           {tabs.map((label, index) => (
             <div
               key={label}
               id={`preview-panel-${index}`}
               role="tabpanel"
               aria-labelledby={`preview-tab-${index}`}
-              hidden={active !== index}
+              data-active={active === index}
               tabIndex={0}
-              className="focus-visible:outline-2 focus-visible:outline-[var(--hero-mint)] focus-visible:outline-offset-[-3px] [&:not([hidden])]:animate-[landing-preview-panel-enter_var(--duration-cg-slow)_var(--ease-cg-standard)] motion-reduce:[&:not([hidden])]:animate-none"
+              className="col-start-1 row-start-1 data-[active=false]:invisible focus-visible:outline-2 focus-visible:outline-[var(--hero-mint)] focus-visible:outline-offset-[-3px] data-[active=true]:animate-[landing-preview-panel-enter_var(--duration-cg-slow)_var(--ease-cg-standard)] motion-reduce:data-[active=true]:animate-none"
             >
               {index === 0 && (
                 <>
@@ -175,7 +175,7 @@ const BrowserPreview = () => {
                       <ArrowDownUp size={14} aria-hidden="true" /> 평점순
                     </small>
                   </div>
-                  <div className="gap-[7px] my-cg-3 [&>span]:py-cg-2 [&>span]:px-2.5 [&>span]:bg-[var(--preview-card)] [&>span]:rounded-cg-full [&>span[data-selected=true]]:text-[var(--landing-on-accent)] [&>span[data-selected=true]]:bg-[var(--hero-mint)] [&>span[data-selected=true]]:font-cg-bold flex flex-wrap">
+                  <div className="text-[11px] gap-[7px] my-cg-3 [&>span]:py-cg-2 [&>span]:px-2.5 [&>span]:bg-[var(--preview-card)] [&>span]:rounded-cg-full [&>span[data-selected=true]]:text-[var(--landing-on-accent)] [&>span[data-selected=true]]:bg-[var(--hero-mint)] [&>span[data-selected=true]]:font-cg-bold flex flex-wrap">
                     {[
                       "난이도 3",
                       "강의형",
@@ -197,7 +197,7 @@ const BrowserPreview = () => {
                   >
                     내가 넣은 조건 <small>조건 수정</small>
                   </div>
-                  <div className="gap-[7px] my-cg-3 [&>span]:py-cg-2 [&>span]:px-2.5 [&>span]:bg-[var(--preview-card)] [&>span]:rounded-cg-full [&>span[data-selected=true]]:text-[var(--landing-on-accent)] [&>span[data-selected=true]]:bg-[var(--hero-mint)] [&>span[data-selected=true]]:font-cg-bold flex flex-wrap">
+                  <div className="text-[11px] gap-[7px] my-cg-3 [&>span]:py-cg-2 [&>span]:px-2.5 [&>span]:bg-[var(--preview-card)] [&>span]:rounded-cg-full [&>span[data-selected=true]]:text-[var(--landing-on-accent)] [&>span[data-selected=true]]:bg-[var(--hero-mint)] [&>span[data-selected=true]]:font-cg-bold flex flex-wrap">
                     {[
                       "목표 · 토익 700",
                       "수준 · 난이도 2~3",
@@ -328,7 +328,7 @@ const BrowserPreview = () => {
                       </div>
                     ))}
                   </div>
-                  <div className="gap-[7px] my-cg-3 [&>span]:py-cg-2 [&>span]:px-2.5 [&>span]:bg-[var(--preview-card)] [&>span]:rounded-cg-full [&>span[data-selected=true]]:text-[var(--landing-on-accent)] [&>span[data-selected=true]]:bg-[var(--hero-mint)] [&>span[data-selected=true]]:font-cg-bold flex flex-wrap">
+                  <div className="text-[11px] gap-[7px] my-cg-3 [&>span]:py-cg-2 [&>span]:px-2.5 [&>span]:bg-[var(--preview-card)] [&>span]:rounded-cg-full [&>span[data-selected=true]]:text-[var(--landing-on-accent)] [&>span[data-selected=true]]:bg-[var(--hero-mint)] [&>span[data-selected=true]]:font-cg-bold flex flex-wrap">
                     <span>12일 연속</span>
                     <span>완주 뱃지 3/4</span>
                     <span>주 5회 목표</span>
