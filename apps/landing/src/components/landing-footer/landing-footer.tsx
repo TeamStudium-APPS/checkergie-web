@@ -14,12 +14,13 @@ const LandingFooter = ({ onOpenTerms, onOpenPrivacy }: LandingFooterProps) => (
   <footer className="bg-[var(--landing-footer-surface)] text-cg-text">
     <div className="max-w-[1440px] m-auto p-[calc(var(--spacing-cg-1)_*_7)_var(--spacing-cg-10)] [@media(width<=768px)]:p-cg-6">
       <div className="flex justify-between items-start gap-cg-6 pb-cg-6 [border-bottom:1px_solid_color-mix(in_srgb,_var(--color-cg-ink)_7.84%,_transparent)] [@media(width<=768px)]:flex-col [@media(width<=768px)]:items-start">
-        <div className="flex items-start gap-cg-3 [&_img]:shrink-0 [&_strong]:text-cg-title-md [&_strong]:text-cg-ink [&_p_>_span]:text-cg-label-sm [&_p_>_span]:ml-cg-4">
-          <Image src="/logo.svg" alt="" width={34} height={34} />
+        <div className="flex items-start gap-cg-3 [&_img]:shrink-0 [&_strong]:text-cg-title-md [&_strong]:text-cg-ink">
+          <Image src="/team-logo.svg" alt="" width={34} height={34} />
           <div>
-            <p>
+            <p className="flex items-center gap-cg-3">
               <strong>팀 스터디움</strong>
-              <span>TEAM STUDIUM</span>
+              <span aria-hidden="true" className="h-[23px] w-px shrink-0 bg-cg-ink/20" />
+              <span className="text-cg-label-sm">TEAM STUDIUM</span>
             </p>
             <p className="text-cg-caption-sm text-cg-text mt-cg-1">
               여러 플랫폼에 흩어진 강의를 한 곳에서 비교하고, 내 일정에 맞춘
