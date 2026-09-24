@@ -19,14 +19,6 @@ body {
   --landing-on-accent: #05372f;
 }
 
-@keyframes logo-color-swap {
-  0%, 25% {
-    opacity: var(--logo-initial-opacity);
-  }
-  100% {
-    opacity: var(--logo-final-opacity);
-  }
-}
 
 @media (min-width: 1024px) {
   :root {

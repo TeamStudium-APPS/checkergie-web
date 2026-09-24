@@ -44,10 +44,6 @@ const LandingHero = ({
         );
       headerHeight = header?.getBoundingClientRect().height ?? 112;
 
-      document.documentElement.style.setProperty(
-        "--landing-header-height",
-        `${headerHeight}px`,
-      );
       distance = Math.max(
         1,
         section.offsetHeight - (window.innerHeight - headerHeight),
@@ -97,7 +93,6 @@ const LandingHero = ({
       window.removeEventListener("resize", remeasure);
       reduce.removeEventListener("change", remeasure);
       desktop.removeEventListener("change", remeasure);
-      document.documentElement.style.removeProperty("--landing-header-height");
     };
   }, [completed]);
 
@@ -158,7 +153,7 @@ const LandingHero = ({
             </div>
           </div>
           <div
-            className="min-w-0 z-[1] lg:invisible lg:group-data-[preview-ready=true]/hero:visible hero-motion:absolute hero-motion:left-[calc(74.5%_-_20px_-_(24.5%_-_20px)*var(--hero-travel))] hero-motion:w-[calc(51%_+_(49%_-_80px)*var(--hero-travel))] hero-motion:[transform:translateX(-50%)] hero-motion:will-change-[transform,width,left] hero-motion:top-[max(var(--spacing-cg-6),calc(50%_-_var(--hero-copy-height,0px)/2_-_var(--spacing-cg-6)))] hero-motion:bottom-0 hero-static:absolute hero-static:top-[max(var(--spacing-cg-6),calc(50%_-_var(--hero-copy-height,0px)/2_-_var(--spacing-cg-6)))] hero-static:right-cg-10 hero-static:bottom-0 hero-static:w-[calc((100%_-_var(--spacing-cg-10)*2_-_var(--spacing-cg-12))*0.55)]"
+            className="min-w-0 z-[1] lg:invisible lg:group-data-[preview-ready=true]/hero:visible hero-motion:absolute hero-motion:left-[calc(74.5%_-_20px_-_(24.5%_-_20px)*var(--hero-travel))] hero-motion:w-[calc(51%_+_(49%_-_80px)*var(--hero-travel))] hero-motion:[transform:translateX(-50%)] hero-motion:will-change-[transform,width,left] hero-motion:top-[max(var(--spacing-cg-6),calc(50%_-_var(--hero-copy-height,0px)/2_-_var(--spacing-cg-6)))] hero-motion:bottom-[max(0px,calc(50%_-_var(--hero-copy-height,0px)/2))] hero-static:absolute hero-static:top-[max(var(--spacing-cg-6),calc(50%_-_var(--hero-copy-height,0px)/2_-_var(--spacing-cg-6)))] hero-static:right-cg-10 hero-static:bottom-[max(0px,calc(50%_-_var(--hero-copy-height,0px)/2))] hero-static:w-[calc((100%_-_var(--spacing-cg-10)*2_-_var(--spacing-cg-12))*0.55)]"
           >
             <BrowserPreview />
           </div>
