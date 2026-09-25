@@ -1,26 +1,55 @@
 @import "tailwindcss";
+@import "@checkergie/ui/theme.css";
+@source "../../../../packages/ui/src/**/*.{ts,tsx}";
 
+body {
+  margin: 0;
+  background: var(--color-cg-canvas);
+  color: var(--color-cg-ink);
+  font-family: var(--font-cg-sans);
+}
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --landing-backdrop: #05002f;
+  --landing-gradient-deep: #09014f;
+  --landing-gradient-end: #170d49;
+  --landing-accent: #36d6b4;
+  --landing-text-inverse: #c5c2d7;
+  --landing-text-inverse-muted: #aaa5c7;
+  --landing-footer-surface: #d1d5d8;
+  --landing-on-accent: #05372f;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
+@media (min-width: 1024px) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --landing-header-height: calc(var(--text-cg-heading-lg--line-height) + var(--text-cg-label-sm--line-height) + var(--spacing-cg-12) + 1px);
+  }
+}
+@media (hover: hover) {
+  .landing-brand-hover:hover {
+    color: var(--color-cg-brand);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@keyframes landing-preview-panel-enter {
+  from {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@custom-variant hero-motion (@media (min-width: 1024px) and (min-height: 700px) and (prefers-reduced-motion: no-preference));
+@custom-variant hero-static {
+  @media (min-width: 1024px) and (max-height: 699px), (min-width: 1024px) and (prefers-reduced-motion: reduce) {
+    @slot;
+  }
+}
+
+@keyframes landing-hero-float {
+  0%, 100% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, 8px); }
 }
