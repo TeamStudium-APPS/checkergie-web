@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import "@checkergie/ui/theme.css";
+@source "../../../../packages/ui/src/**/*.{ts,tsx}";
 
 :root {
   --background: #ffffff;
