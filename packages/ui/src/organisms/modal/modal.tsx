@@ -152,7 +152,7 @@ const Modal = ({
         onPointerDown={(event) => event.stopPropagation()}
       >
         {(title || description || showCloseIcon) && (
-          <header className="relative shrink-0 px-6 pb-3 pt-6 sm:px-7 sm:pt-7">
+          <header className="relative shrink-0 border-b border-cg-border px-6 pb-3 pt-6 sm:px-7 sm:pt-7">
             {title ? (
               <h2 id={titleId} className="pr-10 text-cg-heading-sm text-cg-ink">
                 {title}
