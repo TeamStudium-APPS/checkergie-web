@@ -126,7 +126,7 @@ const ProfileModal = ({ open, onComplete, onOpenChange, onSave }: ProfileModalPr
         건너뛰기
       </button>
 
-      <p className="text-cg-label-sm text-cg-caption mt-cg-4">
+      <p className="text-cg-label-sm text-cg-caption mt-cg-4 mb-cg-3 sm:mb-cg-4">
         선택 정보(연령대·성별)를 알려주시면 베타 오픈 때 연령대·성별에 맞는 강의를 미리 골라둘게요:)
       </p>
     </Modal>
