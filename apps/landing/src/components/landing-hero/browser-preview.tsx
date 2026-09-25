@@ -8,7 +8,9 @@ import {
   Headphones,
   MonitorPlay,
   Search,
+  SlidersHorizontal,
   Sunrise,
+  UserRound,
 } from "lucide-react";
 
 const tabs = ["강의 찾기", "내 큐레이션", "완강 루틴"];
@@ -20,6 +22,8 @@ const courses = [
     con: "자료 업데이트",
     score: "6.2",
     match: "94%",
+    curationMeta: "평일 저녁 40분 · 난이도 3 · 4주",
+    matchReason: "목표 점수대 적중",
   },
   {
     title: "기초부터 다지는 LC 청취 훈련",
@@ -28,6 +32,8 @@ const courses = [
     con: "진도 빠름",
     score: "5.8",
     match: "89%",
+    curationMeta: "하루 35분 · 난이도 2 · 3주",
+    matchReason: "가능 시간에 딱",
   },
   {
     title: "직장인 새벽 30분 영단어 루틴",
@@ -36,6 +42,8 @@ const courses = [
     con: "예문 부족",
     score: "5.1",
     match: "82%",
+    curationMeta: "짧은 회차 · 난이도 1 · 2주",
+    matchReason: "자투리 시간용",
   },
 ];
 
@@ -116,7 +124,7 @@ const BrowserPreview = () => {
           <div
             role="tablist"
             aria-label="서비스 미리보기"
-            className="[&_button]:text-[11px] [&_button]:text-[var(--preview-muted)] [&_button]:whitespace-nowrap [&_button]:border-b-2 [&_button]:border-transparent [&_button[aria-selected=true]]:text-[var(--hero-mint)] [&_button[aria-selected=true]]:border-[var(--hero-mint)] flex gap-cg-4"
+            className="min-w-0 overflow-x-auto [&_button]:shrink-0 [@media(width<=560px)]:gap-cg-2 [&_button]:text-[11px] [&_button]:text-[var(--preview-muted)] [&_button]:whitespace-nowrap [&_button]:border-b-2 [&_button]:border-transparent [&_button[aria-selected=true]]:text-[var(--hero-mint)] [&_button[aria-selected=true]]:border-[var(--hero-mint)] flex gap-cg-4"
           >
             {tabs.map((label, index) => (
               <button
@@ -152,6 +160,12 @@ const BrowserPreview = () => {
               </button>
             ))}
           </div>
+          <span
+            aria-hidden="true"
+            className="ml-auto grid size-8 shrink-0 place-items-center rounded-cg-full bg-cg-surface/[0.08] text-[var(--preview-muted)]"
+          >
+            <UserRound size={18} />
+          </span>
         </div>
         <div className="grid overflow-hidden">
           {tabs.map((label, index) => (
@@ -171,7 +185,7 @@ const BrowserPreview = () => {
                   >
                     <Search size={18} aria-hidden="true" />
                     <span>토익 700점 목표 · 평일 저녁 40분</span>
-                    <small>
+                    <small className="shrink-0 rounded-cg-full bg-cg-surface/[0.08] px-cg-3 py-cg-2 text-cg-caption-sm">
                       <ArrowDownUp size={14} aria-hidden="true" /> 평점순
                     </small>
                   </div>
@@ -192,18 +206,22 @@ const BrowserPreview = () => {
               )}
               {index === 1 && (
                 <>
-                  <div
-                    className="gap-2.5 bg-[var(--preview-card)] text-[var(--preview-muted)] [&_small]:inline-flex [&_small]:items-center [&_small]:gap-cg-1 [&_small]:ml-auto [&_small]:whitespace-nowrap [@media(width<=560px)]:p-cg-3 [@media(width<=560px)]:[&_small]:hidden text-cg-body-sm flex items-center p-cg-4 rounded-cg-md"
-                  >
-                    내가 넣은 조건 <small>조건 수정</small>
+                  <div className="flex items-center justify-between gap-cg-3 text-cg-body-sm text-[var(--preview-muted)]">
+                    <span>내가 넣은 조건</span>
+                    <small className="inline-flex shrink-0 items-center gap-cg-1 whitespace-nowrap rounded-cg-full bg-cg-surface/[0.08] px-cg-3 py-cg-2 text-cg-caption-sm">
+                      <SlidersHorizontal size={14} aria-hidden="true" /> 조건 수정
+                    </small>
                   </div>
-                  <div className="text-[11px] gap-[7px] my-cg-3 [&>span]:py-cg-2 [&>span]:px-2.5 [&>span]:bg-[var(--preview-card)] [&>span]:rounded-cg-full [&>span[data-selected=true]]:text-[var(--landing-on-accent)] [&>span[data-selected=true]]:bg-[var(--hero-mint)] [&>span[data-selected=true]]:font-cg-bold flex flex-wrap">
+                  <div className="my-cg-3 flex flex-wrap gap-cg-2 text-[11px]">
                     {[
-                      "목표 · 토익 700",
-                      "수준 · 난이도 2~3",
-                      "시간 · 저녁 40분",
-                    ].map((tag) => (
-                      <span key={tag}>{tag}</span>
+                      ["목표", "토익 700"],
+                      ["수준", "난이도 2~3"],
+                      ["시간", "평일 저녁 40분"],
+                    ].map(([label, value]) => (
+                      <span key={label} className="inline-flex items-center gap-cg-2 rounded-cg-sm border border-cg-surface/[0.15] bg-[var(--preview-card)] px-cg-3 py-cg-3">
+                        <span className="font-cg-semibold text-[var(--preview-muted)]">{label}</span>
+                        <span className="font-cg-semibold text-[#E9EAEC]">{value}</span>
+                      </span>
                     ))}
                   </div>
                 </>
@@ -214,7 +232,8 @@ const BrowserPreview = () => {
                     className="gap-2.5 my-3.5 text-[var(--preview-muted)] text-cg-caption-sm flex justify-between"
                   >
                     <span>
-                      {index === 0 ? "1,284개 중 37개" : "조건에 맞는 강의 6개"}
+                      {index === 0 ? "1,284개 중 " : "조건에 맞는 강의 "}
+                      <strong className="font-cg-bold text-[#E9EAEC]">{index === 0 ? "37개" : "6개"}</strong>
                     </span>
                     <span>{index === 0 ? "조건 2개 적용" : "매칭도순"}</span>
                   </div>
@@ -237,13 +256,21 @@ const BrowserPreview = () => {
                           )}
                         </span>
                         <div className="flex-1 min-w-0">
-                          <strong className="text-cg-label-md">{course.title}</strong>
-                          <p className="text-cg-caption-sm">{course.meta}</p>
-                          <div
-                            className="gap-1.5 [&_span]:py-cg-1 [&_span]:px-1.5 [&_span]:text-[var(--preview-positive)] [&_span]:bg-[color-mix(in_srgb,var(--landing-accent)_10.98%,transparent)] [&_span]:rounded-cg-xs [&_span+span]:text-[var(--preview-negative)] [&_span+span]:bg-[color-mix(in_srgb,var(--preview-negative-background)_13.33%,transparent)] text-cg-caption-sm flex flex-wrap mt-cg-2"
-                          >
-                            <span>PRO {course.pro}</span>
-                            {index === 0 && <span>CON {course.con}</span>}
+                          <strong className="block text-cg-label-md">{course.title}</strong>
+                          <div className="mt-cg-2 flex flex-wrap items-center gap-cg-2 text-cg-caption-sm">
+                            <p className="text-[var(--preview-muted)]">
+                              {index === 0 ? course.meta : course.curationMeta}
+                            </p>
+                            <div className="flex flex-wrap items-center gap-1.5">
+                              <span className="rounded-cg-xs bg-[var(--landing-accent)]/[0.1098] px-1.5 py-cg-1 text-[var(--preview-positive)]">
+                                {index === 0 ? `PRO ${course.pro}` : course.matchReason}
+                              </span>
+                              {index === 0 && (
+                                <span className="rounded-cg-xs bg-[var(--preview-negative-background)]/[0.1333] px-1.5 py-cg-1 text-[var(--preview-negative)]">
+                                  CON {course.con}
+                                </span>
+                              )}
+                            </div>
                           </div>
                         </div>
                         <div className="gap-1.5 [&_small]:text-[var(--preview-muted)] grid text-right">
@@ -285,7 +312,7 @@ const BrowserPreview = () => {
                   <div
                     className="gap-2.5 my-3.5 text-[var(--preview-muted)] text-cg-caption-sm flex justify-between"
                   >
-                    <span>이번 주 3/5 완료</span>
+                    <span>이번 주 <strong className="font-cg-bold text-[#E9EAEC]">3/5</strong> 완료</span>
                     <span>오늘 40분 예정</span>
                   </div>
                   <div className="gap-2.5 grid">

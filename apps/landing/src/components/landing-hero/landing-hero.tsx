@@ -1,7 +1,7 @@
 "use client";
 
 import { useLayoutEffect, useRef } from "react";
-import { Check, ChevronsDown } from "lucide-react";
+import { Check, ChevronsDown, Gift } from "lucide-react";
 import EmailSignupForm from "../landing-signup/email-signup-form";
 import SignupComplete from "./signup-complete";
 import BrowserPreview from "./browser-preview";
@@ -133,8 +133,8 @@ const LandingHero = ({
               align="left"
               onRequestSignup={onRequestSignup}
             />
-            <div className="mt-cg-6 p-cg-6 border border-cg-surface/[0.149] rounded-cg-lg bg-cg-surface/[0.0196] [&>p]:mb-[18px] [&>p]:text-[var(--landing-text-inverse-muted)] [&_ul]:grid [&_ul]:gap-cg-4 [&_li]:flex [&_li]:items-baseline [&_li]:gap-cg-3 [&_li]:text-[var(--landing-text-inverse)] [&_li>span:first-child]:px-[5px] [&_li>span:first-child]:text-[var(--hero-mint)] [&_li>span:first-child]:bg-[var(--landing-accent)]/[0.1333] [&_li>span:first-child]:rounded-cg-full [&_strong]:text-cg-surface [&_strong]:whitespace-nowrap [@media(width<=560px)]:p-cg-4 [@media(width<=560px)]:[&_li]:flex-wrap [@media(width<=560px)]:[&_li]:gap-cg-2">
-              <p className="text-cg-label-md">지금 등록하면</p>
+            <div className="mt-cg-6 p-cg-6 border border-cg-surface/[0.149] rounded-cg-lg bg-cg-surface/[0.0196] [&>p]:mb-[18px] [&>p]:text-[var(--landing-text-inverse-muted)] [&_ul]:grid [&_ul]:gap-cg-4 [&_li]:flex [&_li]:items-baseline [&_li]:gap-cg-3 [&_li]:text-[var(--landing-text-inverse)] [&_li>span:first-child]:size-cg-6 [&_li>span:first-child]:shrink-0 [&_li>span:first-child]:inline-grid [&_li>span:first-child]:place-items-center [&_li>span:first-child]:self-center [&_li>span:first-child]:text-[var(--hero-mint)] [&_li>span:first-child]:bg-[var(--landing-accent)]/[0.1333] [&_li>span:first-child]:rounded-cg-full [&_strong]:text-cg-surface [&_strong]:whitespace-nowrap [@media(width<=560px)]:p-cg-4 [@media(width<=560px)]:[&_li]:flex-wrap [@media(width<=560px)]:[&_li]:gap-cg-2">
+              <p className="text-cg-label-md flex items-center gap-cg-2"><Gift size={16} className="shrink-0" aria-hidden="true" />지금 등록하면</p>
               <ul>
                 {[
                   ["먼저 알림", "정식 오픈하는 날, 메일로 가장 먼저"],
