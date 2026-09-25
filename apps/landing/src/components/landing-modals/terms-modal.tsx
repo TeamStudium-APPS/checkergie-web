@@ -25,7 +25,7 @@ const TermsModal = ({ open, onOpenChange }: TermsModalProps) => (
           )}
         </div>
       ))}
-      <p className="pt-cg-4 border-t border-cg-border text-cg-caption-sm text-cg-caption">
+      <p className="pt-cg-3 border-t border-cg-border text-cg-caption-sm text-cg-caption">
         본 약관은 베타 대기 페이지에 적용되는 초안이며, 정식 서비스 오픈 시 개정될 수 있습니다.
         <br />
         시행일 {termsEffectiveDate}
