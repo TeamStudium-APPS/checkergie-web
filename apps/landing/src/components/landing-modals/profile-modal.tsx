@@ -8,6 +8,7 @@ import type { ProfileAge, ProfileGender, ProfileModalProps } from "./profile-mod
 export type { ProfileAge, ProfileGender, ProfilePatch, ProfileModalProps } from "./profile-modal.types";
 
 const SAVE_ERROR_MESSAGE = "저장에 실패했어요. 다시 시도해 주세요.";
+const SAVE_HINT_MESSAGE = "연령대 또는 성별을 선택하면 저장할 수 있어요";
 
 const ageOptions: { value: ProfileAge; label: string }[] = [
   { value: "10s", label: "10대" },
@@ -55,12 +56,18 @@ const ProfileModal = ({ open, onComplete, onOpenChange, onSave }: ProfileModalPr
   };
 
   return (
-    <Modal open={open} onOpenChange={onOpenChange} title="신청 완료! 한 가지만 더" ariaLabel="신청 완료! 한 가지만 더">
+    <Modal
+      open={open}
+      onOpenChange={onOpenChange}
+      dismissible={!saving}
+      title="신청 완료! 한 가지만 더"
+      ariaLabel="신청 완료! 한 가지만 더"
+    >
       <div className="mb-cg-5">
         <div className="flex items-center gap-cg-2 text-cg-label-md font-cg-bold text-cg-ink mb-cg-3">
           연령대
           <em className="not-italic text-cg-caption-sm font-cg-semibold text-cg-caption bg-cg-subtle rounded-cg-full px-cg-2 py-0.5">
-            선택
+            택1 선택
           </em>
         </div>
         <div className="flex flex-wrap gap-cg-2">
@@ -79,7 +86,7 @@ const ProfileModal = ({ open, onComplete, onOpenChange, onSave }: ProfileModalPr
         <div className="flex items-center gap-cg-2 text-cg-label-md font-cg-bold text-cg-ink mb-cg-3">
           성별
           <em className="not-italic text-cg-caption-sm font-cg-semibold text-cg-caption bg-cg-subtle rounded-cg-full px-cg-2 py-0.5">
-            선택
+            택1 선택
           </em>
         </div>
         <div className="flex flex-wrap gap-cg-2">
@@ -98,6 +105,8 @@ const ProfileModal = ({ open, onComplete, onOpenChange, onSave }: ProfileModalPr
         <p role="alert" className="text-cg-label-sm text-cg-danger mb-cg-2">
           {SAVE_ERROR_MESSAGE}
         </p>
+      ) : !hasSelection ? (
+        <p className="text-cg-label-sm text-cg-caption mb-cg-2">{SAVE_HINT_MESSAGE}</p>
       ) : null}
       <Button
         fullWidth
