@@ -39,6 +39,8 @@ const ProfileModal = ({ open, onComplete, onOpenChange, onSave }: ProfileModalPr
     }
   }
 
+  const hasSelection = age !== undefined || gender !== undefined;
+
   const handleSave = async () => {
     setSaving(true);
     setSaveError(false);
@@ -97,7 +99,13 @@ const ProfileModal = ({ open, onComplete, onOpenChange, onSave }: ProfileModalPr
           {SAVE_ERROR_MESSAGE}
         </p>
       ) : null}
-      <Button fullWidth loading={saving} trailingIcon={<Check size={16} aria-hidden="true" />} onClick={handleSave}>
+      <Button
+        fullWidth
+        loading={saving}
+        disabled={!hasSelection}
+        trailingIcon={<Check size={16} aria-hidden="true" />}
+        onClick={handleSave}
+      >
         저장하기
       </Button>
       <button
