@@ -1,0 +1,19 @@
+{
+  "name": "@checkergie/docs",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./terms": "./src/terms.ts",
+    "./privacy": "./src/privacy.ts"
+  },
+  "main": "./src/index.ts",
+  "scripts": {
+    "lint": "eslint src",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.43"
+  }
+}
