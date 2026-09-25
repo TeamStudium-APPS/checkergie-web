@@ -68,6 +68,9 @@ importers:
       '@checkergie/api':
         specifier: workspace:*
         version: link:../../packages/api
+      '@checkergie/docs':
+        specifier: workspace:*
+        version: link:../../packages/docs
       '@checkergie/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -102,6 +105,12 @@ importers:
       zod:
         specifier: ^4.5.4
         version: 4.5.4
+    devDependencies:
+      '@types/node':
+        specifier: ^20.19.43
+        version: 20.19.43
+
+  packages/docs:
     devDependencies:
       '@types/node':
         specifier: ^20.19.43
