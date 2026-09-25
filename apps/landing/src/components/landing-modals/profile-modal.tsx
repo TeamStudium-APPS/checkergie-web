@@ -7,6 +7,8 @@ import type { ProfileAge, ProfileGender, ProfileModalProps } from "./profile-mod
 
 export type { ProfileAge, ProfileGender, ProfilePatch, ProfileModalProps } from "./profile-modal.types";
 
+const SAVE_ERROR_MESSAGE = "저장에 실패했어요. 다시 시도해 주세요.";
+
 const ageOptions: { value: ProfileAge; label: string }[] = [
   { value: "10s", label: "10대" },
   { value: "20s", label: "20대" },
@@ -25,6 +27,7 @@ const ProfileModal = ({ open, onComplete, onOpenChange, onSave }: ProfileModalPr
   const [age, setAge] = useState<ProfileAge>();
   const [gender, setGender] = useState<ProfileGender>();
   const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState(false);
   const [wasOpen, setWasOpen] = useState(open);
 
   if (open !== wasOpen) {
@@ -32,14 +35,18 @@ const ProfileModal = ({ open, onComplete, onOpenChange, onSave }: ProfileModalPr
     if (open) {
       setAge(undefined);
       setGender(undefined);
+      setSaveError(false);
     }
   }
 
   const handleSave = async () => {
     setSaving(true);
+    setSaveError(false);
     try {
       await onSave?.({ age, gender });
       onComplete("saved");
+    } catch {
+      setSaveError(true);
     } finally {
       setSaving(false);
     }
@@ -85,6 +92,11 @@ const ProfileModal = ({ open, onComplete, onOpenChange, onSave }: ProfileModalPr
         </div>
       </div>
 
+      {saveError ? (
+        <p role="alert" className="text-cg-label-sm text-cg-danger mb-cg-2">
+          {SAVE_ERROR_MESSAGE}
+        </p>
+      ) : null}
       <Button fullWidth loading={saving} trailingIcon={<Check size={16} aria-hidden="true" />} onClick={handleSave}>
         저장하기
       </Button>
