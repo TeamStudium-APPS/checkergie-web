@@ -14,7 +14,7 @@ const ReviewCard = () => (
       <Repeat size={22} className="text-cg-ink" aria-hidden="true" />
       <h3 className="text-cg-title-lg text-cg-ink">복습 제공</h3>
     </div>
-    <p className="text-cg-body-sm text-cg-text flex-1">
+    <p className="text-cg-body-sm text-cg-text break-keep flex-1">
       배운 내용을 잊을 때쯤 다시 꺼내드려요. 복습 주기와 방식은 베타에서 함께 다듬어갑니다.
     </p>
     <div className="flex flex-nowrap items-center gap-cg-1 mt-cg-4">
@@ -35,7 +35,7 @@ const ReviewCard = () => (
         </Fragment>
       ))}
     </div>
-    <div className="flex justify-between text-cg-caption-sm text-cg-muted mt-cg-4">
+    <div className="flex flex-wrap justify-between gap-x-cg-2 gap-y-cg-1 text-cg-caption-sm text-cg-muted [&>span]:whitespace-nowrap mt-cg-4">
       <span>3강 복습 예정</span>
       <span>내일 오전</span>
     </div>

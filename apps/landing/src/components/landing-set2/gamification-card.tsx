@@ -15,7 +15,7 @@ const GamificationCard = () => (
       <Gamepad2 size={22} className="text-cg-ink" aria-hidden="true" />
       <h3 className="text-cg-title-lg text-cg-ink">게임화 루틴</h3>
     </div>
-    <p className="text-cg-body-sm text-cg-text flex-1">
+    <p className="text-cg-body-sm text-cg-text break-keep flex-1">
       스트릭·뱃지·완주 인증으로 오늘 하루치를 계속 누르게 만들어요. 꾸준함이 곧 완강입니다.
     </p>
     <div className="flex gap-cg-2 mt-cg-4">
@@ -40,7 +40,7 @@ const GamificationCard = () => (
         />
       ))}
     </div>
-    <div className="flex justify-between text-cg-caption-sm text-cg-muted mt-cg-3">
+    <div className="flex justify-between gap-cg-2 text-cg-caption-sm text-cg-muted [&>span]:min-w-0 [&>span]:truncate mt-cg-3">
       <span>연속 12일 학습 중</span>
       <span>완주 뱃지 3/4</span>
     </div>

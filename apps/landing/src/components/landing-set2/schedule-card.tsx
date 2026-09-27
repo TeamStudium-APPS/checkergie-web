@@ -24,7 +24,7 @@ const ScheduleCard = () => (
       <CalendarClock size={22} className="text-cg-ink" aria-hidden="true" />
       <h3 className="text-cg-title-lg text-cg-ink">강의 미분화</h3>
     </div>
-    <p className="text-cg-body-sm text-cg-text flex-1">
+    <p className="text-cg-body-sm text-cg-text break-keep flex-1">
       18시간짜리 강의를 내 시간표에 맞춰 40분 단위로 쪼개고, 날짜별 일정으로 배치해드려요.
     </p>
     <div className="grid grid-cols-7 gap-cg-1 mt-cg-4">
@@ -45,7 +45,7 @@ const ScheduleCard = () => (
         />
       ))}
     </div>
-    <div className="flex justify-between text-cg-caption-sm text-cg-muted mt-cg-3">
+    <div className="flex flex-wrap justify-between gap-x-cg-2 gap-y-cg-1 text-cg-caption-sm text-cg-muted [&>span]:whitespace-nowrap mt-cg-3">
       <span>18시간 → 27회차</span>
       <span>D-18</span>
     </div>
