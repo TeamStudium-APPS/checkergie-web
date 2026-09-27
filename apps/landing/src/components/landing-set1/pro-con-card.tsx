@@ -24,14 +24,14 @@ const ProConCard = () => (
     <p className="text-cg-body-sm text-cg-text">
       후기를 좋은 점 3줄, 아쉬운 점 3줄로 정성 요약하고 많이 나온 단어까지 뽑아드려요.
     </p>
-    <div className="grid gap-cg-2 mt-cg-4">
+    <ul className="grid gap-cg-2 mt-cg-4">
       {proCon.map((row) => (
-        <div key={row.text} className="flex items-start gap-cg-2 text-cg-label-sm text-cg-text">
+        <li key={row.text} className="flex items-center gap-cg-2 text-cg-label-sm text-cg-text">
           <span
             className={
               row.type === "pro"
-                ? "shrink-0 mt-0.5 size-5 grid place-items-center rounded-cg-full bg-cg-success-soft text-cg-success"
-                : "shrink-0 mt-0.5 size-5 grid place-items-center rounded-cg-full bg-cg-warning-soft text-cg-warning"
+                ? "shrink-0 size-5 grid place-items-center rounded-cg-full bg-cg-success-soft text-cg-success"
+                : "shrink-0 size-5 grid place-items-center rounded-cg-full bg-cg-warning-soft text-cg-warning"
             }
           >
             {row.type === "pro" ? (
@@ -40,10 +40,10 @@ const ProConCard = () => (
               <MessageCircleWarning size={12} aria-hidden="true" />
             )}
           </span>
-          <span>{row.text}</span>
-        </div>
+          <span className="translate-y-px">{row.text}</span>
+        </li>
       ))}
-    </div>
+    </ul>
     <div className="flex flex-wrap items-baseline gap-cg-2 mt-cg-4 pt-cg-4 border-t border-dashed border-cg-border">
       {wordCloud.map(({ word, size, color }) => (
         <b key={word} className={`font-cg-bold ${color} ${size}`}>
