@@ -28,8 +28,8 @@ const RecommendationRow = ({ item }: { item: Recommendation }) => (
     <div className="flex-1 min-w-0">
       <strong className="block text-cg-body-sm font-cg-bold text-cg-ink truncate">{item.title}</strong>
       <span className="flex items-center gap-cg-1 text-cg-caption-sm text-cg-muted">
-        <Check size={11} aria-hidden="true" />
-        {item.why}
+        <Check size={11} className="shrink-0" aria-hidden="true" />
+        <span className="truncate">{item.why}</span>
       </span>
     </div>
     <span className="shrink-0 text-cg-body-md font-cg-bold text-cg-ink">
@@ -69,7 +69,7 @@ const RecommendationCard = () => {
       </p>
       <div className="relative mt-cg-4">
         {/* 첫 페이지와 같은 높이를 확보하는 자리 표시용 사본. 트랙은 이 높이 안에서 세로로 스크롤된다. */}
-        <div className="invisible grid gap-cg-2" aria-hidden="true">
+        <div className="invisible grid grid-cols-1 gap-cg-2" aria-hidden="true">
           {pages[0].map((item) => (
             <RecommendationRow key={item.rank} item={item} />
           ))}
@@ -83,7 +83,7 @@ const RecommendationCard = () => {
           className="absolute inset-0 overflow-y-auto snap-y snap-mandatory scroll-smooth motion-reduce:scroll-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden rounded-cg-md outline-none focus-visible:ring-2 focus-visible:ring-cg-brand/20"
         >
           {pages.map((items, index) => (
-            <div key={index} className="grid gap-cg-2 h-full snap-start">
+            <div key={index} className="grid grid-cols-1 gap-cg-2 h-full snap-start">
               {items.map((item) => (
                 <RecommendationRow key={item.rank} item={item} />
               ))}
