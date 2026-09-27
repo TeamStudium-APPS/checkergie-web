@@ -11,7 +11,7 @@ const LandingSet1 = () => (
     className="[scroll-margin-top:var(--landing-header-height,112px)] max-w-[1280px] mx-auto px-cg-6 [@media(width<=560px)]:px-cg-4"
     aria-labelledby="set1-title"
   >
-    <div className="bg-cg-surface border border-cg-border rounded-cg-md p-cg-10 grid grid-cols-1 lg:grid-cols-[300px_minmax(0,1fr)] gap-cg-10 [@media(width<=1023px)]:p-cg-6">
+    <div className="bg-cg-surface border border-cg-border rounded-cg-md p-cg-10 grid grid-cols-1 lg:grid-cols-[300px_minmax(0,1fr)] xl:grid-cols-[360px_minmax(0,1fr)] gap-cg-10 [@media(width<=1023px)]:p-cg-6">
       <div className="lg:sticky lg:top-[calc(var(--landing-header-height,112px)+var(--spacing-cg-6))] self-start">
         <span className="inline-flex items-center gap-cg-2 text-cg-label-md text-cg-muted mb-cg-4">
           Set 1 · 강의 찾기
@@ -32,7 +32,7 @@ const LandingSet1 = () => (
         </p>
         <div className="flex items-start gap-cg-2 text-cg-label-sm text-cg-muted mt-cg-5 pt-cg-4 border-t border-cg-border">
           <ExternalLink size={14} className="mt-0.5 shrink-0" aria-hidden="true" />
-          <span>결정하고 나면 구매는 원래 강의 플랫폼으로 바로 연결돼요.</span>
+          <span className="xl:whitespace-nowrap">결정하고 나면 구매는 원래 강의 플랫폼으로 바로 연결돼요.</span>
         </div>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-cg-4">
