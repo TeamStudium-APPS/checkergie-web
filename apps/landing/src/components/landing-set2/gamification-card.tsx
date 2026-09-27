@@ -18,17 +18,17 @@ const GamificationCard = () => (
     <p className="text-cg-body-sm text-cg-text break-keep flex-1">
       스트릭·뱃지·완주 인증으로 오늘 하루치를 계속 누르게 만들어요. 꾸준함이 곧 완강입니다.
     </p>
-    <div className="flex gap-cg-2 mt-cg-4">
+    <div className="flex items-start gap-cg-2 mt-cg-4">
       {badges.map(({ icon: Icon, earned }, index) => (
         <span
           key={index}
           className={
             earned
-              ? "size-9 grid place-items-center rounded-cg-full bg-[linear-gradient(135deg,var(--landing-gold)_0%,var(--landing-coral)_100%)] text-cg-surface"
-              : "size-9 grid place-items-center rounded-cg-full bg-cg-subtle border border-cg-border text-cg-muted"
+              ? "flex-1 min-w-0 max-w-9 aspect-square grid place-items-center rounded-cg-full bg-[linear-gradient(135deg,var(--landing-gold)_0%,var(--landing-coral)_100%)] text-cg-surface"
+              : "flex-1 min-w-0 max-w-9 aspect-square grid place-items-center rounded-cg-full bg-cg-subtle border border-cg-border text-cg-muted"
           }
         >
-          <Icon size={17} aria-hidden="true" />
+          <Icon size={17} className="size-[47%]" aria-hidden="true" />
         </span>
       ))}
     </div>
