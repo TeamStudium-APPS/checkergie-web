@@ -1,7 +1,6 @@
 export interface TermsSection {
   heading: string;
-  body?: string;
-  list?: string[];
+  body: string | string[];
 }
 
 export const termsSections: TermsSection[] = [
@@ -11,7 +10,7 @@ export const termsSections: TermsSection[] = [
   },
   {
     heading: "제2조 (서비스의 내용)",
-    list: [
+    body: [
       "회사는 여러 온라인 강의 플랫폼의 강의 정보를 모아 비교·평가·추천하는 서비스를 준비 중입니다.",
       "본 페이지는 정식 출시 전 베타 참여 의사를 남기는 목적의 사전 등록 페이지입니다.",
     ],

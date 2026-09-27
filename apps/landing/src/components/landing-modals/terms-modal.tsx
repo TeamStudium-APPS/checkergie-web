@@ -14,9 +14,9 @@ const TermsModal = ({ open, onOpenChange }: TermsModalProps) => (
       {termsSections.map((section) => (
         <div key={section.heading}>
           <h3 className="text-cg-title-sm text-cg-ink mb-cg-2">{section.heading}</h3>
-          {section.list ? (
+          {Array.isArray(section.body) ? (
             <ul className="list-disc pl-cg-5 flex flex-col gap-cg-1 text-cg-body-sm text-cg-text">
-              {section.list.map((item) => (
+              {section.body.map((item) => (
                 <li key={item}>{item}</li>
               ))}
             </ul>
