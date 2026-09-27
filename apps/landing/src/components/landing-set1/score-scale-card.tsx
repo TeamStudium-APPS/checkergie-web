@@ -17,17 +17,24 @@ const ScoreScaleCard = ({ className = "" }: ScoreScaleCardProps) => (
     <p className="text-cg-body-sm text-[var(--landing-text-inverse)]">
       5점 만점 별점은 금방 4.8점이 됩니다. 체커기는 7점 척도로 촘촘하게, 인플레이션 없이 정량 평가해요.
     </p>
-    <div className="grid grid-cols-7 gap-cg-2 mt-cg-5">
+    <fieldset className="grid grid-cols-7 gap-cg-2 mt-cg-5 min-w-0 border-0 p-0 m-0">
+      <legend className="sr-only">7점 척도 평점 선택</legend>
       {scale.map((value) => (
-        <span
-          key={value}
-          data-active={value === 6}
-          className="h-9 grid place-items-center rounded-cg-sm bg-cg-surface/10 border border-cg-surface/[0.16] text-cg-label-sm text-[var(--landing-text-inverse-muted)] data-[active=true]:bg-[var(--color-cg-action)] data-[active=true]:border-[var(--color-cg-action)] data-[active=true]:text-cg-ink"
-        >
-          {value}
-        </span>
+        <label key={value} className="relative">
+          <input
+            type="radio"
+            name="score-scale"
+            value={value}
+            defaultChecked={value === 6}
+            aria-label={`${value}점`}
+            className="peer sr-only"
+          />
+          <span className="h-9 grid place-items-center rounded-cg-sm bg-cg-surface/10 border border-cg-surface/[0.16] text-cg-label-sm text-[var(--landing-text-inverse-muted)] cursor-pointer touch-manipulation transition-colors duration-150 motion-reduce:transition-none hover:bg-cg-surface/20 peer-checked:bg-[var(--color-cg-action)] peer-checked:hover:bg-[var(--color-cg-action)] peer-checked:border-[var(--color-cg-action)] peer-checked:text-cg-ink peer-focus-visible:ring-2 peer-focus-visible:ring-cg-surface/60">
+            {value}
+          </span>
+        </label>
       ))}
-    </div>
+    </fieldset>
     <div className="flex justify-between text-cg-caption-sm text-[var(--landing-text-inverse-muted)] mt-cg-3">
       <span>1 · 비추천</span>
       <span>4 · 보통</span>
