@@ -1,5 +1,6 @@
-import { Sparkles, UserRoundCog } from "lucide-react";
+import { ChevronDown, Sparkles, UserRoundCog } from "lucide-react";
 
+// TODO: select 옵션 값은 추후 논의 후 확정. 현재는 기존 노출값만 옵션으로 둔다.
 const fields = [
   { label: "목표", value: "토익 700" },
   { label: "수준", value: "난이도 2~3" },
@@ -19,10 +20,23 @@ const CurationCard = () => (
     <div className="flex-1 flex flex-col justify-between gap-cg-2 mt-cg-4">
       {fields.map((field) => (
         <div key={field.label} className="flex items-center gap-cg-2 text-cg-label-sm">
-          <span className="w-12 shrink-0 text-cg-caption">{field.label}</span>
-          <span className="flex-1 h-[38px] flex items-center bg-cg-subtle border border-cg-border rounded-cg-xs px-cg-3 font-cg-semibold text-cg-ink">
-            {field.value}
-          </span>
+          <label htmlFor={`curation-${field.label}`} className="w-12 shrink-0 text-cg-caption">
+            {field.label}
+          </label>
+          <div className="relative flex-1">
+            <select
+              id={`curation-${field.label}`}
+              defaultValue={field.value}
+              className="w-full h-[38px] appearance-none cursor-pointer bg-cg-subtle border border-cg-border rounded-cg-xs pl-cg-3 pr-cg-8 font-cg-semibold text-cg-ink outline-none focus-visible:ring-2 focus-visible:ring-cg-brand/20"
+            >
+              <option value={field.value}>{field.value}</option>
+            </select>
+            <ChevronDown
+              size={14}
+              className="pointer-events-none absolute right-cg-3 top-1/2 -translate-y-1/2 text-cg-muted"
+              aria-hidden="true"
+            />
+          </div>
         </div>
       ))}
     </div>
