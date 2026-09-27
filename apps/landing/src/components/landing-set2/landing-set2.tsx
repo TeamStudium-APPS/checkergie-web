@@ -9,8 +9,8 @@ const LandingSet2 = () => (
     className="[scroll-margin-top:var(--landing-header-height,112px)] max-w-[1280px] mx-auto px-cg-6 [@media(width<=560px)]:px-cg-4"
     aria-labelledby="set2-title"
   >
-    <div className="bg-cg-subtle border border-cg-border rounded-cg-md p-cg-10 grid grid-cols-1 lg:grid-cols-[300px_minmax(0,1fr)] gap-cg-10 [@media(width<=1023px)]:p-cg-6">
-      <div className="lg:sticky lg:top-[calc(var(--landing-header-height,112px)+var(--spacing-cg-6))] self-start">
+    <div className="bg-cg-subtle border border-cg-border rounded-cg-md p-cg-10 grid grid-cols-1 xl:grid-cols-[300px_minmax(0,1fr)] gap-cg-10 [@media(width<=1279px)]:p-cg-6">
+      <div className="xl:sticky xl:top-[calc(var(--landing-header-height,112px)+var(--spacing-cg-6))] self-start">
         <span className="inline-flex items-center gap-cg-2 text-cg-label-md text-cg-muted mb-cg-4">
           Set 2 · 루틴화
           <span className="text-cg-caption-sm text-cg-muted bg-cg-surface border border-cg-border rounded-cg-full px-cg-2 py-0.5">
