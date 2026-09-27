@@ -33,7 +33,7 @@ const LandingSet2 = () => (
           <span>루틴 기능은 베타에서 순차적으로 열립니다.</span>
         </div>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-cg-4">
+      <div className="grid grid-cols-1 min-[720px]:grid-cols-3 gap-cg-4">
         <ScheduleCard />
         <ReviewCard />
         <GamificationCard />

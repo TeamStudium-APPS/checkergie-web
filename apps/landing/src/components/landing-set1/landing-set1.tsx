@@ -35,8 +35,8 @@ const LandingSet1 = () => (
           <span>결정하고 나면 구매는 원래 강의 플랫폼으로 바로 연결돼요.</span>
         </div>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-cg-4">
-        <ScoreScaleCard className="sm:col-span-2" />
+      <div className="grid grid-cols-1 min-[720px]:grid-cols-2 gap-cg-4">
+        <ScoreScaleCard className="min-[720px]:col-span-2" />
         <TagSearchCard />
         <ProConCard />
         <CurationCard />
