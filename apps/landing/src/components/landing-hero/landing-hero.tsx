@@ -8,7 +8,6 @@ import BrowserPreview from "./browser-preview";
 
 export interface LandingHeroProps {
   completed?: boolean;
-  profileSaved?: boolean;
   onRequestSignup?: (email: string) => void | Promise<void>;
   onReset?: () => void;
   onOpenProfile?: () => void;
@@ -16,7 +15,6 @@ export interface LandingHeroProps {
 
 const LandingHero = ({
   completed = false,
-  profileSaved = false,
   onRequestSignup,
   onReset,
   onOpenProfile,
@@ -101,7 +99,6 @@ const LandingHero = ({
       <SignupComplete
         onReset={onReset}
         onOpenProfile={onOpenProfile}
-        profileSaved={profileSaved}
         autoFocus={false}
       />
     );

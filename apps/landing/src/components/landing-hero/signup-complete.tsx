@@ -10,7 +10,6 @@ export interface SignupCompleteProps {
   autoFocus?: boolean;
   onReset?: () => void;
   onOpenProfile?: () => void;
-  profileSaved?: boolean;
 }
 
 const SignupComplete = ({
@@ -19,7 +18,6 @@ const SignupComplete = ({
   autoFocus = true,
   onReset,
   onOpenProfile,
-  profileSaved = false,
 }: SignupCompleteProps) => {
   const heading = useRef<HTMLHeadingElement>(null);
   const [message, setMessage] = useState("");
@@ -109,16 +107,14 @@ const SignupComplete = ({
             친구에게 알려주기
           </Button>
 
-          {!profileSaved && (
-            <Button
-              variant="outline"
-              trailingIcon={<Sparkles size={16} />}
-              className="[&&]:bg-cg-surface/[0.051] [&&]:text-cg-surface [&&]:border-cg-surface/[0.251]"
-              onClick={onOpenProfile}
-            >
-              맞춤 추천 받기
-            </Button>
-          )}
+          <Button
+            variant="outline"
+            trailingIcon={<Sparkles size={16} />}
+            className="[&&]:bg-cg-surface/[0.051] [&&]:text-cg-surface [&&]:border-cg-surface/[0.251]"
+            onClick={onOpenProfile}
+          >
+            맞춤 추천 받기
+          </Button>
         </div>
 
         <button

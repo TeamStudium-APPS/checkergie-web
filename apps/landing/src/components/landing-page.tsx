@@ -38,7 +38,6 @@ const LandingPage = ({
   const [termsOpen, setTermsOpen] = useState(false);
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const [completed, setCompleted] = useState(false);
-  const [profileSaved, setProfileSaved] = useState(false);
   const [email, setEmail] = useState("");
   const [open, setOpen] = useState(false);
   const [formVersion, setFormVersion] = useState(0);
@@ -47,7 +46,6 @@ const LandingPage = ({
   const reset = (location: "hero" | "beta") => {
     setSource(location);
     setCompleted(false);
-    setProfileSaved(false);
     setEmail("");
     setOpen(false);
     setFormVersion((value) => value + 1);
@@ -67,14 +65,11 @@ const LandingPage = ({
       setOpen(true);
     } finally { pending.current = false; }
   };
-  const complete = (result: "saved" | "skipped") => {
+  const complete = () => {
     setOpen(false);
-    if (result === "saved") {
-      setProfileSaved(true);
-    }
     requestAnimationFrame(() => document.getElementById(`${source}-signup`)?.scrollIntoView({ block: "center", behavior: "instant" }));
   };
-  const common = { completed, profileSaved, onOpenProfile: () => { setSource("hero"); setOpen(true); } };
+  const common = { completed, onOpenProfile: () => { setSource("hero"); setOpen(true); } };
 
   return <>
     <LandingHeader signupHref="#hero-signup-btm" completed={completed} />
