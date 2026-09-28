@@ -6,6 +6,12 @@ import LandingHero from "./landing-hero/landing-hero";
 import LandingSignup from "./landing-signup/landing-signup";
 import LandingFooter from "./landing-footer/landing-footer";
 import type { LandingFooterProps } from "./landing-footer/landing-footer";
+import ProfileModal from "./landing-modals/profile-modal";
+import TermsModal from "./landing-modals/terms-modal";
+import PrivacyModal from "./landing-modals/privacy-modal";
+
+// TODO: 대기 등록 API 나오면 실제 요청으로 교체
+const mockRequest = () => new Promise<void>((resolve) => setTimeout(resolve, 600));
 
 export interface SurveyConnection {
   open: boolean;
@@ -23,7 +29,14 @@ export interface LandingPageProps extends LandingFooterProps {
   renderSurvey?: (props: SurveyConnection) => ReactNode;
 }
 
-const LandingPage = ({ submitSignup, renderSurvey, onOpenTerms, onOpenPrivacy }: LandingPageProps) => {
+const LandingPage = ({
+  submitSignup = mockRequest,
+  renderSurvey = (props) => <ProfileModal {...props} onSave={mockRequest} />,
+  onOpenTerms,
+  onOpenPrivacy,
+}: LandingPageProps) => {
+  const [termsOpen, setTermsOpen] = useState(false);
+  const [privacyOpen, setPrivacyOpen] = useState(false);
   const [completed, setCompleted] = useState(false);
   const [profileSaved, setProfileSaved] = useState(false);
   const [email, setEmail] = useState("");
@@ -44,14 +57,14 @@ const LandingPage = ({ submitSignup, renderSurvey, onOpenTerms, onOpenPrivacy }:
     });
   };
   const request = async (value: string, location: "hero" | "beta") => {
-    if (!submitSignup || pending.current || open || completed) return;
+    if (pending.current || open || completed) return;
     pending.current = true;
     try {
       await submitSignup(value);
       setSource(location);
       setEmail(value);
       setCompleted(true);
-      setOpen(Boolean(renderSurvey));
+      setOpen(true);
     } finally { pending.current = false; }
   };
   const complete = (result: "saved" | "skipped") => {
@@ -61,16 +74,18 @@ const LandingPage = ({ submitSignup, renderSurvey, onOpenTerms, onOpenPrivacy }:
     }
     requestAnimationFrame(() => document.getElementById(`${source}-signup`)?.scrollIntoView({ block: "center", behavior: "instant" }));
   };
-  const common = { completed, profileSaved, onOpenProfile: renderSurvey ? () => { setSource("hero"); setOpen(true); } : undefined };
+  const common = { completed, profileSaved, onOpenProfile: () => { setSource("hero"); setOpen(true); } };
 
   return <>
     <LandingHeader signupHref="#hero-signup-btm" completed={completed} />
     <main id="main-content" className="flex-1" aria-label="체커기 랜딩">
-      <LandingHero key={`hero-${formVersion}`} {...common} onReset={() => reset("hero")} onRequestSignup={submitSignup ? (value) => request(value, "hero") : undefined} />
-      <LandingSignup key={`beta-${formVersion}`} {...common} onReset={() => reset("beta")} onRequestSignup={submitSignup ? (value) => request(value, "beta") : undefined} />
+      <LandingHero key={`hero-${formVersion}`} {...common} onReset={() => reset("hero")} onRequestSignup={(value) => request(value, "hero")} />
+      <LandingSignup key={`beta-${formVersion}`} {...common} onReset={() => reset("beta")} onRequestSignup={(value) => request(value, "beta")} />
     </main>
-    <LandingFooter onOpenTerms={onOpenTerms} onOpenPrivacy={onOpenPrivacy} />
-    {renderSurvey?.({ open, email, onComplete: complete, onOpenChange: setOpen })}
+    <LandingFooter onOpenTerms={onOpenTerms ?? (() => setTermsOpen(true))} onOpenPrivacy={onOpenPrivacy ?? (() => setPrivacyOpen(true))} />
+    {renderSurvey({ open, email, onComplete: complete, onOpenChange: setOpen })}
+    <TermsModal open={termsOpen} onOpenChange={setTermsOpen} />
+    <PrivacyModal open={privacyOpen} onOpenChange={setPrivacyOpen} />
   </>;
 };
 
