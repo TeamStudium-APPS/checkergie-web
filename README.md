@@ -11,6 +11,7 @@ apps/
 packages/
   ui/          공통 UI
   api/         API 통신 및 데이터 검증
+  docs/        이용약관, 개인정보처리방침 문구
 docs/          협업 문서
 ```
 
