@@ -3,29 +3,23 @@
 import { useState } from "react";
 import { Check } from "lucide-react";
 import { Button, Chip, Modal } from "@checkergie/ui";
-import type { ProfileAge, ProfileGender, ProfileModalProps } from "./profile-modal.types";
+import { ageGroupSchema, genderSchema } from "@checkergie/api";
 
-export type { ProfileAge, ProfileGender, ProfilePatch, ProfileModalProps } from "./profile-modal.types";
+type ProfileAgeGroup = (typeof ageGroupSchema.options)[number];
+type ProfileGender = (typeof genderSchema.options)[number];
+
+export interface ProfileModalProps {
+  open: boolean;
+  onComplete: (result: "saved" | "skipped") => void;
+  onOpenChange: (open: boolean) => void;
+  onSave?: (patch: { ageGroup?: ProfileAgeGroup; gender?: ProfileGender }) => void | Promise<void>;
+}
 
 const SAVE_ERROR_MESSAGE = "저장에 실패했어요. 다시 시도해 주세요.";
 const SAVE_HINT_MESSAGE = "연령대 또는 성별을 선택하면 저장할 수 있어요";
 
-const ageOptions: { value: ProfileAge; label: string }[] = [
-  { value: "10s", label: "10대" },
-  { value: "20s", label: "20대" },
-  { value: "30s", label: "30대" },
-  { value: "40s", label: "40대" },
-  { value: "50s+", label: "50대 이상" },
-];
-
-const genderOptions: { value: ProfileGender; label: string }[] = [
-  { value: "female", label: "여성" },
-  { value: "male", label: "남성" },
-  { value: "other", label: "기타" },
-];
-
 const ProfileModal = ({ open, onComplete, onOpenChange, onSave }: ProfileModalProps) => {
-  const [age, setAge] = useState<ProfileAge>();
+  const [ageGroup, setAgeGroup] = useState<ProfileAgeGroup>();
   const [gender, setGender] = useState<ProfileGender>();
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState(false);
@@ -34,19 +28,19 @@ const ProfileModal = ({ open, onComplete, onOpenChange, onSave }: ProfileModalPr
   if (open !== wasOpen) {
     setWasOpen(open);
     if (open) {
-      setAge(undefined);
+      setAgeGroup(undefined);
       setGender(undefined);
       setSaveError(false);
     }
   }
 
-  const hasSelection = age !== undefined || gender !== undefined;
+  const hasSelection = ageGroup !== undefined || gender !== undefined;
 
   const handleSave = async () => {
     setSaving(true);
     setSaveError(false);
     try {
-      await onSave?.({ age, gender });
+      await onSave?.({ ageGroup, gender });
       onComplete("saved");
     } catch {
       setSaveError(true);
@@ -71,12 +65,12 @@ const ProfileModal = ({ open, onComplete, onOpenChange, onSave }: ProfileModalPr
           </em>
         </div>
         <div className="flex flex-wrap gap-cg-2">
-          {ageOptions.map((option) => (
+          {ageGroupSchema.options.map((option) => (
             <Chip
-              key={option.value}
-              label={option.label}
-              selected={age === option.value}
-              onPress={() => setAge((current) => (current === option.value ? undefined : option.value))}
+              key={option}
+              label={option}
+              selected={ageGroup === option}
+              onPress={() => setAgeGroup((current) => (current === option ? undefined : option))}
             />
           ))}
         </div>
@@ -90,12 +84,12 @@ const ProfileModal = ({ open, onComplete, onOpenChange, onSave }: ProfileModalPr
           </em>
         </div>
         <div className="flex flex-wrap gap-cg-2">
-          {genderOptions.map((option) => (
+          {genderSchema.options.map((option) => (
             <Chip
-              key={option.value}
-              label={option.label}
-              selected={gender === option.value}
-              onPress={() => setGender((current) => (current === option.value ? undefined : option.value))}
+              key={option}
+              label={option}
+              selected={gender === option}
+              onPress={() => setGender((current) => (current === option ? undefined : option))}
             />
           ))}
         </div>
