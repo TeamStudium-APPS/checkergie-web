@@ -23,13 +23,14 @@ const ProfileModal = ({ open, onComplete, onOpenChange, onSave }: ProfileModalPr
   const [gender, setGender] = useState<ProfileGender>();
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState(false);
+  const [saved, setSaved] = useState<{ ageGroup?: ProfileAgeGroup; gender?: ProfileGender }>({});
   const [wasOpen, setWasOpen] = useState(open);
 
   if (open !== wasOpen) {
     setWasOpen(open);
     if (open) {
-      setAgeGroup(undefined);
-      setGender(undefined);
+      setAgeGroup(saved.ageGroup);
+      setGender(saved.gender);
       setSaveError(false);
     }
   }
@@ -41,6 +42,7 @@ const ProfileModal = ({ open, onComplete, onOpenChange, onSave }: ProfileModalPr
     setSaveError(false);
     try {
       await onSave?.({ ageGroup, gender });
+      setSaved({ ageGroup, gender });
       onComplete("saved");
     } catch {
       setSaveError(true);

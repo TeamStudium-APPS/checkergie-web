@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, type ReactNode } from "react";
+import { Fragment, useRef, useState, type ReactNode } from "react";
 import LandingHeader from "./landing-header/landing-header";
 import LandingHero from "./landing-hero/landing-hero";
 import LandingSignup from "./landing-signup/landing-signup";
@@ -83,7 +83,7 @@ const LandingPage = ({
       <LandingSignup key={`beta-${formVersion}`} {...common} onReset={() => reset("beta")} onRequestSignup={(value) => request(value, "beta")} />
     </main>
     <LandingFooter onOpenTerms={onOpenTerms ?? (() => setTermsOpen(true))} onOpenPrivacy={onOpenPrivacy ?? (() => setPrivacyOpen(true))} />
-    {renderSurvey({ open, email, onComplete: complete, onOpenChange: setOpen })}
+    <Fragment key={`survey-${formVersion}`}>{renderSurvey({ open, email, onComplete: complete, onOpenChange: setOpen })}</Fragment>
     <TermsModal open={termsOpen} onOpenChange={setTermsOpen} />
     <PrivacyModal open={privacyOpen} onOpenChange={setPrivacyOpen} />
   </>;
