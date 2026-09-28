@@ -110,7 +110,7 @@ const BrowserPreview = () => {
         </span>
       </div>
       <div className="p-cg-5 [@media(width<=560px)]:p-cg-3">
-        <div className="mb-[18px] border-b border-cg-surface/[0.051] [@media(width<=560px)]:gap-cg-3 flex items-center gap-cg-5">
+        <div className="pb-[13px] mb-[8px] border-b border-cg-surface/[0.051] [@media(width<=560px)]:gap-cg-3 flex items-center gap-cg-5">
           <span className="text-cg-label-md flex gap-cg-2 items-center whitespace-nowrap [@media(width<=560px)]:text-cg-caption-sm">
             <Image
               src="/logo.svg"
@@ -162,7 +162,7 @@ const BrowserPreview = () => {
           </div>
           <span
             aria-hidden="true"
-            className="ml-auto grid size-8 shrink-0 place-items-center rounded-cg-full bg-cg-surface/[0.08] text-[var(--preview-muted)]"
+            className="ml-auto grid size-6 shrink-0 place-items-center rounded-cg-full bg-cg-surface/[0.08] text-[var(--preview-muted)]"
           >
             <UserRound size={18} />
           </span>
