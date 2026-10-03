@@ -6,6 +6,16 @@ import {
 import { neonWaitlistStore } from "src/server/waitlist/neon-store";
 import { storeErrorStatus } from "src/server/waitlist/store";
 
+export async function GET() {
+  try {
+    await neonWaitlistStore.warmUp();
+  } catch (error) {
+    return new Response(null, { status: storeErrorStatus(error) });
+  }
+
+  return new Response(null, { status: 204 });
+}
+
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
   const result = waitlistSubscribeRequestSchema.safeParse(body);

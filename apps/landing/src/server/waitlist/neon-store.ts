@@ -26,6 +26,11 @@ const run = async <T>(query: () => Promise<T>) => {
 };
 
 export const neonWaitlistStore: WaitlistStore = {
+  warmUp: () => run(async () => {
+    const sql = getSql();
+    await sql`SELECT 1`;
+  }),
+
   subscribe: (email) => run(async () => {
     const sql = getSql();
     const { rowCount } = await sql`
