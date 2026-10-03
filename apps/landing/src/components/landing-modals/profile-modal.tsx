@@ -3,10 +3,7 @@
 import { useState } from "react";
 import { Check } from "lucide-react";
 import { Button, Chip, Modal } from "@checkergie/ui";
-import { ageGroupSchema, genderSchema } from "@checkergie/api";
-
-type ProfileAgeGroup = (typeof ageGroupSchema.options)[number];
-type ProfileGender = (typeof genderSchema.options)[number];
+import { ageGroupSchema, genderSchema, type AgeGroup as ProfileAgeGroup, type Gender as ProfileGender } from "@checkergie/api";
 
 export interface ProfileModalProps {
   open: boolean;
