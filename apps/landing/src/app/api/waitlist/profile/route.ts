@@ -2,7 +2,7 @@ import { waitlistProfileRequestSchema, type WaitlistProfileResponse } from "@che
 import { neonWaitlistStore } from "src/server/waitlist/neon-store";
 import { storeErrorStatus } from "src/server/waitlist/store";
 
-export async function PATCH(request: Request) {
+export const PATCH = async (request: Request) => {
   const body = await request.json().catch(() => null);
   const result = waitlistProfileRequestSchema.safeParse(body);
   if (!result.success) {
@@ -17,4 +17,4 @@ export async function PATCH(request: Request) {
   }
 
   return Response.json({ success: true } satisfies WaitlistProfileResponse);
-}
+};
