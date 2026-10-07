@@ -13,7 +13,7 @@ const getSql = () => {
 
 const isTransient = (error: unknown) => {
   if (!(error instanceof NeonDbError)) return false;
-  if (!error.code) return true;
+  if (!error.code) return error.sourceError !== undefined;
   return TRANSIENT_SQLSTATE_PREFIXES.some((prefix) => error.code?.startsWith(prefix));
 };
 
