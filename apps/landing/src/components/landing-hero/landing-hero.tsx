@@ -2,7 +2,7 @@
 
 import { useLayoutEffect, useRef } from "react";
 import { Check, ChevronsDown, Gift } from "lucide-react";
-import EmailSignupForm from "../landing-signup/email-signup-form";
+import WaitlistEmailForm from "../landing-signup/waitlist-email-form";
 import SignupComplete from "./signup-complete";
 import BrowserPreview from "./browser-preview";
 
@@ -125,7 +125,7 @@ const LandingHero = ({
               <br />
               검증된 후기로 진짜 강의 상태를 확인하세요.
             </p>
-            <EmailSignupForm
+            <WaitlistEmailForm
               id="hero-signup"
               align="left"
               onRequestSignup={onRequestSignup}
