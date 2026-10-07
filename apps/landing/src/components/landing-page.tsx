@@ -1,6 +1,7 @@
 "use client";
 
 import { Fragment, useRef, useState, type ReactNode } from "react";
+import { isWaitlistAlreadyRegisteredError } from "@checkergie/api";
 import LandingHeader from "./landing-header/landing-header";
 import LandingHero from "./landing-hero/landing-hero";
 import LandingSet1 from "./landing-set1/landing-set1";
@@ -35,6 +36,7 @@ const LandingPage = ({
   const [termsOpen, setTermsOpen] = useState(false);
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const [completed, setCompleted] = useState(false);
+  const [alreadyRegistered, setAlreadyRegistered] = useState(false);
   const [email, setEmail] = useState("");
   const [open, setOpen] = useState(false);
   const [formVersion, setFormVersion] = useState(0);
@@ -43,6 +45,7 @@ const LandingPage = ({
   const reset = (location: "hero" | "beta") => {
     setSource(location);
     setCompleted(false);
+    setAlreadyRegistered(false);
     setEmail("");
     setOpen(false);
     setFormVersion((value) => value + 1);
@@ -60,13 +63,20 @@ const LandingPage = ({
       setEmail(value);
       setCompleted(true);
       setOpen(true);
+    } catch (error) {
+      if (!isWaitlistAlreadyRegisteredError(error)) throw error;
+      /* 이미 등록된 이메일은 완료 상태로만 보여주고, 기존 선택값을 바꿀 수 있는 프로필 모달은 열지 않는다 */
+      setSource(location);
+      setEmail(value);
+      setAlreadyRegistered(true);
+      setCompleted(true);
     } finally { pending.current = false; }
   };
   const complete = () => {
     setOpen(false);
     requestAnimationFrame(() => document.getElementById(`${source}-signup`)?.scrollIntoView({ block: "center", behavior: "instant" }));
   };
-  const common = { completed, onOpenProfile: () => { setSource("hero"); setOpen(true); } };
+  const common = { completed, alreadyRegistered, onOpenProfile: () => { setSource("hero"); setOpen(true); } };
 
   return <>
     <LandingHeader signupHref="#hero-signup-btm" featuresHref="#set1" routineHref="#set2" completed={completed} />

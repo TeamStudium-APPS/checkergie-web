@@ -4,7 +4,7 @@ import { Bell, Check } from "lucide-react";
 import WaitlistEmailForm from "./waitlist-email-form";
 import type { LandingHeroProps } from "../landing-hero/landing-hero";
 
-const LandingSignup = ({ completed, onRequestSignup }: LandingHeroProps) => (
+const LandingSignup = ({ completed, alreadyRegistered, onRequestSignup }: LandingHeroProps) => (
   <div id="hero-signup-btm" className="max-w-[1280px] mx-auto px-cg-6 py-cg-10 [@media(width<=560px)]:px-cg-4 [@media(width<=560px)]:py-cg-6">
     {completed ? (
       <section
@@ -15,11 +15,11 @@ const LandingSignup = ({ completed, onRequestSignup }: LandingHeroProps) => (
         <div className="max-w-[560px]">
           <h2 id="beta-complete-title" className="border border-[var(--landing-accent)]/40 text-[var(--landing-accent)] bg-[var(--landing-accent)]/[0.1333] text-cg-title-md flex items-center gap-cg-3 px-cg-5 py-cg-4 rounded-cg-full">
             <Check size={24} aria-hidden="true" className="bg-[var(--landing-accent)] text-[var(--landing-on-accent)] shrink-0 p-cg-1 rounded-full" />
-            정상적으로 등록됐어요!
+            {alreadyRegistered ? "이미 등록되어 있어요!" : "정상적으로 등록됐어요!"}
           </h2>
           <div className="border border-cg-surface/[0.149] bg-cg-surface/[0.0196] mt-cg-4 p-cg-6 rounded-cg-lg [@media(width<=560px)]:p-cg-4">
             <p className="text-[var(--landing-text-inverse-muted)] text-cg-label-md flex items-center gap-cg-2 mb-cg-6">
-              <Bell size={16} aria-hidden="true" />대기 등록 완료
+              <Bell size={16} aria-hidden="true" />{alreadyRegistered ? "이미 대기 등록됨" : "대기 등록 완료"}
             </p>
             <ul className="grid gap-cg-5">
               {[

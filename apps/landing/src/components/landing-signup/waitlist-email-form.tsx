@@ -3,9 +3,8 @@
 import { useState, type FormEvent } from "react";
 import { Bell, Mail } from "lucide-react";
 import { Button, Form, TextField } from "@checkergie/ui";
-import { isWaitlistAlreadyRegisteredError, waitlistSubscribeRequestSchema, warmUpWaitlist } from "@checkergie/api";
+import { waitlistSubscribeRequestSchema, warmUpWaitlist } from "@checkergie/api";
 
-const ALREADY_REGISTERED_MESSAGE = "이미 등록된 이메일입니다.";
 const REQUEST_FAILED_MESSAGE = "신청하지 못했어요. 잠시 후 다시 시도해 주세요.";
 
 let warmUpRequested = false;
@@ -25,7 +24,6 @@ export interface WaitlistEmailFormProps {
 const WaitlistEmailForm = ({ id, align = "center", onRequestSignup }: WaitlistEmailFormProps) => {
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [emailError, setEmailError] = useState<string>();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -42,12 +40,10 @@ const WaitlistEmailForm = ({ id, align = "center", onRequestSignup }: WaitlistEm
 
     setSubmitting(true);
     setMessage("");
-    setEmailError(undefined);
     try {
       await onRequestSignup(email);
-    } catch (error) {
-      if (isWaitlistAlreadyRegisteredError(error)) setEmailError(ALREADY_REGISTERED_MESSAGE);
-      else setMessage(REQUEST_FAILED_MESSAGE);
+    } catch {
+      setMessage(REQUEST_FAILED_MESSAGE);
     } finally {
       setSubmitting(false);
     }
@@ -56,13 +52,11 @@ const WaitlistEmailForm = ({ id, align = "center", onRequestSignup }: WaitlistEm
   const handleEmailInput = (event: FormEvent<HTMLInputElement>) => {
     warmUpOnce();
     event.currentTarget.setCustomValidity("");
-    setEmailError(undefined);
   };
 
   return (
     <Form
       id={id}
-      errors={emailError ? { email: emailError } : undefined}
       className={`gap-cg-0 w-full max-w-[560px] ${align === "left" ? "ml-0 mr-auto" : "mx-auto"} [scroll-margin-top:calc(var(--landing-header-height,_calc(var(--spacing-cg-1)_*_28))_+_var(--spacing-cg-6))]`}
       onSubmit={handleSubmit}
     >
