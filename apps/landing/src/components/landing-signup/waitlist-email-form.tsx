@@ -72,7 +72,7 @@ const WaitlistEmailForm = ({ id, align = "center", onRequestSignup }: WaitlistEm
         visuallyHiddenLabel
         required
         className="gap-cg-3 [&>p]:px-cg-0 [&>p:not([aria-live])]:text-[var(--landing-text-inverse-muted)]"
-        help="등록하면 개인정보 수집·이용에 동의하는 것으로 봅니다. 수집 항목은 출시 알림 외 다른 용도로 사용하지 않습니다."
+        help="등록하면 개인정보 수집·이용에 동의하는 것으로 봅니다. 수집된 이메일은 출시 알림 외 다른 용도로 사용하지 않습니다."
       >
         <TextField
           name="email"
