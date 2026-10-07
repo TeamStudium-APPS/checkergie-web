@@ -3,6 +3,7 @@ import {
   type WaitlistErrorResponse,
   type WaitlistSubscribeResponse,
 } from "@checkergie/api";
+import { privacyEffectiveDate } from "@checkergie/docs";
 import { neonWaitlistStore } from "src/server/waitlist/neon-store";
 import { storeErrorStatus } from "src/server/waitlist/store";
 
@@ -24,7 +25,7 @@ export const POST = async (request: Request) => {
   }
 
   try {
-    const { created } = await neonWaitlistStore.subscribe(result.data.email);
+    const { created } = await neonWaitlistStore.subscribe(result.data.email, privacyEffectiveDate);
     if (!created) {
       return Response.json({ code: "ALREADY_REGISTERED" } satisfies WaitlistErrorResponse, { status: 409 });
     }

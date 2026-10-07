@@ -31,10 +31,10 @@ export const neonWaitlistStore: WaitlistStore = {
     await sql`SELECT 1`;
   }),
 
-  subscribe: (email) => run(async () => {
+  subscribe: (email, policyVersion) => run(async () => {
     const sql = getSql();
     const { rowCount } = await sql`
-      INSERT INTO waitlist (email) VALUES (${normalizeEmail(email)})
+      INSERT INTO waitlist (email, policy_version) VALUES (${normalizeEmail(email)}, ${policyVersion})
       ON CONFLICT (email) DO NOTHING
     `;
     return { created: rowCount === 1 };

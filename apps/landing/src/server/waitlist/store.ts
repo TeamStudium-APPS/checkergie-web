@@ -7,7 +7,7 @@ export interface WaitlistProfile {
 
 export interface WaitlistStore {
   warmUp(): Promise<void>;
-  subscribe(email: string): Promise<{ created: boolean }>;
+  subscribe(email: string, policyVersion: string): Promise<{ created: boolean }>;
   updateProfile(email: string, profile: WaitlistProfile): Promise<void>;
 }
 
