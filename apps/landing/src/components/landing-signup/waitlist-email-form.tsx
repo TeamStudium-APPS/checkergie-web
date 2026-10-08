@@ -57,7 +57,7 @@ const WaitlistEmailForm = ({ id, align = "center", onRequestSignup }: WaitlistEm
   return (
     <Form
       id={id}
-      className={`gap-cg-0 w-full max-w-[560px] ${align === "left" ? "ml-0 mr-auto" : "mx-auto"} [scroll-margin-top:calc(var(--landing-header-height,_calc(var(--spacing-cg-1)_*_28))_+_var(--spacing-cg-6))]`}
+      className={`gap-cg-0 w-full max-w-140 ${align === "left" ? "ml-0 mr-auto" : "mx-auto"} scroll-mt-[calc(var(--landing-header-height,calc(var(--spacing-cg-1)*28))+var(--spacing-cg-6))]`}
       onSubmit={handleSubmit}
     >
       <Form.Field
@@ -65,7 +65,7 @@ const WaitlistEmailForm = ({ id, align = "center", onRequestSignup }: WaitlistEm
         label="알림 받을 이메일"
         visuallyHiddenLabel
         required
-        className="gap-cg-3 [&>p]:px-cg-0 [&>p:not([aria-live])]:text-[var(--landing-text-inverse-muted)]"
+        className="gap-cg-3 [&>p]:px-cg-0 [&>p:not([aria-live])]:text-(--landing-text-inverse-muted)"
         help="등록하면 개인정보 수집·이용에 동의하는 것으로 봅니다. 수집된 이메일은 출시 알림 외 다른 용도로 사용하지 않습니다."
       >
         <TextField
@@ -77,7 +77,7 @@ const WaitlistEmailForm = ({ id, align = "center", onRequestSignup }: WaitlistEm
           onFocus={warmUpOnce}
           onInput={handleEmailInput}
           leadingIcon={<Mail size={20} aria-hidden="true" />}
-          wrapperClassName="[&>span:has(>button[type=submit])]:pr-0 [&&]:rounded-cg-full [&&]:bg-cg-border [&&]:text-cg-ink [&&]:pr-[calc(var(--spacing-cg-1))] [&&]:shadow-[inset_4px_4px_8px_rgba(201,208,217,0.8),inset_-4px_-4px_8px_rgba(255,255,255,0.6)] [&&:not(:has(input[aria-invalid=true]))]:focus-within:border-cg-border [&&:not(:has(input[aria-invalid=true]))]:focus-within:ring-3 [&&:not(:has(input[aria-invalid=true]))]:focus-within:ring-[var(--landing-accent)]/45 motion-reduce:transition-none"
+          wrapperClassName="[&>span:has(>button[type=submit])]:pr-0 [&&]:rounded-cg-full [&&]:bg-cg-border [&&]:text-cg-ink [&&]:pr-[calc(var(--spacing-cg-1))] [&&]:shadow-[inset_4px_4px_8px_rgba(201,208,217,0.8),inset_-4px_-4px_8px_rgba(255,255,255,0.6)] [&&:not(:has(input[aria-invalid=true]))]:focus-within:border-cg-border [&&:not(:has(input[aria-invalid=true]))]:focus-within:ring-3 [&&:not(:has(input[aria-invalid=true]))]:focus-within:ring-(--landing-accent)/45 motion-reduce:transition-none"
           trailingAction={
             <Button
               type="submit"
@@ -91,7 +91,7 @@ const WaitlistEmailForm = ({ id, align = "center", onRequestSignup }: WaitlistEm
           }
         />
       </Form.Field>
-      <p role="status" className="text-cg-caption-sm text-[var(--landing-text-inverse-muted)] mt-cg-3 [&:empty]:hidden">{message}</p>
+      <p role="status" className="text-cg-caption-sm text-(--landing-text-inverse-muted) mt-cg-3 empty:hidden">{message}</p>
     </Form>
   );
 };
