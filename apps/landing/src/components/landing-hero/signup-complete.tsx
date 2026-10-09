@@ -8,6 +8,7 @@ export interface SignupCompleteProps {
   id?: string;
   compact?: boolean;
   autoFocus?: boolean;
+  alreadyRegistered?: boolean;
   onReset?: () => void;
   onOpenProfile?: () => void;
 }
@@ -16,6 +17,7 @@ const SignupComplete = ({
   id = "hero-signup",
   compact = false,
   autoFocus = true,
+  alreadyRegistered = false,
   onReset,
   onOpenProfile,
 }: SignupCompleteProps) => {
@@ -72,7 +74,11 @@ const SignupComplete = ({
           id={`${id}-title`}
           className="text-cg-display-lg"
         >
-          자리, <span>맡아뒀어요.</span>
+          {alreadyRegistered ? (
+            <>이미, <span>등록돼 있어요.</span></>
+          ) : (
+            <>자리, <span>맡아뒀어요.</span></>
+          )}
         </Heading>
 
         <p className="mt-cg-5 mx-auto mb-9 text-[var(--landing-text-inverse)] text-cg-body-md">
@@ -88,7 +94,7 @@ const SignupComplete = ({
           </span>
 
           <strong className="text-cg-title-md">
-            정상적으로 등록됐어요!
+            {alreadyRegistered ? "이미 등록되어 있어요!" : "정상적으로 등록됐어요!"}
           </strong>
 
           <p className="text-cg-body-sm">
@@ -107,14 +113,16 @@ const SignupComplete = ({
             친구에게 알려주기
           </Button>
 
-          <Button
-            variant="outline"
-            trailingIcon={<Sparkles size={16} />}
-            className="[&&]:bg-cg-surface/[0.051] [&&]:text-cg-surface [&&]:border-cg-surface/[0.251]"
-            onClick={onOpenProfile}
-          >
-            맞춤 추천 받기
-          </Button>
+          {!alreadyRegistered && (
+            <Button
+              variant="outline"
+              trailingIcon={<Sparkles size={16} />}
+              className="[&&]:bg-cg-surface/[0.051] [&&]:text-cg-surface [&&]:border-cg-surface/[0.251]"
+              onClick={onOpenProfile}
+            >
+              맞춤 추천 받기
+            </Button>
+          )}
         </div>
 
         <button

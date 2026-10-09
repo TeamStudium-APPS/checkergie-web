@@ -2,12 +2,13 @@
 
 import { useLayoutEffect, useRef } from "react";
 import { Check, ChevronsDown, Gift } from "lucide-react";
-import EmailSignupForm from "../landing-signup/email-signup-form";
+import WaitlistEmailForm from "../landing-signup/waitlist-email-form";
 import SignupComplete from "./signup-complete";
 import BrowserPreview from "./browser-preview";
 
 export interface LandingHeroProps {
   completed?: boolean;
+  alreadyRegistered?: boolean;
   onRequestSignup?: (email: string) => void | Promise<void>;
   onReset?: () => void;
   onOpenProfile?: () => void;
@@ -15,6 +16,7 @@ export interface LandingHeroProps {
 
 const LandingHero = ({
   completed = false,
+  alreadyRegistered = false,
   onRequestSignup,
   onReset,
   onOpenProfile,
@@ -97,6 +99,7 @@ const LandingHero = ({
   if (completed)
     return (
       <SignupComplete
+        alreadyRegistered={alreadyRegistered}
         onReset={onReset}
         onOpenProfile={onOpenProfile}
         autoFocus={false}
@@ -125,7 +128,7 @@ const LandingHero = ({
               <br />
               검증된 후기로 진짜 강의 상태를 확인하세요.
             </p>
-            <EmailSignupForm
+            <WaitlistEmailForm
               id="hero-signup"
               align="left"
               onRequestSignup={onRequestSignup}

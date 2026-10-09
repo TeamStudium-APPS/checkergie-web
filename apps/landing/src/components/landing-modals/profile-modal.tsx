@@ -3,10 +3,7 @@
 import { useState } from "react";
 import { Check } from "lucide-react";
 import { Button, Chip, Modal } from "@checkergie/ui";
-import { ageGroupSchema, genderSchema } from "@checkergie/api";
-
-type ProfileAgeGroup = (typeof ageGroupSchema.options)[number];
-type ProfileGender = (typeof genderSchema.options)[number];
+import { ageGroupSchema, genderSchema, type AgeGroup as ProfileAgeGroup, type Gender as ProfileGender } from "@checkergie/api";
 
 export interface ProfileModalProps {
   open: boolean;
@@ -36,6 +33,8 @@ const ProfileModal = ({ open, onComplete, onOpenChange, onSave }: ProfileModalPr
   }
 
   const hasSelection = ageGroup !== undefined || gender !== undefined;
+  const hasSaved = saved.ageGroup !== undefined || saved.gender !== undefined;
+  const hasChanges = ageGroup !== saved.ageGroup || gender !== saved.gender;
 
   const handleSave = async () => {
     setSaving(true);
@@ -101,13 +100,13 @@ const ProfileModal = ({ open, onComplete, onOpenChange, onSave }: ProfileModalPr
         <p role="alert" className="text-cg-label-sm text-cg-danger mb-cg-2">
           {SAVE_ERROR_MESSAGE}
         </p>
-      ) : !hasSelection ? (
+      ) : !hasSelection && !hasSaved ? (
         <p className="text-cg-label-sm text-cg-caption mb-cg-2">{SAVE_HINT_MESSAGE}</p>
       ) : null}
       <Button
         fullWidth
         loading={saving}
-        disabled={!hasSelection}
+        disabled={!hasChanges}
         trailingIcon={<Check size={16} aria-hidden="true" />}
         onClick={handleSave}
       >

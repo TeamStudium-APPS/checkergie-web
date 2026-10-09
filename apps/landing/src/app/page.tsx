@@ -1,6 +1,5 @@
-import LandingPage from "src/components/landing-page";
+import LandingPageContainer from "src/components/landing-page-container";
 
-// 모달 연결 "use client" 컨테이너에서 LandingPage props로 전달
-const Home = () => <LandingPage />;
+const Home = () => <LandingPageContainer />;
 
 export default Home;

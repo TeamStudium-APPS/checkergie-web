@@ -1,6 +1,7 @@
 "use client";
 
 import { Fragment, useRef, useState, type ReactNode } from "react";
+import { isWaitlistAlreadyRegisteredError } from "@checkergie/api";
 import LandingHeader from "./landing-header/landing-header";
 import LandingHero from "./landing-hero/landing-hero";
 import LandingSet1 from "./landing-set1/landing-set1";
@@ -8,12 +9,8 @@ import LandingSet2 from "./landing-set2/landing-set2";
 import LandingSignup from "./landing-signup/landing-signup";
 import LandingFooter from "./landing-footer/landing-footer";
 import type { LandingFooterProps } from "./landing-footer/landing-footer";
-import ProfileModal from "./landing-modals/profile-modal";
 import TermsModal from "./landing-modals/terms-modal";
 import PrivacyModal from "./landing-modals/privacy-modal";
-
-// TODO: 대기 등록 API 나오면 실제 요청으로 교체
-const mockRequest = () => new Promise<void>((resolve) => setTimeout(resolve, 600));
 
 export interface SurveyConnection {
   open: boolean;
@@ -22,24 +19,24 @@ export interface SurveyConnection {
   onOpenChange: (open: boolean) => void;
 }
 export interface LandingPageProps extends LandingFooterProps {
-  submitSignup?: (email: string) => Promise<void>;
+  submitSignup: (email: string) => Promise<void>;
   /* 신청 완료 모달 연결. open/email 전달,
    * 추가 정보 API 저장 성공 시에만 onComplete("saved") 호출
    * 건너뛰기는 onComplete("skipped"), X·ESC·배경 닫기는 onOpenChange(false) 호출
-   * 클라이언트 컨테이너에서 renderSurvey={(props) => <SignupModal {...props} />}로 연결
    */
-  renderSurvey?: (props: SurveyConnection) => ReactNode;
+  renderSurvey: (props: SurveyConnection) => ReactNode;
 }
 
 const LandingPage = ({
-  submitSignup = mockRequest,
-  renderSurvey = (props) => <ProfileModal {...props} onSave={mockRequest} />,
+  submitSignup,
+  renderSurvey,
   onOpenTerms,
   onOpenPrivacy,
 }: LandingPageProps) => {
   const [termsOpen, setTermsOpen] = useState(false);
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const [completed, setCompleted] = useState(false);
+  const [alreadyRegistered, setAlreadyRegistered] = useState(false);
   const [email, setEmail] = useState("");
   const [open, setOpen] = useState(false);
   const [formVersion, setFormVersion] = useState(0);
@@ -48,6 +45,7 @@ const LandingPage = ({
   const reset = (location: "hero" | "beta") => {
     setSource(location);
     setCompleted(false);
+    setAlreadyRegistered(false);
     setEmail("");
     setOpen(false);
     setFormVersion((value) => value + 1);
@@ -65,13 +63,19 @@ const LandingPage = ({
       setEmail(value);
       setCompleted(true);
       setOpen(true);
+    } catch (error) {
+      if (!isWaitlistAlreadyRegisteredError(error)) throw error;
+      setSource(location);
+      setEmail(value);
+      setAlreadyRegistered(true);
+      setCompleted(true);
     } finally { pending.current = false; }
   };
   const complete = () => {
     setOpen(false);
     requestAnimationFrame(() => document.getElementById(`${source}-signup`)?.scrollIntoView({ block: "center", behavior: "instant" }));
   };
-  const common = { completed, onOpenProfile: () => { setSource("hero"); setOpen(true); } };
+  const common = { completed, alreadyRegistered, onOpenProfile: () => { setSource("hero"); setOpen(true); } };
 
   return <>
     <LandingHeader signupHref="#hero-signup-btm" featuresHref="#set1" routineHref="#set2" completed={completed} />
