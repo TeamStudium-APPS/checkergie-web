@@ -1,12 +1,12 @@
 "use client";
 
 import { Bell, Check, ChevronsDown, Gift } from "lucide-react";
-import EmailSignupForm from "../landing-signup/email-signup-form";
+import WaitlistEmailForm from "../landing-signup/waitlist-email-form";
 import BrowserPreview from "./browser-preview";
 
 export interface LandingHeroProps {
   completed?: boolean;
-  profileSaved?: boolean;
+  alreadyRegistered?: boolean;
   onRequestSignup?: (email: string) => void | Promise<void>;
   onReset?: () => void;
   onOpenProfile?: () => void;
@@ -14,6 +14,7 @@ export interface LandingHeroProps {
 
 const LandingHero = ({
   completed = false,
+  alreadyRegistered = false,
   onRequestSignup,
 }: LandingHeroProps) => {
   if (completed) {
@@ -27,11 +28,14 @@ const LandingHero = ({
         <div className="max-w-[560px]">
           <h1 id="hero-complete-title" className="border border-[var(--landing-accent)]/40 text-[var(--landing-accent)] bg-[var(--landing-accent)]/[0.1333] text-cg-title-md flex items-center gap-cg-3 px-cg-5 py-cg-4 rounded-cg-full">
             <Check size={24} aria-hidden="true" className="bg-[var(--landing-accent)] text-[var(--landing-on-accent)] shrink-0 p-cg-1 rounded-full" />
-            정상적으로 등록됐어요!
+            {alreadyRegistered
+              ? "이미 등록되어 있어요!"
+              : "정상적으로 등록됐어요!"
+            }
           </h1>
           <div className="border border-cg-surface/[0.149] bg-cg-surface/[0.0196] mt-cg-4 p-cg-6 rounded-cg-lg [@media(width<=560px)]:p-cg-4">
             <p className="text-[var(--landing-text-inverse-muted)] text-cg-label-md flex items-center gap-cg-2 mb-cg-6">
-              <Bell size={16} aria-hidden="true" />대기 등록 완료
+              <Bell size={16} aria-hidden="true" />{alreadyRegistered ? "이미 대기 등록됨" : "대기 등록 완료"}
             </p>
             <ul className="grid gap-cg-5">
               {[
@@ -73,7 +77,7 @@ const LandingHero = ({
               <br />
               검증된 후기로 진짜 강의 상태를 확인하세요.
             </p>
-            <EmailSignupForm
+            <WaitlistEmailForm
               id="hero-signup"
               align="left"
               onRequestSignup={onRequestSignup}

@@ -1,11 +1,16 @@
 "use client";
 
-import { useRef, useState, type ReactNode } from "react";
+import { Fragment, useRef, useState, type ReactNode } from "react";
+import { isWaitlistAlreadyRegisteredError } from "@checkergie/api";
 import LandingHeader from "./landing-header/landing-header";
 import LandingHero from "./landing-hero/landing-hero";
+import LandingSet1 from "./landing-set1/landing-set1";
+import LandingSet2 from "./landing-set2/landing-set2";
 import LandingSignup from "./landing-signup/landing-signup";
 import LandingFooter from "./landing-footer/landing-footer";
 import type { LandingFooterProps } from "./landing-footer/landing-footer";
+import TermsModal from "./landing-modals/terms-modal";
+import PrivacyModal from "./landing-modals/privacy-modal";
 
 export interface SurveyConnection {
   open: boolean;
@@ -14,18 +19,24 @@ export interface SurveyConnection {
   onOpenChange: (open: boolean) => void;
 }
 export interface LandingPageProps extends LandingFooterProps {
-  submitSignup?: (email: string) => Promise<void>;
+  submitSignup: (email: string) => Promise<void>;
   /* 신청 완료 모달 연결. open/email 전달,
    * 추가 정보 API 저장 성공 시에만 onComplete("saved") 호출
    * 건너뛰기는 onComplete("skipped"), X·ESC·배경 닫기는 onOpenChange(false) 호출
-   * 클라이언트 컨테이너에서 renderSurvey={(props) => <SignupModal {...props} />}로 연결
    */
-  renderSurvey?: (props: SurveyConnection) => ReactNode;
+  renderSurvey: (props: SurveyConnection) => ReactNode;
 }
 
-const LandingPage = ({ submitSignup, renderSurvey, onOpenTerms, onOpenPrivacy }: LandingPageProps) => {
+const LandingPage = ({
+  submitSignup,
+  renderSurvey,
+  onOpenTerms,
+  onOpenPrivacy,
+}: LandingPageProps) => {
+  const [termsOpen, setTermsOpen] = useState(false);
+  const [privacyOpen, setPrivacyOpen] = useState(false);
   const [completed, setCompleted] = useState(false);
-  const [profileSaved, setProfileSaved] = useState(false);
+  const [alreadyRegistered, setAlreadyRegistered] = useState(false);
   const [email, setEmail] = useState("");
   const [open, setOpen] = useState(false);
   const [formVersion, setFormVersion] = useState(0);
@@ -34,7 +45,7 @@ const LandingPage = ({ submitSignup, renderSurvey, onOpenTerms, onOpenPrivacy }:
   const reset = (location: "hero" | "beta") => {
     setSource(location);
     setCompleted(false);
-    setProfileSaved(false);
+    setAlreadyRegistered(false);
     setEmail("");
     setOpen(false);
     setFormVersion((value) => value + 1);
@@ -44,33 +55,42 @@ const LandingPage = ({ submitSignup, renderSurvey, onOpenTerms, onOpenPrivacy }:
     });
   };
   const request = async (value: string, location: "hero" | "beta") => {
-    if (!submitSignup || pending.current || open || completed) return;
+    if (pending.current || open || completed) return;
     pending.current = true;
     try {
       await submitSignup(value);
       setSource(location);
       setEmail(value);
       setCompleted(true);
-      setOpen(Boolean(renderSurvey));
+      setOpen(true);
+    } catch (error) {
+      if (!isWaitlistAlreadyRegisteredError(error)) throw error;
+      setSource(location);
+      setEmail(value);
+      setAlreadyRegistered(true);
+      setCompleted(true);
     } finally { pending.current = false; }
   };
-  const complete = (result: "saved" | "skipped") => {
+  const complete = () => {
     setOpen(false);
-    if (result === "saved") {
-      setProfileSaved(true);
-    }
     requestAnimationFrame(() => document.getElementById(`${source}-signup`)?.scrollIntoView({ block: "center", behavior: "instant" }));
   };
-  const common = { completed, profileSaved, onOpenProfile: renderSurvey ? () => { setSource("beta"); setOpen(true); } : undefined };
+  const common = { completed, alreadyRegistered, onOpenProfile: () => { setSource("beta"); setOpen(true); } };
 
   return <>
-    <LandingHeader signupHref="#hero-signup-btm" completed={completed} />
+    <LandingHeader signupHref="#hero-signup-btm" featuresHref="#set1" routineHref="#set2" completed={completed} />
     <main id="main-content" className="flex-1" aria-label="체커기 랜딩">
-      <LandingHero key={`hero-${formVersion}`} {...common} onReset={() => reset("hero")} onRequestSignup={submitSignup ? (value) => request(value, "hero") : undefined} />
-      <LandingSignup key={`beta-${formVersion}`} {...common} onReset={() => reset("beta")} onRequestSignup={submitSignup ? (value) => request(value, "beta") : undefined} />
+      <LandingHero key={`hero-${formVersion}`} {...common} onReset={() => reset("hero")} onRequestSignup={(value) => request(value, "hero")} />
+      <div className="flex flex-col gap-cg-8 py-cg-6">
+        <LandingSet1 />
+        <LandingSet2 />
+      </div>
+      <LandingSignup key={`beta-${formVersion}`} {...common} onReset={() => reset("beta")} onRequestSignup={(value) => request(value, "beta")} />
     </main>
-    <LandingFooter onOpenTerms={onOpenTerms} onOpenPrivacy={onOpenPrivacy} />
-    {renderSurvey?.({ open, email, onComplete: complete, onOpenChange: setOpen })}
+    <LandingFooter onOpenTerms={onOpenTerms ?? (() => setTermsOpen(true))} onOpenPrivacy={onOpenPrivacy ?? (() => setPrivacyOpen(true))} />
+    <Fragment key={`survey-${formVersion}`}>{renderSurvey({ open, email, onComplete: complete, onOpenChange: setOpen })}</Fragment>
+    <TermsModal open={termsOpen} onOpenChange={setTermsOpen} />
+    <PrivacyModal open={privacyOpen} onOpenChange={setPrivacyOpen} />
   </>;
 };
 

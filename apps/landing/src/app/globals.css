@@ -2,6 +2,15 @@
 @import "@checkergie/ui/theme.css";
 @source "../../../../packages/ui/src/**/*.{ts,tsx}";
 
+html {
+  scroll-behavior: smooth;
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
 body {
   margin: 0;
   background: var(--color-cg-canvas);
@@ -17,6 +26,9 @@ body {
   --landing-text-inverse-muted: #aaa5c7;
   --landing-footer-surface: #d1d5d8;
   --landing-on-accent: #05372f;
+  --landing-coral: #ff6b35;
+  --landing-gold: #f5c542;
+  --landing-violet: #e85dff;
 }
 
 
