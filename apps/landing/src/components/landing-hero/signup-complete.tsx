@@ -60,7 +60,7 @@ const SignupComplete = ({
       id={id}
       className={`[--landing-receipt:#287dbe] [--completion-mint:var(--landing-accent)] [scroll-margin-top:var(--landing-header-height,112px)] [background:radial-gradient(ellipse_at_92%_0%,color-mix(in_srgb,var(--landing-accent)_18.04%,transparent),transparent_38%),linear-gradient(120deg,var(--color-cg-brand),var(--landing-gradient-deep)_65%,var(--landing-gradient-end))] grid place-items-center text-cg-surface ${
         compact
-          ? `py-14 min-h-0 px-cg-6`
+          ? `py-14 min-h-0 px-cg-6 rounded-cg-sm`
           : "min-h-[calc(100svh_-_var(--landing-header-height,_112px))] px-cg-6 py-cg-16"
       }`}
       aria-labelledby={`${id}-title`}

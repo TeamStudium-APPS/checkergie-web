@@ -75,7 +75,7 @@ const LandingPage = ({
     setOpen(false);
     requestAnimationFrame(() => document.getElementById(`${source}-signup`)?.scrollIntoView({ block: "center", behavior: "instant" }));
   };
-  const common = { completed, alreadyRegistered, onOpenProfile: () => { setSource("hero"); setOpen(true); } };
+  const common = { completed, alreadyRegistered, onOpenProfile: () => { setSource("beta"); setOpen(true); } };
 
   return <>
     <LandingHeader signupHref="#hero-signup-btm" featuresHref="#set1" routineHref="#set2" completed={completed} />
