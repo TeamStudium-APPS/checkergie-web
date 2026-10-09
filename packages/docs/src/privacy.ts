@@ -34,5 +34,3 @@ export const privacySections: PrivacySection[] = [
 ];
 
 export const privacyEffectiveDate = "2026-01-01";
-
-// 버전 기록 방식은 아직 정해지지 않아서, 임의로 저장 추후에 별도 개선 사항

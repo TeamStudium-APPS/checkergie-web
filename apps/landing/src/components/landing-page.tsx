@@ -65,7 +65,6 @@ const LandingPage = ({
       setOpen(true);
     } catch (error) {
       if (!isWaitlistAlreadyRegisteredError(error)) throw error;
-      /* 이미 등록된 이메일은 완료 상태로만 보여주고, 기존 선택값을 바꿀 수 있는 프로필 모달은 열지 않는다 */
       setSource(location);
       setEmail(value);
       setAlreadyRegistered(true);
