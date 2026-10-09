@@ -61,7 +61,7 @@ const LandingPage = ({ submitSignup, renderSurvey, onOpenTerms, onOpenPrivacy }:
     }
     requestAnimationFrame(() => document.getElementById(`${source}-signup`)?.scrollIntoView({ block: "center", behavior: "instant" }));
   };
-  const common = { completed, profileSaved, onOpenProfile: renderSurvey ? () => { setSource("hero"); setOpen(true); } : undefined };
+  const common = { completed, profileSaved, onOpenProfile: renderSurvey ? () => { setSource("beta"); setOpen(true); } : undefined };
 
   return <>
     <LandingHeader signupHref="#hero-signup-btm" completed={completed} />
