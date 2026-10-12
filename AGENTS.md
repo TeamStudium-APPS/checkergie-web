@@ -40,6 +40,13 @@ Run `pnpm check` before opening a pull request. Use package-level scripts when
 working inside a package; do not broaden root checks until the scaffolded
 packages have real implementations.
 
+## Technical documentation
+
+- Use `docs/architecture.md` for workspace boundaries and dependency direction.
+- Use `docs/code-convention.md` for TypeScript, React, and Next.js code conventions.
+- Use `docs/api-and-data.md` for API contracts, state ownership, errors, environment variables, and database changes.
+- Use `docs/README.md` as the documentation index and precedence guide.
+
 ## Next.js conventions
 
 - Use the App Router under `src/app` and React Server Components by default.
