@@ -41,4 +41,12 @@ pnpm check
 
 `pnpm check`는 현재 구현된 랜딩 앱의 lint, typecheck, production build를 순서대로 실행합니다.
 
+## 기술 문서
+
+- [기술 문서 안내](./docs/README.md)
+- [아키텍처](./docs/architecture.md)
+- [코드 작성 규칙](./docs/code-convention.md)
+- [API와 데이터 규칙](./docs/api-and-data.md)
+- [디자인 시스템](./docs/design-system.md)
+
 협업 규칙은 [Git 규칙](./docs/git-convention.md)과 [브랜치 규칙](./docs/branch-convention.md)을 확인해주세요.
