@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 
-import { saveWaitlistProfile, subscribeWaitlist } from "../endpoints/waitlist";
+import { saveWaitlistProfileApi, subscribeWaitlistApi } from "../endpoints/waitlist";
 
-export const useSubscribeWaitlist = () => useMutation({ mutationFn: subscribeWaitlist });
+export const useSubscribeWaitlist = () => useMutation({ mutationFn: subscribeWaitlistApi });
 
-export const useSaveWaitlistProfile = () => useMutation({ mutationFn: saveWaitlistProfile });
+export const useSaveWaitlistProfile = () => useMutation({ mutationFn: saveWaitlistProfileApi });

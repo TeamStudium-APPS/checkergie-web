@@ -3,7 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { Bell, Mail } from "lucide-react";
 import { Button, Form, TextField } from "@checkergie/ui";
-import { waitlistSubscribeRequestSchema, warmUpWaitlist } from "@checkergie/api";
+import { waitlistSubscribeRequestSchema, warmUpWaitlistApi } from "@checkergie/api";
 
 const REQUEST_FAILED_MESSAGE = "신청하지 못했어요. 잠시 후 다시 시도해 주세요.";
 
@@ -11,7 +11,7 @@ let warmUpRequested = false;
 const warmUpOnce = () => {
   if (warmUpRequested) return;
   warmUpRequested = true;
-  warmUpWaitlist().catch(() => {});
+  warmUpWaitlistApi().catch(() => {});
 };
 
 export interface WaitlistEmailFormProps {
