@@ -36,3 +36,5 @@ export const isWaitlistAlreadyRegisteredError = (error: unknown) =>
   isAxiosError(error)
   && error.response?.status === 409
   && waitlistErrorResponseSchema.safeParse(error.response.data).success;
+
+export const isResponseLostError = (error: unknown) => isAxiosError(error) && error.response === undefined;
