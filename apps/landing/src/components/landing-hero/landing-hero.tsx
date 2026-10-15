@@ -1,13 +1,13 @@
 "use client";
 
 import { Bell, Check, ChevronsDown, Gift } from "lucide-react";
-import WaitlistEmailForm from "../landing-signup/waitlist-email-form";
+import WaitlistEmailForm from "../landing-subscription/waitlist-email-form";
 import BrowserPreview from "./browser-preview";
 
 export interface LandingHeroProps {
   completed?: boolean;
   alreadyRegistered?: boolean;
-  onRequestSignup?: (email: string) => void | Promise<void>;
+  onRequestSubscribe?: (email: string) => void | Promise<void>;
   onReset?: () => void;
   onOpenProfile?: () => void;
 }
@@ -15,12 +15,12 @@ export interface LandingHeroProps {
 const LandingHero = ({
   completed = false,
   alreadyRegistered = false,
-  onRequestSignup,
+  onRequestSubscribe,
 }: LandingHeroProps) => {
   if (completed) {
     return (
       <section
-        id="hero-signup"
+        id="hero-subscription"
         className="bg-[var(--landing-backdrop)] [scroll-margin-top:calc(var(--landing-header-height,112px)_+_var(--spacing-cg-6))] text-cg-surface"
         aria-labelledby="hero-complete-title"
       >
@@ -78,9 +78,9 @@ const LandingHero = ({
               검증된 후기로 진짜 강의 상태를 확인하세요.
             </p>
             <WaitlistEmailForm
-              id="hero-signup"
+              id="hero-subscription"
               align="left"
-              onRequestSignup={onRequestSignup}
+              onRequestSubscribe={onRequestSubscribe}
             />
             <div className="mt-cg-6 p-cg-6 border border-cg-surface/[0.149] rounded-cg-lg bg-cg-surface/[0.0196] [&>p]:mb-[18px] [&>p]:text-[var(--landing-text-inverse-muted)] [&_ul]:grid [&_ul]:gap-cg-4 [&_li]:flex [&_li]:items-baseline [&_li]:gap-cg-3 [&_li]:text-[var(--landing-text-inverse)] [&_li>span:first-child]:size-cg-6 [&_li>span:first-child]:shrink-0 [&_li>span:first-child]:inline-grid [&_li>span:first-child]:place-items-center [&_li>span:first-child]:self-center [&_li>span:first-child]:text-[var(--hero-mint)] [&_li>span:first-child]:bg-[var(--landing-accent)]/[0.1333] [&_li>span:first-child]:rounded-cg-full [&_strong]:text-cg-surface [&_strong]:whitespace-nowrap [@media(width<=560px)]:p-cg-4 [@media(width<=560px)]:[&_li]:flex-wrap [@media(width<=560px)]:[&_li]:gap-cg-2">
               <p className="text-cg-label-md flex items-center gap-cg-2"><Gift size={16} className="shrink-0" aria-hidden="true" />지금 등록하면</p>

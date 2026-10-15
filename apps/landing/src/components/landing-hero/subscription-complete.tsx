@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Check, Share2, Sparkles } from "lucide-react";
 import { Button } from "@checkergie/ui";
 
-export interface SignupCompleteProps {
+export interface SubscriptionCompleteProps {
   id?: string;
   compact?: boolean;
   autoFocus?: boolean;
@@ -13,14 +13,14 @@ export interface SignupCompleteProps {
   onOpenProfile?: () => void;
 }
 
-const SignupComplete = ({
-  id = "hero-signup",
+const SubscriptionComplete = ({
+  id = "hero-subscription",
   compact = false,
   autoFocus = true,
   alreadyRegistered = false,
   onReset,
   onOpenProfile,
-}: SignupCompleteProps) => {
+}: SubscriptionCompleteProps) => {
   const heading = useRef<HTMLHeadingElement>(null);
   const [message, setMessage] = useState("");
   const [sharing, setSharing] = useState(false);
@@ -145,4 +145,4 @@ const SignupComplete = ({
   );
 };
 
-export default SignupComplete;
+export default SubscriptionComplete;

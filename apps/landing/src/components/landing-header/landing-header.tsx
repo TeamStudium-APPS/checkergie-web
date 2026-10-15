@@ -9,11 +9,11 @@ import { Button } from "@checkergie/ui";
 export interface LandingHeaderProps {
   featuresHref?: string;
   routineHref?: string;
-  signupHref?: string;
+  subscriptionHref?: string;
   completed?: boolean;
 }
 
-const LandingHeader = ({ featuresHref, routineHref, signupHref, completed = false }: LandingHeaderProps) => {
+const LandingHeader = ({ featuresHref, routineHref, subscriptionHref, completed = false }: LandingHeaderProps) => {
   const headerRef = useRef<HTMLElement>(null);
 
   useLayoutEffect(() => {
@@ -55,7 +55,7 @@ const LandingHeader = ({ featuresHref, routineHref, signupHref, completed = fals
         <Button<"a"> href={featuresHref} variant="ghost" className="landing-brand-hover hover:bg-cg-subtle">강의 찾기</Button>
         <Button<"a"> href={routineHref} variant="ghost" className="landing-brand-hover hover:bg-cg-subtle">루틴화</Button>
         <Button<"a">
-          href={signupHref}
+          href={subscriptionHref}
           trailingIcon={completed ? <Check size={20} /> : undefined}
           className={completed
             ? "border border-[var(--landing-accent)]/50 [&&]:bg-[var(--landing-accent)]/15 [&&]:text-[var(--landing-accent)] [&&]:hover:bg-[var(--landing-accent)]/25 [&&]:hover:text-[var(--landing-accent)]"

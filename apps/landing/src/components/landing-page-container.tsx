@@ -38,6 +38,6 @@ const LandingPageContainer = () => {
     <ProfileModal {...props} onSave={(answers) => handleSaveSurveyAnswers(props.email, answers)} />
   );
 
-  return <LandingPage submitSignup={handleSubscribeWaitlist} renderSurvey={renderSurveyModal} />;
+  return <LandingPage submitSubscribe={handleSubscribeWaitlist} renderSurvey={renderSurveyModal} />;
 };
 export default LandingPageContainer;

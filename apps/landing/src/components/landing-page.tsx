@@ -6,7 +6,7 @@ import LandingHeader from "./landing-header/landing-header";
 import LandingHero from "./landing-hero/landing-hero";
 import LandingSet1 from "./landing-set1/landing-set1";
 import LandingSet2 from "./landing-set2/landing-set2";
-import LandingSignup from "./landing-signup/landing-signup";
+import LandingSubscription from "./landing-subscription/landing-subscription";
 import LandingFooter from "./landing-footer/landing-footer";
 import type { LandingFooterProps } from "./landing-footer/landing-footer";
 import TermsModal from "./landing-modals/terms-modal";
@@ -19,7 +19,7 @@ export interface SurveyConnection {
   onOpenChange: (open: boolean) => void;
 }
 export interface LandingPageProps extends LandingFooterProps {
-  submitSignup: (email: string) => Promise<void>;
+  submitSubscribe: (email: string) => Promise<void>;
   /* 신청 완료 모달 연결. open/email 전달,
    * 추가 정보 API 저장 성공 시에만 onComplete("saved") 호출
    * 건너뛰기는 onComplete("skipped"), X·ESC·배경 닫기는 onOpenChange(false) 호출
@@ -28,7 +28,7 @@ export interface LandingPageProps extends LandingFooterProps {
 }
 
 const LandingPage = ({
-  submitSignup,
+  submitSubscribe,
   renderSurvey,
   onOpenTerms,
   onOpenPrivacy,
@@ -50,15 +50,15 @@ const LandingPage = ({
     setOpen(false);
     setFormVersion((value) => value + 1);
     requestAnimationFrame(() => {
-      document.getElementById(`${location}-signup`)?.scrollIntoView({ block: "center", behavior: "instant" });
-      requestAnimationFrame(() => document.getElementById(`${location}-signup`)?.querySelector<HTMLInputElement>('input[name="email"]')?.focus({ preventScroll: true }));
+      document.getElementById(`${location}-subscription`)?.scrollIntoView({ block: "center", behavior: "instant" });
+      requestAnimationFrame(() => document.getElementById(`${location}-subscription`)?.querySelector<HTMLInputElement>('input[name="email"]')?.focus({ preventScroll: true }));
     });
   };
   const request = async (value: string, location: "hero" | "beta") => {
     if (pending.current || open || completed) return;
     pending.current = true;
     try {
-      await submitSignup(value);
+      await submitSubscribe(value);
       setSource(location);
       setEmail(value);
       setCompleted(true);
@@ -73,19 +73,19 @@ const LandingPage = ({
   };
   const complete = () => {
     setOpen(false);
-    requestAnimationFrame(() => document.getElementById(`${source}-signup`)?.scrollIntoView({ block: "center", behavior: "instant" }));
+    requestAnimationFrame(() => document.getElementById(`${source}-subscription`)?.scrollIntoView({ block: "center", behavior: "instant" }));
   };
   const common = { completed, alreadyRegistered, onOpenProfile: () => { setSource("beta"); setOpen(true); } };
 
   return <>
-    <LandingHeader signupHref="#hero-signup-btm" featuresHref="#set1" routineHref="#set2" completed={completed} />
+    <LandingHeader subscriptionHref="#hero-subscription-btm" featuresHref="#set1" routineHref="#set2" completed={completed} />
     <main id="main-content" className="flex-1" aria-label="체커기 랜딩">
-      <LandingHero key={`hero-${formVersion}`} {...common} onReset={() => reset("hero")} onRequestSignup={(value) => request(value, "hero")} />
+      <LandingHero key={`hero-${formVersion}`} {...common} onReset={() => reset("hero")} onRequestSubscribe={(value) => request(value, "hero")} />
       <div className="flex flex-col gap-cg-8 py-cg-6">
         <LandingSet1 />
         <LandingSet2 />
       </div>
-      <LandingSignup key={`beta-${formVersion}`} {...common} onReset={() => reset("beta")} onRequestSignup={(value) => request(value, "beta")} />
+      <LandingSubscription key={`beta-${formVersion}`} {...common} onReset={() => reset("beta")} onRequestSubscribe={(value) => request(value, "beta")} />
     </main>
     <LandingFooter onOpenTerms={onOpenTerms ?? (() => setTermsOpen(true))} onOpenPrivacy={onOpenPrivacy ?? (() => setPrivacyOpen(true))} />
     <Fragment key={`survey-${formVersion}`}>{renderSurvey({ open, email, onComplete: complete, onOpenChange: setOpen })}</Fragment>
