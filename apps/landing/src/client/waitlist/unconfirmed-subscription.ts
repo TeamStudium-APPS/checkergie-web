@@ -8,8 +8,6 @@ interface UnconfirmedSubscription {
   savedAt: number;
 }
 
-// ==================== 기록: 결과가 확인되지 않은 대기 등록을 저장소에 남기기 ====================
-
 export const rememberUnconfirmedSubscription = async (email: string) => {
   const emailHash = await toEmailHash(email);
   if (!emailHash) return;
@@ -24,8 +22,6 @@ export const forgetUnconfirmedSubscription = () => {
   }
 };
 
-// ==================== 확인: 이전 대기 등록의 결과가 확인되지 않았는지 판단하기 ====================
-
 export const hasUnconfirmedSubscription = async (email: string) => {
   const unconfirmedSubscription = readUnconfirmedSubscription();
   if (!unconfirmedSubscription || isExpired(unconfirmedSubscription)) return false;
@@ -34,16 +30,12 @@ export const hasUnconfirmedSubscription = async (email: string) => {
 
 const isExpired = ({ savedAt }: UnconfirmedSubscription) => Date.now() - savedAt > UNCONFIRMED_SUBSCRIPTION_TTL;
 
-// ==================== 실패 처리: 응답 유실 후 재시도를 등록 완료로 되돌리기 ====================
-
-export const finishFailedSubscription = (error: unknown, wasUnconfirmed: boolean) => {
+export const finishFailedSubscription = (error: unknown, hasUnconfirmedAttempt: boolean) => {
   if (isResponseLostError(error)) throw error;
   forgetUnconfirmedSubscription();
-  if (wasUnconfirmed && isWaitlistAlreadyRegisteredError(error)) return;
+  if (hasUnconfirmedAttempt && isWaitlistAlreadyRegisteredError(error)) return;
   throw error;
 };
-
-// ==================== 저장소: localStorage 읽기·쓰기와 이메일 해시 ====================
 
 const readUnconfirmedSubscription = (): UnconfirmedSubscription | undefined => {
   try {

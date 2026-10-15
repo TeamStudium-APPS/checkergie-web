@@ -15,17 +15,19 @@ declare global {
   }
 }
 
-export default function SwaggerUi() {
-  const [scriptLoaded, setScriptLoaded] = useState(false);
+const SwaggerUi = () => {
+  const [isScriptLoaded, setIsScriptLoaded] = useState(false);
+
+  const handleScriptLoad = () => setIsScriptLoaded(true);
 
   useEffect(() => {
-    if (!scriptLoaded || !window.SwaggerUIBundle) return;
+    if (!isScriptLoaded || !window.SwaggerUIBundle) return;
 
     window.SwaggerUIBundle({
       dom_id: "#swagger-ui",
       url: "/api/openapi",
     });
-  }, [scriptLoaded]);
+  }, [isScriptLoaded]);
 
   return (
     <>
@@ -33,9 +35,11 @@ export default function SwaggerUi() {
       <Script
         src={`${SWAGGER_UI_CDN}/swagger-ui-bundle.js`}
         strategy="afterInteractive"
-        onLoad={() => setScriptLoaded(true)}
+        onLoad={handleScriptLoad}
       />
       <div id="swagger-ui" />
     </>
   );
-}
+};
+
+export default SwaggerUi;

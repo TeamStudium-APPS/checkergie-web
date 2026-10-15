@@ -19,7 +19,7 @@ export interface SurveyConnection {
   onOpenChange: (open: boolean) => void;
 }
 export interface LandingPageProps extends LandingFooterProps {
-  submitSubscribe: (email: string) => Promise<void>;
+  onSubscribe: (email: string) => Promise<void>;
   /* 신청 완료 모달 연결. open/email 전달,
    * 추가 정보 API 저장 성공 시에만 onComplete("saved") 호출
    * 건너뛰기는 onComplete("skipped"), X·ESC·배경 닫기는 onOpenChange(false) 호출
@@ -28,7 +28,7 @@ export interface LandingPageProps extends LandingFooterProps {
 }
 
 const LandingPage = ({
-  submitSubscribe,
+  onSubscribe,
   renderSurvey,
   onOpenTerms,
   onOpenPrivacy,
@@ -58,7 +58,7 @@ const LandingPage = ({
     if (pending.current || open || completed) return;
     pending.current = true;
     try {
-      await submitSubscribe(value);
+      await onSubscribe(value);
       setSource(location);
       setEmail(value);
       setCompleted(true);

@@ -1,6 +1,6 @@
 "use client";
 
-import SubscriptionComplete from "../landing-hero/subscription-complete";
+import SubscriptionComplete from "src/components/landing-hero/subscription-complete";
 import WaitlistEmailForm from "./waitlist-email-form";
 import type { LandingHeroProps } from "../landing-hero/landing-hero";
 

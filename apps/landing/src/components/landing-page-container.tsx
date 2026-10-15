@@ -15,20 +15,16 @@ const LandingPageContainer = () => {
   const subscribe = useSubscribeWaitlist();
   const saveProfile = useSaveWaitlistProfile();
 
-  // ==================== 등록: 대기 명단에 이메일 보내기 ====================
-
   const handleSubscribeWaitlist = async (email: string) => {
-    const wasUnconfirmed = await hasUnconfirmedSubscription(email);
+    const hasUnconfirmedAttempt = await hasUnconfirmedSubscription(email);
     await rememberUnconfirmedSubscription(email);
     try {
       await subscribe.mutateAsync({ email });
       forgetUnconfirmedSubscription();
     } catch (error) {
-      finishFailedSubscription(error, wasUnconfirmed);
+      finishFailedSubscription(error, hasUnconfirmedAttempt);
     }
   };
-
-  // ==================== 설문: 설문 응답 저장과 모달 연결 ====================
 
   const handleSaveSurveyAnswers = async (email: string, { ageGroup, gender }: { ageGroup?: AgeGroup; gender?: Gender }) => {
     await saveProfile.mutateAsync({ email, ageGroup: ageGroup ?? null, gender: gender ?? null });
@@ -38,6 +34,11 @@ const LandingPageContainer = () => {
     <ProfileModal {...props} onSave={(answers) => handleSaveSurveyAnswers(props.email, answers)} />
   );
 
-  return <LandingPage submitSubscribe={handleSubscribeWaitlist} renderSurvey={renderSurveyModal} />;
+  return (
+    <LandingPage
+      onSubscribe={handleSubscribeWaitlist}
+      renderSurvey={renderSurveyModal}
+    />
+  );
 };
 export default LandingPageContainer;

@@ -1,7 +1,7 @@
 "use client";
 
 import { Bell, Check, ChevronsDown, Gift } from "lucide-react";
-import WaitlistEmailForm from "../landing-subscription/waitlist-email-form";
+import WaitlistEmailForm from "src/components/landing-subscription/waitlist-email-form";
 import BrowserPreview from "./browser-preview";
 
 export interface LandingHeroProps {
