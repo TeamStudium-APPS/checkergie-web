@@ -1,4 +1,4 @@
-import { isResponseLostError, isWaitlistAlreadyRegisteredError } from "@checkergie/api";
+import { isWaitlistAlreadyRegisteredError } from "@checkergie/api";
 
 const STORAGE_KEY = "checkergie:waitlist:unconfirmed-subscription";
 const UNCONFIRMED_SUBSCRIPTION_TTL = 10 * 60 * 1000;
@@ -31,9 +31,9 @@ export const hasUnconfirmedSubscription = async (email: string) => {
 const isExpired = ({ savedAt }: UnconfirmedSubscription) => Date.now() - savedAt > UNCONFIRMED_SUBSCRIPTION_TTL;
 
 export const finishFailedSubscription = (error: unknown, hasUnconfirmedAttempt: boolean) => {
-  if (isResponseLostError(error)) throw error;
+  if (!isWaitlistAlreadyRegisteredError(error)) throw error;
   forgetUnconfirmedSubscription();
-  if (hasUnconfirmedAttempt && isWaitlistAlreadyRegisteredError(error)) return;
+  if (hasUnconfirmedAttempt) return;
   throw error;
 };
 
