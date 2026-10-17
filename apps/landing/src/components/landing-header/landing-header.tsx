@@ -47,9 +47,8 @@ const LandingHeader = ({ featuresHref, routineHref, subscriptionHref, completed 
     window.history.pushState(null, "", link.hash);
   };
 
-  return <>
-  <div aria-hidden="true" className="h-[var(--landing-header-height,112px)] shrink-0" />
-  <header ref={headerRef} className="fixed inset-x-0 top-0 z-[var(--z-cg-sticky)] border-b border-cg-border bg-white/92">
+  return (
+  <header ref={headerRef} className="sticky top-0 shrink-0 z-[var(--z-cg-sticky)] border-b border-cg-border bg-white/92">
     <div className="mx-auto flex min-h-16 max-w-[1440px] flex-nowrap sm:min-h-24 items-center justify-between gap-cg-1 px-cg-3 py-cg-2 sm:gap-cg-4 sm:px-cg-10 sm:py-cg-6">
       <Link
         href="/"
@@ -77,7 +76,7 @@ const LandingHeader = ({ featuresHref, routineHref, subscriptionHref, completed 
       </nav>
     </div>
   </header>
-  </>;
+  );
 };
 
 export default LandingHeader;

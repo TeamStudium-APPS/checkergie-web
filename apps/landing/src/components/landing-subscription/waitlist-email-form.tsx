@@ -71,6 +71,7 @@ const WaitlistEmailForm = ({ id, align = "center", onRequestSubscribe }: Waitlis
         <TextField
           name="email"
           type="email"
+          className="text-cg-body-lg sm:text-cg-body-sm"
           required
           autoComplete="email"
           placeholder="이메일 주소를 입력해주세요…"
