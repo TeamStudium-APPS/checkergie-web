@@ -3,7 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { Bell, Mail } from "lucide-react";
 import { Button, Form, TextField } from "@checkergie/ui";
-import { waitlistSubscribeRequestSchema, warmUpWaitlist } from "@checkergie/api";
+import { waitlistSubscribeRequestSchema, warmUpWaitlistApi } from "@checkergie/api";
 
 const REQUEST_FAILED_MESSAGE = "신청하지 못했어요. 잠시 후 다시 시도해 주세요.";
 
@@ -11,23 +11,23 @@ let warmUpRequested = false;
 const warmUpOnce = () => {
   if (warmUpRequested) return;
   warmUpRequested = true;
-  warmUpWaitlist().catch(() => {});
+  warmUpWaitlistApi().catch(() => {});
 };
 
 export interface WaitlistEmailFormProps {
   id: string;
   align?: "left" | "center";
   /* LandingPage의 이메일 등록 처리로 연결. 모달은 부모에서 제어 */
-  onRequestSignup?: (email: string) => void | Promise<void>;
+  onRequestSubscribe?: (email: string) => void | Promise<void>;
 }
 
-const WaitlistEmailForm = ({ id, align = "center", onRequestSignup }: WaitlistEmailFormProps) => {
+const WaitlistEmailForm = ({ id, align = "center", onRequestSubscribe }: WaitlistEmailFormProps) => {
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (submitting || !onRequestSignup) return;
+    if (submitting || !onRequestSubscribe) return;
 
     const email = String(new FormData(event.currentTarget).get("email") ?? "").trim();
     const result = waitlistSubscribeRequestSchema.safeParse({ email });
@@ -41,7 +41,7 @@ const WaitlistEmailForm = ({ id, align = "center", onRequestSignup }: WaitlistEm
     setSubmitting(true);
     setMessage("");
     try {
-      await onRequestSignup(email);
+      await onRequestSubscribe(email);
     } catch {
       setMessage(REQUEST_FAILED_MESSAGE);
     } finally {
