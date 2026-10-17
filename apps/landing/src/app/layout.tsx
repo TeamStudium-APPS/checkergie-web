@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { QueryProvider } from "@checkergie/api/query";
+import { SITE_URL } from "src/constants/site";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -13,13 +14,30 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-// 메타데이터 확정되면 수정 예정
+const SITE_TITLE = "체커기 | 온라인 강의 비교와 추천";
+const SITE_DESCRIPTION = "여러 플랫폼에 흩어진 온라인 강의를 한곳에서 비교하고, 나에게 맞는 강의를 찾아보세요.";
+
 export const metadata: Metadata = {
-  title: "체커기 | CHECKERGIE",
-  description: "여러 플랫폼에 흩어진 강의를 한 곳에서 비교하고, 검증된 후기로 진짜 강의 상태를 확인하세요.",
+  metadataBase: new URL(SITE_URL),
+  title: SITE_TITLE,
+  description: SITE_DESCRIPTION,
+  verification: {
+    google: "TY0dpmOBeICJi7tuCftK4XfY9PZgW2F7_F3K4ccIUJ0",
+  },
+  alternates: {
+    canonical: "/",
+  },
   icons: {
 		icon: "/logo.svg",
 	},
+  openGraph: {
+    url: "/",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    siteName: "체커기",
+    locale: "ko_KR",
+    type: "website",
+  }
 };
 
 export default function RootLayout({
