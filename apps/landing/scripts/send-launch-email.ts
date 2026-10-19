@@ -2,6 +2,7 @@ import { existsSync } from "node:fs";
 import { loadEnvFile } from "node:process";
 import { parseArgs } from "node:util";
 
+import { mailDeliveryStatusSchema } from "@checkergie/api";
 import { renderLaunchEmail, validateEmailAddress } from "../src/server/mail/launch-email";
 import { createLaunchMailer, getMailPreviewConfig, MailDeliveryError } from "../src/server/mail/smtp";
 
@@ -45,7 +46,8 @@ const main = async () => {
 
 main().catch((error: unknown) => {
   // SMTP 오류 원문에는 계정·수신자 등 개인정보가 포함될 수 있다.
-  const isUncertain = error instanceof MailDeliveryError && error.deliveryStatus === "uncertain";
+  const isUncertain = error instanceof MailDeliveryError
+    && error.deliveryStatus === mailDeliveryStatusSchema.enum.uncertain;
   console.error(isUncertain ? DELIVERY_ERROR_MESSAGE : NOT_SENT_ERROR_MESSAGE);
   process.exitCode = 1;
 });

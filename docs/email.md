@@ -67,7 +67,9 @@ pnpm --filter @checkergie/landing mail:send --to tester@example.com
 SMTP 접수 성공은 최종 수신함 도착을 보장하지 않는다. 연결이 끊겨 결과가 불명확하면
 수신함을 확인하기 전에 무조건 재실행하지 않는다.
 
-발송 함수는 실패 시 `MailDeliveryError.deliveryStatus`를 제공한다. 설정·인증·수신자
+발송 상태는 `packages/api`의 `mailDeliveryStatusSchema`로 `sent`, `not_sent`,
+`uncertain` 세 값을 공유한다. 발송 함수는 실패 시 `MailDeliveryError.deliveryStatus`를
+제공한다. 설정·인증·수신자
 거절처럼 서버가 메일을 접수하지 않은 것이 확인되면 `not_sent`, 본문 전송 중 연결 종료나
 타임아웃처럼 접수 여부를 확인할 수 없으면 `uncertain`이다. 알 수 없는 오류도 중복 발송을
 막기 위해 `uncertain`으로 처리한다. 향후 일괄 발송에서는 성공 결과를 `sent`로 기록하고,

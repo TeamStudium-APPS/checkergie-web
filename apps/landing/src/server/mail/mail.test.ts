@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
+import { mailDeliveryStatusSchema } from "@checkergie/api";
 import nodemailer, { type SendMailOptions } from "nodemailer";
 import type SMTPTransport from "nodemailer/lib/smtp-transport";
 
@@ -80,7 +81,10 @@ test("단일 수신자에게 HTML·텍스트를 함께 보내고 SMTP 거절을 
   const mailer = createLaunchMailer(environment);
   try {
     await mailer.verify();
-    assert.deepEqual(await mailer.send("recipient@example.com"), { messageId: "test-message" });
+    assert.deepEqual(await mailer.send("recipient@example.com"), {
+      status: mailDeliveryStatusSchema.enum.sent,
+      messageId: "test-message",
+    });
     const options = createTransport.mock.calls[0].arguments[0] as SMTPTransport.Options;
     assert.equal(options.secure, true);
     assert.equal(options.requireTLS, true);
@@ -91,7 +95,8 @@ test("단일 수신자에게 HTML·텍스트를 함께 보내고 SMTP 거절을 
     shouldReject = true;
     await assert.rejects(
       mailer.send("recipient@example.com"),
-      (error: unknown) => error instanceof MailDeliveryError && error.deliveryStatus === "not_sent",
+      (error: unknown) => error instanceof MailDeliveryError
+        && error.deliveryStatus === mailDeliveryStatusSchema.enum.not_sent,
     );
     await assert.rejects(mailer.send("a@example.com,b@example.com"));
     assert.equal(sendMail.mock.callCount(), 2);
@@ -121,7 +126,8 @@ test("SMTP 실패를 not_sent와 uncertain으로 구분한다", async (context) 
   verifyError = Object.assign(new Error("authentication failed"), { code: "EAUTH" });
   await assert.rejects(
     mailer.verify(),
-    (error: unknown) => error instanceof MailDeliveryError && error.deliveryStatus === "not_sent",
+    (error: unknown) => error instanceof MailDeliveryError
+      && error.deliveryStatus === mailDeliveryStatusSchema.enum.not_sent,
   );
 
   verifyError = undefined;
@@ -129,13 +135,15 @@ test("SMTP 실패를 not_sent와 uncertain으로 구분한다", async (context) 
   sendError = Object.assign(new Error("recipient rejected"), { code: "EENVELOPE", responseCode: 550 });
   await assert.rejects(
     mailer.send("recipient@example.com"),
-    (error: unknown) => error instanceof MailDeliveryError && error.deliveryStatus === "not_sent",
+    (error: unknown) => error instanceof MailDeliveryError
+      && error.deliveryStatus === mailDeliveryStatusSchema.enum.not_sent,
   );
 
   sendError = Object.assign(new Error("socket timeout"), { code: "ETIMEDOUT" });
   await assert.rejects(
     mailer.send("recipient@example.com"),
-    (error: unknown) => error instanceof MailDeliveryError && error.deliveryStatus === "uncertain",
+    (error: unknown) => error instanceof MailDeliveryError
+      && error.deliveryStatus === mailDeliveryStatusSchema.enum.uncertain,
   );
 
   context.mock.restoreAll();

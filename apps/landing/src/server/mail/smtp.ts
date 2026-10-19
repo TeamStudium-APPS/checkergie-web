@@ -1,5 +1,6 @@
 import "server-only";
 
+import { mailDeliveryStatusSchema, type MailDeliveryStatus } from "@checkergie/api";
 import nodemailer from "nodemailer";
 import type SMTPTransport from "nodemailer/lib/smtp-transport";
 import { renderLaunchEmail, validateEmailAddress, validateServiceUrl } from "./launch-email";
@@ -7,10 +8,12 @@ import { renderLaunchEmail, validateEmailAddress, validateServiceUrl } from "./l
 type Environment = Record<string, string | undefined>;
 type SmtpError = Error & { code?: string; responseCode?: number };
 
-export type MailDeliveryStatus = "not_sent" | "uncertain";
+type MailDeliveryFailureStatus = Exclude<MailDeliveryStatus, "sent">;
+
+const MAIL_DELIVERY_STATUS = mailDeliveryStatusSchema.enum;
 
 export class MailDeliveryError extends Error {
-  constructor(public readonly deliveryStatus: MailDeliveryStatus) {
+  constructor(public readonly deliveryStatus: MailDeliveryFailureStatus) {
     super("오픈 알림 메일 발송에 실패했습니다.");
     this.name = "MailDeliveryError";
   }
@@ -29,12 +32,12 @@ const NOT_SENT_ERROR_CODES = new Set([
   "EMESSAGE",
 ]);
 
-const classifySendFailure = (error: unknown): MailDeliveryStatus => {
-  if (!(error instanceof Error)) return "uncertain";
+const classifySendFailure = (error: unknown): MailDeliveryFailureStatus => {
+  if (!(error instanceof Error)) return MAIL_DELIVERY_STATUS.uncertain;
   const smtpError = error as SmtpError;
-  if (typeof smtpError.responseCode === "number") return "not_sent";
-  if (smtpError.code && NOT_SENT_ERROR_CODES.has(smtpError.code)) return "not_sent";
-  return "uncertain";
+  if (typeof smtpError.responseCode === "number") return MAIL_DELIVERY_STATUS.not_sent;
+  if (smtpError.code && NOT_SENT_ERROR_CODES.has(smtpError.code)) return MAIL_DELIVERY_STATUS.not_sent;
+  return MAIL_DELIVERY_STATUS.uncertain;
 };
 
 const requireSetting = (env: Environment, name: string) => {
@@ -91,7 +94,7 @@ export const createLaunchMailer = (env: Environment = process.env) => {
         await transport.verify();
       } catch {
         // verify는 본문을 전송하지 않으므로 실패해도 재발송에 따른 중복 위험이 없다.
-        throw new MailDeliveryError("not_sent");
+        throw new MailDeliveryError(MAIL_DELIVERY_STATUS.not_sent);
       }
     },
     send: async (recipient: string) => {
@@ -108,10 +111,10 @@ export const createLaunchMailer = (env: Environment = process.env) => {
         throw new MailDeliveryError(classifySendFailure(error));
       }
       if (result.accepted.length !== 1 || result.rejected.length > 0) {
-        throw new MailDeliveryError("not_sent");
+        throw new MailDeliveryError(MAIL_DELIVERY_STATUS.not_sent);
       }
       // SMTP 접수 성공이며 최종 수신함 도착 여부를 의미하지 않는다.
-      return { messageId: result.messageId };
+      return { status: MAIL_DELIVERY_STATUS.sent, messageId: result.messageId };
     },
     close: () => transport.close(),
   };
