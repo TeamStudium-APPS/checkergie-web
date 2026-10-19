@@ -4,7 +4,7 @@ import nodemailer, { type SendMailOptions } from "nodemailer";
 import type SMTPTransport from "nodemailer/lib/smtp-transport";
 
 import { renderLaunchEmail, validateEmailAddress } from "./launch-email";
-import { createLaunchMailer, getMailConfig } from "./smtp";
+import { createLaunchMailer, getMailConfig, getMailPreviewConfig } from "./smtp";
 
 const environment = {
   SMTP_HOST: "smtp.example.com",
@@ -38,9 +38,16 @@ test("실행 가능한 URL·HTTP 주소·인증 정보가 들어간 URL을 거�
 });
 
 test("수신자 여러 명과 헤더 삽입을 거부한다", () => {
-  for (const recipient of ["a@example.com,b@example.com", "a@example.com\r\nBcc: b@example.com", "Name <a@example.com>", "invalid"]) {
+  for (const recipient of ["a@example.com,b@example.com", "a@example.com\r\nBcc: b@example.com", "Name <a@example.com>", "a?b@example.com", "a#b@example.com", "invalid"]) {
     assert.throws(() => validateEmailAddress(recipient));
   }
+});
+
+test("미리보기 문의 주소는 실제 발송과 같이 발신 주소를 기본값으로 사용한다", () => {
+  const preview = getMailPreviewConfig(environment);
+  const config = getMailConfig(environment);
+  assert.equal(preview.contactEmail, config.contactEmail);
+  assert.equal(preview.serviceUrl, config.serviceUrl);
 });
 
 test("SMTP 설정은 런타임에 검증하고 TLS 포트만 허용한다", () => {

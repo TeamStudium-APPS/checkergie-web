@@ -2,7 +2,7 @@ import { z } from "zod";
 
 const INVALID_EMAIL_MESSAGE = "올바른 이메일 형식이 아닙니다.";
 
-const emailSchema = z.email(INVALID_EMAIL_MESSAGE).max(254, INVALID_EMAIL_MESSAGE);
+export const emailSchema = z.email(INVALID_EMAIL_MESSAGE).max(254, INVALID_EMAIL_MESSAGE);
 
 export const waitlistSubscribeRequestSchema = z.object({
   email: emailSchema,

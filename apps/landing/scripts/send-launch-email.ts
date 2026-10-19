@@ -3,7 +3,12 @@ import { loadEnvFile } from "node:process";
 import { parseArgs } from "node:util";
 
 import { renderLaunchEmail, validateEmailAddress } from "../src/server/mail/launch-email";
-import { createLaunchMailer } from "../src/server/mail/smtp";
+import { createLaunchMailer, getMailPreviewConfig } from "../src/server/mail/smtp";
+
+const PREPARATION_ERROR_MESSAGE = "메일을 보내지 않았습니다. --to 주소와 .env.local 설정을 확인해 주세요.";
+const DELIVERY_ERROR_MESSAGE = "발송하지 못했거나 결과를 확인하지 못했습니다. 수신함을 먼저 확인한 뒤 --to, SMTP 설정, MAIL_SERVICE_URL을 점검해 주세요. 자세한 설정은 docs/email.md를 참고하세요.";
+
+class MailDeliveryError extends Error {}
 
 const main = async () => {
   const { values } = parseArgs({
@@ -24,27 +29,28 @@ const main = async () => {
   const recipient = validateEmailAddress(values.to);
 
   if (!values.send) {
-    const email = renderLaunchEmail({
-      serviceUrl: process.env.MAIL_SERVICE_URL || "https://example.com/checkergie",
-      contactEmail: process.env.MAIL_CONTACT_EMAIL || "hello@example.com",
-    });
+    const email = renderLaunchEmail(getMailPreviewConfig());
     console.log(`미리보기 모드: 메일을 보내지 않았습니다.\n제목: ${email.subject}\n\n${email.text}`);
-    console.log("\n실제 발송하려면 SMTP 설정 후 같은 명령에 --send를 추가하세요.");
+    console.log("\n실제 발송하려면 SMTP 설정 후 mail:send 명령을 사용하세요.");
     return;
   }
 
   const mailer = createLaunchMailer();
   try {
-    await mailer.verify();
-    await mailer.send(recipient);
-    console.log("SMTP 서버에 메일 1건을 접수했습니다. 수신함과 스팸함을 확인해 주세요.");
+    try {
+      await mailer.verify();
+      await mailer.send(recipient);
+      console.log("SMTP 서버에 메일 1건을 접수했습니다. 수신함과 스팸함을 확인해 주세요.");
+    } catch {
+      throw new MailDeliveryError();
+    }
   } finally {
     mailer.close();
   }
 };
 
-main().catch(() => {
+main().catch((error: unknown) => {
   // SMTP 오류 원문에는 계정·수신자 등 개인정보가 포함될 수 있다.
-  console.error("발송하지 못했거나 결과를 확인하지 못했습니다. 수신함을 먼저 확인한 뒤 --to, SMTP 설정, MAIL_SERVICE_URL을 점검해 주세요. 자세한 설정은 docs/email.md를 참고하세요.");
+  console.error(error instanceof MailDeliveryError ? DELIVERY_ERROR_MESSAGE : PREPARATION_ERROR_MESSAGE);
   process.exitCode = 1;
 });

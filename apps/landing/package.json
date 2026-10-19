@@ -8,7 +8,8 @@
     "start": "next start --port 3000",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "mail:test": "node --conditions=react-server --import tsx scripts/send-launch-email.ts",
+    "mail:preview": "node --conditions=react-server --import tsx scripts/send-launch-email.ts",
+    "mail:send": "node --conditions=react-server --import tsx scripts/send-launch-email.ts --send",
     "test:mail": "node --conditions=react-server --import tsx --test src/server/mail/mail.test.ts"
   },
   "dependencies": {

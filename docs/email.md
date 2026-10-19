@@ -53,13 +53,13 @@ MAIL_CONTACT_EMAIL=checkergie@studium.rehab
 저장소 루트에서 실행한다. `--send`가 없으면 SMTP 연결도 하지 않는 텍스트 미리보기다.
 
 ```bash
-pnpm --filter @checkergie/landing mail:test --to tester@example.com
+pnpm --filter @checkergie/landing mail:preview --to tester@example.com
 ```
 
-실제 메일은 아래처럼 수신자 한 명과 `--send`를 명시해야 발송한다.
+실제 메일은 아래처럼 `mail:send` 명령과 수신자 한 명을 명시해야 발송한다.
 
 ```bash
-pnpm --filter @checkergie/landing mail:test --to tester@example.com --send
+pnpm --filter @checkergie/landing mail:send --to tester@example.com
 ```
 
 먼저 팀 내부 테스트 주소로 발송하고 제목, HTML·텍스트 본문, 링크, 모바일 표시,

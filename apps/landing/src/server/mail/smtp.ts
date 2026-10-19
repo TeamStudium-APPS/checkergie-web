@@ -5,12 +5,24 @@ import { renderLaunchEmail, validateEmailAddress, validateServiceUrl } from "./l
 
 type Environment = Record<string, string | undefined>;
 
+const PREVIEW_SERVICE_URL = "https://example.com/checkergie";
+const PREVIEW_CONTACT_EMAIL = "hello@example.com";
+
 const requireSetting = (env: Environment, name: string) => {
   const value = env[name]?.trim();
   if (!value) throw new Error(`${name} 환경변수가 필요합니다.`);
   if (/[\r\n]/.test(value)) throw new Error(`${name} 환경변수에 줄바꿈을 사용할 수 없습니다.`);
   return value;
 };
+
+export const getMailPreviewConfig = (env: Environment = process.env) => ({
+  serviceUrl: validateServiceUrl(env.MAIL_SERVICE_URL?.trim() || PREVIEW_SERVICE_URL),
+  contactEmail: validateEmailAddress(
+    env.MAIL_CONTACT_EMAIL?.trim()
+      || env.MAIL_FROM_ADDRESS?.trim()
+      || PREVIEW_CONTACT_EMAIL,
+  ),
+});
 
 export const getMailConfig = (env: Environment = process.env) => {
   const port = Number(env.SMTP_PORT ?? "465");

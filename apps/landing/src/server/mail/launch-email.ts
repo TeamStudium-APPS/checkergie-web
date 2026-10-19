@@ -1,3 +1,5 @@
+import { emailSchema } from "@checkergie/api";
+
 export interface LaunchEmailOptions {
   serviceUrl: string;
   contactEmail: string;
@@ -23,7 +25,7 @@ const escapeHtml = (value: string) => value.replace(/[&<>"']/g, (character) => (
 
 export const validateEmailAddress = (value: string): string => {
   const email = value.trim();
-  if (email.length > 254 || !/^[^\s<>@,;]+@[^\s<>@,;]+\.[^\s<>@,;]+$/.test(email)) {
+  if (!emailSchema.safeParse(email).success) {
     throw new Error("이메일 주소 하나를 올바른 형식으로 입력해 주세요.");
   }
   return email;
