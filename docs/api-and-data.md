@@ -147,6 +147,7 @@ Neon이 유휴 상태에서 정지될 수 있어 이메일 입력 focus/input �
 | --- | --- | --- | --- |
 | `DATABASE_URL` | 서버 전용 | 런타임 필수 | Neon 연결 문자열 |
 | `NEXT_PUBLIC_API_BASE_URL` | 브라우저 번들 | 선택 | 별도 API origin 사용 시 지정, 기본값 `/api` |
+| `NEXT_PUBLIC_GA_ID` | 브라우저 번들 | 선택 | GA4 측정 ID(`G-`로 시작). Production에만 설정하며, 없으면 GA 스크립트를 로드하지 않는다 |
 
 - 로컬 변수는 `apps/landing/.env.local`에 두고 커밋하지 않는다.
 - 서버 비밀에는 `NEXT_PUBLIC_`을 붙이지 않는다.
