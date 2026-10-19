@@ -187,6 +187,7 @@ TanStack Query는 원격 요청 상태의 원본이다.
 | `waitlist_reset` | 다른 이메일로 신청하기 클릭 | - |
 | `profile_option_click` | 설문 연령대·성별 선택 클릭 | `field`: `age_group` / `gender`, `option`, `selected` |
 | `profile_submit` | 설문 저장하기 클릭 | `age_group`, `gender`, 미선택은 `none` |
+| `profile_submit_result` | 설문 저장 결과 | `result`: `success` / `error` |
 | `profile_skip` | 설문 건너뛰기 클릭 | - |
 | `profile_dismiss` | 설문 모달을 바깥 클릭, ESC, X로 닫음 | - |
 | `policy_open` | 푸터 이용약관, 개인정보처리방침 클릭 | `policy`: `terms` / `privacy` |

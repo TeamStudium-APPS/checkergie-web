@@ -38,16 +38,18 @@ const ProfileModal = ({ open, onComplete, onOpenChange, onSave }: ProfileModalPr
   const hasChanges = ageGroup !== saved.ageGroup || gender !== saved.gender;
 
   const handleSave = async () => {
-    // 저장 성공 여부와 관계없이 버튼 클릭마다 집계한다.
+    // 클릭은 결과와 관계없이 profile_submit으로, 결과는 profile_submit_result로 나눠 집계한다.
     // GA 관리에서 age_group, gender를 맞춤 측정기준으로 등록해야 보고서에서 나눠 볼 수 있다.
     sendGAEvent("event", "profile_submit", { age_group: ageGroup ?? "none", gender: gender ?? "none" });
     setSaving(true);
     setSaveError(false);
     try {
       await onSave?.({ ageGroup, gender });
+      sendGAEvent("event", "profile_submit_result", { result: "success" });
       setSaved({ ageGroup, gender });
       onComplete("saved");
     } catch {
+      sendGAEvent("event", "profile_submit_result", { result: "error" });
       setSaveError(true);
     } finally {
       setSaving(false);
