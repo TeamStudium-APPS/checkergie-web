@@ -1,12 +1,41 @@
 import "server-only";
 
 import nodemailer from "nodemailer";
+import type SMTPTransport from "nodemailer/lib/smtp-transport";
 import { renderLaunchEmail, validateEmailAddress, validateServiceUrl } from "./launch-email";
 
 type Environment = Record<string, string | undefined>;
+type SmtpError = Error & { code?: string; responseCode?: number };
+
+export type MailDeliveryStatus = "not_sent" | "uncertain";
+
+export class MailDeliveryError extends Error {
+  constructor(public readonly deliveryStatus: MailDeliveryStatus) {
+    super("오픈 알림 메일 발송에 실패했습니다.");
+    this.name = "MailDeliveryError";
+  }
+}
 
 const PREVIEW_SERVICE_URL = "https://example.com/checkergie";
 const PREVIEW_CONTACT_EMAIL = "hello@example.com";
+const NOT_SENT_ERROR_CODES = new Set([
+  "EAUTH",
+  "ENOAUTH",
+  "EDNS",
+  "ETLS",
+  "EREQUIRETLS",
+  "ECONFIG",
+  "EENVELOPE",
+  "EMESSAGE",
+]);
+
+const classifySendFailure = (error: unknown): MailDeliveryStatus => {
+  if (!(error instanceof Error)) return "uncertain";
+  const smtpError = error as SmtpError;
+  if (typeof smtpError.responseCode === "number") return "not_sent";
+  if (smtpError.code && NOT_SENT_ERROR_CODES.has(smtpError.code)) return "not_sent";
+  return "uncertain";
+};
 
 const requireSetting = (env: Environment, name: string) => {
   const value = env[name]?.trim();
@@ -57,17 +86,29 @@ export const createLaunchMailer = (env: Environment = process.env) => {
   const message = renderLaunchEmail(config);
 
   return {
-    verify: () => transport.verify(),
+    verify: async () => {
+      try {
+        await transport.verify();
+      } catch {
+        // verify는 본문을 전송하지 않으므로 실패해도 재발송에 따른 중복 위험이 없다.
+        throw new MailDeliveryError("not_sent");
+      }
+    },
     send: async (recipient: string) => {
       const to = validateEmailAddress(recipient);
-      const result = await transport.sendMail({
-        from: config.from,
-        to: { address: to, name: "" },
-        replyTo: config.contactEmail,
-        ...message,
-      });
+      let result: SMTPTransport.SentMessageInfo;
+      try {
+        result = await transport.sendMail({
+          from: config.from,
+          to: { address: to, name: "" },
+          replyTo: config.contactEmail,
+          ...message,
+        });
+      } catch (error) {
+        throw new MailDeliveryError(classifySendFailure(error));
+      }
       if (result.accepted.length !== 1 || result.rejected.length > 0) {
-        throw new Error("SMTP 서버가 수신자를 승인하지 않았습니다.");
+        throw new MailDeliveryError("not_sent");
       }
       // SMTP 접수 성공이며 최종 수신함 도착 여부를 의미하지 않는다.
       return { messageId: result.messageId };

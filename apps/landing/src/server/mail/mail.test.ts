@@ -4,7 +4,7 @@ import nodemailer, { type SendMailOptions } from "nodemailer";
 import type SMTPTransport from "nodemailer/lib/smtp-transport";
 
 import { renderLaunchEmail, validateEmailAddress } from "./launch-email";
-import { createLaunchMailer, getMailConfig, getMailPreviewConfig } from "./smtp";
+import { createLaunchMailer, getMailConfig, getMailPreviewConfig, MailDeliveryError } from "./smtp";
 
 const environment = {
   SMTP_HOST: "smtp.example.com",
@@ -60,7 +60,7 @@ test("SMTP 설정은 런타임에 검증하고 TLS 포트만 허용한다", () =
   assert.equal(getMailConfig({ ...environment, SMTP_PORT: "587" }).port, 587);
 });
 
-test("단일 수신자에게 HTML·텍스트를 함께 보내고 SMTP 거절을 실패로 처리한다", async (context) => {
+test("단일 수신자에게 HTML·텍스트를 함께 보내고 SMTP 거절을 not_sent로 처리한다", async (context) => {
   let shouldReject = false;
   const sentMessages: SendMailOptions[] = [];
   const sendMail = context.mock.fn(async (message: SendMailOptions) => {
@@ -89,7 +89,10 @@ test("단일 수신자에게 HTML·텍스트를 함께 보내고 SMTP 거절을 
     assert.equal(typeof message.html, "string");
     assert.equal(typeof message.text, "string");
     shouldReject = true;
-    await assert.rejects(mailer.send("recipient@example.com"), /승인하지/);
+    await assert.rejects(
+      mailer.send("recipient@example.com"),
+      (error: unknown) => error instanceof MailDeliveryError && error.deliveryStatus === "not_sent",
+    );
     await assert.rejects(mailer.send("a@example.com,b@example.com"));
     assert.equal(sendMail.mock.callCount(), 2);
   } finally {
@@ -97,4 +100,44 @@ test("단일 수신자에게 HTML·텍스트를 함께 보내고 SMTP 거절을 
     context.mock.restoreAll();
   }
   assert.equal(close.mock.callCount(), 1);
+});
+
+test("SMTP 실패를 not_sent와 uncertain으로 구분한다", async (context) => {
+  let verifyError: Error | undefined;
+  let sendError: Error | undefined;
+  const createTransport = context.mock.method(nodemailer, "createTransport", () => ({
+    verify: async () => {
+      if (verifyError) throw verifyError;
+      return true;
+    },
+    sendMail: async () => {
+      if (sendError) throw sendError;
+      return { messageId: "test-message", accepted: ["recipient@example.com"], rejected: [] };
+    },
+    close: context.mock.fn(),
+  }));
+  const mailer = createLaunchMailer(environment);
+
+  verifyError = Object.assign(new Error("authentication failed"), { code: "EAUTH" });
+  await assert.rejects(
+    mailer.verify(),
+    (error: unknown) => error instanceof MailDeliveryError && error.deliveryStatus === "not_sent",
+  );
+
+  verifyError = undefined;
+  await mailer.verify();
+  sendError = Object.assign(new Error("recipient rejected"), { code: "EENVELOPE", responseCode: 550 });
+  await assert.rejects(
+    mailer.send("recipient@example.com"),
+    (error: unknown) => error instanceof MailDeliveryError && error.deliveryStatus === "not_sent",
+  );
+
+  sendError = Object.assign(new Error("socket timeout"), { code: "ETIMEDOUT" });
+  await assert.rejects(
+    mailer.send("recipient@example.com"),
+    (error: unknown) => error instanceof MailDeliveryError && error.deliveryStatus === "uncertain",
+  );
+
+  context.mock.restoreAll();
+  assert.equal(createTransport.mock.callCount(), 1);
 });

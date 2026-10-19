@@ -3,12 +3,10 @@ import { loadEnvFile } from "node:process";
 import { parseArgs } from "node:util";
 
 import { renderLaunchEmail, validateEmailAddress } from "../src/server/mail/launch-email";
-import { createLaunchMailer, getMailPreviewConfig } from "../src/server/mail/smtp";
+import { createLaunchMailer, getMailPreviewConfig, MailDeliveryError } from "../src/server/mail/smtp";
 
-const PREPARATION_ERROR_MESSAGE = "메일을 보내지 않았습니다. --to 주소와 .env.local 설정을 확인해 주세요.";
+const NOT_SENT_ERROR_MESSAGE = "메일을 보내지 않았습니다. --to 주소와 SMTP 설정을 확인한 뒤 다시 시도해 주세요.";
 const DELIVERY_ERROR_MESSAGE = "발송하지 못했거나 결과를 확인하지 못했습니다. 수신함을 먼저 확인한 뒤 --to, SMTP 설정, MAIL_SERVICE_URL을 점검해 주세요. 자세한 설정은 docs/email.md를 참고하세요.";
-
-class MailDeliveryError extends Error {}
 
 const main = async () => {
   const { values } = parseArgs({
@@ -37,13 +35,9 @@ const main = async () => {
 
   const mailer = createLaunchMailer();
   try {
-    try {
-      await mailer.verify();
-      await mailer.send(recipient);
-      console.log("SMTP 서버에 메일 1건을 접수했습니다. 수신함과 스팸함을 확인해 주세요.");
-    } catch {
-      throw new MailDeliveryError();
-    }
+    await mailer.verify();
+    await mailer.send(recipient);
+    console.log("SMTP 서버에 메일 1건을 접수했습니다. 수신함과 스팸함을 확인해 주세요.");
   } finally {
     mailer.close();
   }
@@ -51,6 +45,7 @@ const main = async () => {
 
 main().catch((error: unknown) => {
   // SMTP 오류 원문에는 계정·수신자 등 개인정보가 포함될 수 있다.
-  console.error(error instanceof MailDeliveryError ? DELIVERY_ERROR_MESSAGE : PREPARATION_ERROR_MESSAGE);
+  const isUncertain = error instanceof MailDeliveryError && error.deliveryStatus === "uncertain";
+  console.error(isUncertain ? DELIVERY_ERROR_MESSAGE : NOT_SENT_ERROR_MESSAGE);
   process.exitCode = 1;
 });
