@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, useRef } from "react";
+import { useLayoutEffect, useRef, type MouseEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Check } from "lucide-react";
@@ -34,24 +34,36 @@ const LandingHeader = ({ featuresHref, routineHref, subscriptionHref, completed 
     };
   }, []);
 
-  return <>
-  <div aria-hidden="true" className="h-[var(--landing-header-height,112px)] shrink-0" />
-  <header ref={headerRef} className="fixed inset-x-0 top-0 z-[var(--z-cg-sticky)] border-b border-cg-border bg-white/92">
-    <div className="mx-auto flex min-h-24 max-w-[1440px] flex-wrap items-center justify-between gap-cg-4 px-cg-4 py-cg-6 sm:px-cg-10">
+  const handleNavigation = (event: MouseEvent<HTMLElement>) => {
+    const link = (event.target as HTMLElement).closest<HTMLAnchorElement>('a[href^="#"]');
+    if (!link || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    const target = document.getElementById(link.hash.slice(1));
+    if (!target) return;
+    event.preventDefault();
+    target.scrollIntoView({
+      block: "start",
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
+    });
+    window.history.pushState(null, "", link.hash);
+  };
+
+  return (
+  <header ref={headerRef} className="sticky top-0 shrink-0 z-[var(--z-cg-sticky)] border-b border-cg-border bg-white/92">
+    <div className="mx-auto flex min-h-16 max-w-[1440px] flex-nowrap sm:min-h-24 items-center justify-between gap-cg-1 px-cg-3 py-cg-2 sm:gap-cg-4 sm:px-cg-10 sm:py-cg-6">
       <Link
         href="/"
         aria-label="체커기 홈"
-        className="flex items-center gap-cg-3 rounded-cg-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cg-brand"
+        className="flex items-center gap-cg-1 sm:gap-cg-3 rounded-cg-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cg-brand"
       >
-        <span className="flex size-12 shrink-0 items-center justify-center rounded-cg-md">
-          <Image src="/logo.svg" alt="" width={34} height={34} preload />
+        <span className="flex size-8 sm:size-12 shrink-0 items-center justify-center rounded-cg-md">
+          <Image src="/logo.svg" alt="" width={34} height={34} className="size-7 sm:size-[34px]" preload />
         </span>
         <span className="font-cg-sans flex shrink-0 flex-col text-cg-ink">
-          <span className="text-cg-heading-lg">체커기</span>
-          <span className="text-cg-label-sm">CHECKERGIE</span>
+          <span className="text-cg-title-md sm:text-cg-heading-lg">체커기</span>
+          <span className="hidden sm:block text-cg-label-sm">CHECKERGIE</span>
         </span>
       </Link>
-      <nav aria-label="주요 메뉴" className="flex flex-wrap items-center gap-cg-1 sm:gap-cg-4">
+      <nav aria-label="주요 메뉴" onClick={handleNavigation} className="flex flex-nowrap items-center gap-cg-1 sm:gap-cg-4 [&_a]:h-11 [&_a]:px-cg-2 [&_a]:text-cg-label-sm sm:[&_a]:px-cg-5 sm:[&_a]:text-cg-label-lg">
         <Button<"a"> href={featuresHref} variant="ghost" className="landing-brand-hover hover:bg-cg-subtle">강의 찾기</Button>
         <Button<"a"> href={routineHref} variant="ghost" className="landing-brand-hover hover:bg-cg-subtle">루틴화</Button>
         <Button<"a">
@@ -64,7 +76,7 @@ const LandingHeader = ({ featuresHref, routineHref, subscriptionHref, completed 
       </nav>
     </div>
   </header>
-  </>;
+  );
 };
 
 export default LandingHeader;
