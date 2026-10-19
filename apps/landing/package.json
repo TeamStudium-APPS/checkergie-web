@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start --port 3000",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "mail:test": "node --conditions=react-server --import tsx scripts/send-launch-email.ts",
+    "test:mail": "node --conditions=react-server --import tsx --test src/server/mail/mail.test.ts"
   },
   "dependencies": {
     "@checkergie/api": "workspace:*",
@@ -16,11 +18,15 @@
     "@neondatabase/serverless": "^1.2.0",
     "lucide-react": "^1.46.0",
     "next": "16.3.4",
+    "nodemailer": "^10.1.1",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4"
+    "@types/nodemailer": "^8.0.2",
+    "tailwindcss": "^4",
+    "tsx": "^4.23.15"
   }
 }
