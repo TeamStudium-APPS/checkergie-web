@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Check, Share2, Sparkles } from "lucide-react";
+import { sendGAEvent } from "@next/third-parties/google";
 import { Button } from "@checkergie/ui";
 
 export interface SubscriptionCompleteProps {
@@ -31,13 +32,17 @@ const SubscriptionComplete = ({
   const Heading = compact ? "h2" : "h1";
 
   const share = async () => {
+    const method = "share" in navigator ? "native" : "clipboard";
+    // 클릭은 결과와 관계없이 share로, 결과는 share_result로 나눠 집계한다.
+    // native의 success는 공유할 앱을 고른 시점이라 실제 전달 여부까지 보장하지 않는다.
+    sendGAEvent("event", "share", { method });
     setSharing(true);
     setMessage("");
     const url = new URL(window.location.href);
     url.search = "";
     url.hash = "";
     try {
-      if (navigator.share) {
+      if (method === "native") {
         await navigator.share({
           title: "체커기",
           text: "고민은 짧게, 강의 수강은 끝까지. 체커기를 만나보세요.",
@@ -47,8 +52,11 @@ const SubscriptionComplete = ({
         await navigator.clipboard.writeText(url.href);
         setMessage("링크를 복사했어요. 친구에게 공유해 주세요!");
       }
+      sendGAEvent("event", "share_result", { method, result: "success" });
     } catch (error) {
-      if (!(error instanceof Error && error.name === "AbortError"))
+      const cancelled = error instanceof Error && error.name === "AbortError";
+      sendGAEvent("event", "share_result", { method, result: cancelled ? "cancelled" : "error" });
+      if (!cancelled)
         setMessage("공유하지 못했어요. 주소창의 링크를 복사해 주세요.");
     } finally {
       setSharing(false);
@@ -128,7 +136,10 @@ const SubscriptionComplete = ({
         <button
           type="button"
           className="text-[var(--landing-text-inverse)] disabled:cursor-not-allowed disabled:opacity-cg-disabled focus-visible:outline-2 focus-visible:outline-[var(--completion-mint)] focus-visible:outline-offset-[3px] text-cg-caption-sm underline underline-offset-[4px] cursor-pointer p-cg-2 rounded-cg-sm"
-          onClick={onReset}
+          onClick={() => {
+            sendGAEvent("event", "waitlist_reset");
+            onReset?.();
+          }}
           disabled={!onReset}
         >
           다른 이메일로 신청하기

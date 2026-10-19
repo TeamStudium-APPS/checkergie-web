@@ -80,7 +80,7 @@ const LandingPage = ({
     setOpen(false);
     requestAnimationFrame(() => document.getElementById(`${source}-subscription`)?.scrollIntoView({ block: "center", behavior: "instant" }));
   };
-  const common = { completed, alreadyRegistered, onOpenProfile: () => { setSource("beta"); setOpen(true); } };
+  const common = { completed, alreadyRegistered, onOpenProfile: () => { sendGAEvent("event", "profile_open"); setSource("beta"); setOpen(true); } };
 
   return <>
     <LandingHeader subscriptionHref="#hero-subscription-btm" featuresHref="#set1" routineHref="#set2" completed={completed} />
