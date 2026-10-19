@@ -79,6 +79,7 @@ const LandingHero = ({
             </p>
             <WaitlistEmailForm
               id="hero-subscription"
+              formLocation="hero"
               align="left"
               onRequestSubscribe={onRequestSubscribe}
             />

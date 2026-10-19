@@ -1,6 +1,7 @@
 "use client";
 
 import { Fragment, useRef, useState, type ReactNode } from "react";
+import { sendGAEvent } from "@next/third-parties/google";
 import { isWaitlistAlreadyRegisteredError } from "@checkergie/api";
 import LandingHeader from "./landing-header/landing-header";
 import LandingHero from "./landing-hero/landing-hero";
@@ -59,12 +60,16 @@ const LandingPage = ({
     pending.current = true;
     try {
       await onSubscribe(value);
+      // 이메일은 GA 약관상 개인 식별 정보라 전송하지 않고 등록 건수만 집계한다.
+      sendGAEvent("event", "sign_up", { method: "waitlist", form_location: location });
+      sendGAEvent("event", "waitlist_submit_result", { form_location: location, result: "success" });
       setSource(location);
       setEmail(value);
       setCompleted(true);
       setOpen(true);
     } catch (error) {
       if (!isWaitlistAlreadyRegisteredError(error)) throw error;
+      sendGAEvent("event", "waitlist_submit_result", { form_location: location, result: "already_registered" });
       setSource(location);
       setEmail(value);
       setAlreadyRegistered(true);

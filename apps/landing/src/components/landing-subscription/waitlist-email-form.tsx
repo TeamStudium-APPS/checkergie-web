@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { Bell, Mail } from "lucide-react";
+import { sendGAEvent } from "@next/third-parties/google";
 import { Button, Form, TextField } from "@checkergie/ui";
 import { waitlistSubscribeRequestSchema, warmUpWaitlistApi } from "@checkergie/api";
 
@@ -16,12 +17,14 @@ const warmUpOnce = () => {
 
 export interface WaitlistEmailFormProps {
   id: string;
+  /* GA 이벤트에서 히어로·하단 폼을 구분하는 값 */
+  formLocation: "hero" | "beta";
   align?: "left" | "center";
   /* LandingPage의 이메일 등록 처리로 연결. 모달은 부모에서 제어 */
   onRequestSubscribe?: (email: string) => void | Promise<void>;
 }
 
-const WaitlistEmailForm = ({ id, align = "center", onRequestSubscribe }: WaitlistEmailFormProps) => {
+const WaitlistEmailForm = ({ id, formLocation, align = "center", onRequestSubscribe }: WaitlistEmailFormProps) => {
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
@@ -43,6 +46,7 @@ const WaitlistEmailForm = ({ id, align = "center", onRequestSubscribe }: Waitlis
     try {
       await onRequestSubscribe(email);
     } catch {
+      sendGAEvent("event", "waitlist_submit_result", { form_location: formLocation, result: "error" });
       setMessage(REQUEST_FAILED_MESSAGE);
     } finally {
       setSubmitting(false);
@@ -77,6 +81,8 @@ const WaitlistEmailForm = ({ id, align = "center", onRequestSubscribe }: Waitlis
           placeholder="이메일 주소를 입력해주세요…"
           onFocus={warmUpOnce}
           onInput={handleEmailInput}
+          // 브라우저 기본 검증과 스키마 검증 실패 모두 invalid 이벤트로 들어온다.
+          onInvalid={() => sendGAEvent("event", "waitlist_submit_result", { form_location: formLocation, result: "invalid" })}
           leadingIcon={<Mail size={20} aria-hidden="true" />}
           wrapperClassName="[&>span:has(>button[type=submit])]:pr-0 [&&]:rounded-cg-full [&&]:bg-cg-border [&&]:text-cg-ink [&&]:pr-[calc(var(--spacing-cg-1))] [&&]:shadow-[inset_4px_4px_8px_rgba(201,208,217,0.8),inset_-4px_-4px_8px_rgba(255,255,255,0.6)] [&&:not(:has(input[aria-invalid=true]))]:focus-within:border-cg-border [&&:not(:has(input[aria-invalid=true]))]:focus-within:ring-3 [&&:not(:has(input[aria-invalid=true]))]:focus-within:ring-(--landing-accent)/45 motion-reduce:transition-none"
           trailingAction={
@@ -85,6 +91,7 @@ const WaitlistEmailForm = ({ id, align = "center", onRequestSubscribe }: Waitlis
               size="sm"
               className="[&&]:hover:bg-cg-action [&&]:hover:text-cg-ink motion-safe:hover:-translate-y-px hover:shadow-[0_8px_18px_rgba(255,200,87,0.42)]"
               loading={submitting}
+              onClick={() => sendGAEvent("event", "waitlist_submit_click", { form_location: formLocation })}
               trailingIcon={<Bell size={16} />}
             >
               알림 받기
