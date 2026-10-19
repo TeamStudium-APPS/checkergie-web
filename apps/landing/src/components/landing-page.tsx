@@ -92,7 +92,10 @@ const LandingPage = ({
       </div>
       <LandingSubscription key={`beta-${formVersion}`} {...common} onReset={() => reset("beta")} onRequestSubscribe={(value) => request(value, "beta")} />
     </main>
-    <LandingFooter onOpenTerms={onOpenTerms ?? (() => setTermsOpen(true))} onOpenPrivacy={onOpenPrivacy ?? (() => setPrivacyOpen(true))} />
+    <LandingFooter
+      onOpenTerms={() => { sendGAEvent("event", "policy_open", { policy: "terms" }); (onOpenTerms ?? (() => setTermsOpen(true)))(); }}
+      onOpenPrivacy={() => { sendGAEvent("event", "policy_open", { policy: "privacy" }); (onOpenPrivacy ?? (() => setPrivacyOpen(true)))(); }}
+    />
     <Fragment key={`survey-${formVersion}`}>{renderSurvey({ open, email, onComplete: complete, onOpenChange: setOpen })}</Fragment>
     <TermsModal open={termsOpen} onOpenChange={setTermsOpen} />
     <PrivacyModal open={privacyOpen} onOpenChange={setPrivacyOpen} />

@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { sendGAEvent } from "@next/third-parties/google";
 import { Button } from "@checkergie/ui";
 import { Mail } from "lucide-react";
 
@@ -47,7 +48,7 @@ const LandingFooter = ({ onOpenTerms, onOpenPrivacy }: LandingFooterProps) => (
       </div>
       <div className="[&_a:focus-visible]:[outline:2px_solid_var(--color-cg-brand)] [&_a:focus-visible]:outline-offset-[4px] flex items-center justify-between gap-cg-4 pt-cg-4 [&_small]:text-cg-caption-sm [&_a]:text-cg-label-sm [&_a]:inline-flex [&_a]:items-center [&_a]:gap-cg-2 [&_a]:[background:color-mix(in_srgb,_var(--color-cg-surface)_50.20%,_transparent)] [&_a]:rounded-cg-full [&_a]:p-[var(--spacing-cg-2)_calc(var(--spacing-cg-1)_*_3.5)] [@media(width<=768px)]:flex-col [@media(width<=768px)]:items-start">
         <small>© 2026 팀 스터디움(TEAM STUDIUM). All rights reserved.</small>
-        <a href="mailto:pcentre@studium.rehab">
+        <a href="mailto:pcentre@studium.rehab" onClick={() => sendGAEvent("event", "contact_click")}>
           <Mail size={14} aria-hidden="true" />
           pcentre@studium.rehab
         </a>
