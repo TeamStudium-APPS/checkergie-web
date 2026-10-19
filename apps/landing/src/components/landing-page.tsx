@@ -97,8 +97,9 @@ const LandingPage = ({
       onOpenPrivacy={() => { sendGAEvent("event", "policy_open", { policy: "privacy" }); (onOpenPrivacy ?? (() => setPrivacyOpen(true)))(); }}
     />
     <Fragment key={`survey-${formVersion}`}>{renderSurvey({ open, email, onComplete: complete, onOpenChange: setOpen })}</Fragment>
-    <TermsModal open={termsOpen} onOpenChange={setTermsOpen} />
-    <PrivacyModal open={privacyOpen} onOpenChange={setPrivacyOpen} />
+    {/* Modal은 사용자가 바깥 클릭, ESC, X로 닫을 때만 onOpenChange(false)를 호출한다. */}
+    <TermsModal open={termsOpen} onOpenChange={(next) => { if (!next) sendGAEvent("event", "policy_close", { policy: "terms" }); setTermsOpen(next); }} />
+    <PrivacyModal open={privacyOpen} onOpenChange={(next) => { if (!next) sendGAEvent("event", "policy_close", { policy: "privacy" }); setPrivacyOpen(next); }} />
   </>;
 };
 

@@ -191,6 +191,7 @@ TanStack Query는 원격 요청 상태의 원본이다.
 | `profile_skip` | 설문 건너뛰기 클릭 | - |
 | `profile_dismiss` | 설문 모달을 바깥 클릭, ESC, X로 닫음 | - |
 | `policy_open` | 푸터 이용약관, 개인정보처리방침 클릭 | `policy`: `terms` / `privacy` |
+| `policy_close` | 이용약관, 개인정보처리방침 모달을 바깥 클릭, ESC, X로 닫음 | `policy`: `terms` / `privacy` |
 | `contact_click` | 푸터 문의 메일 클릭 | - |
 
 - 이메일 등 개인을 식별할 수 있는 값은 이벤트에 넣지 않는다. 등록 수와 이메일의 원본은 DB다.
