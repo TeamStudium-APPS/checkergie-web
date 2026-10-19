@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Check } from "lucide-react";
+import { sendGAEvent } from "@next/third-parties/google";
 import { Button, Chip, Modal } from "@checkergie/ui";
 import { ageGroupSchema, genderSchema, type AgeGroup as ProfileAgeGroup, type Gender as ProfileGender } from "@checkergie/api";
 
@@ -37,6 +38,9 @@ const ProfileModal = ({ open, onComplete, onOpenChange, onSave }: ProfileModalPr
   const hasChanges = ageGroup !== saved.ageGroup || gender !== saved.gender;
 
   const handleSave = async () => {
+    // 저장 성공 여부와 관계없이 버튼 클릭마다 집계한다.
+    // GA 관리에서 age_group, gender를 맞춤 측정기준으로 등록해야 보고서에서 나눠 볼 수 있다.
+    sendGAEvent("event", "profile_submit", { age_group: ageGroup ?? "none", gender: gender ?? "none" });
     setSaving(true);
     setSaveError(false);
     try {
@@ -53,7 +57,11 @@ const ProfileModal = ({ open, onComplete, onOpenChange, onSave }: ProfileModalPr
   return (
     <Modal
       open={open}
-      onOpenChange={onOpenChange}
+      onOpenChange={(next) => {
+        // Modal은 바깥 클릭, ESC, X 버튼으로 닫힐 때만 onOpenChange를 호출한다.
+        if (!next) sendGAEvent("event", "profile_dismiss");
+        onOpenChange(next);
+      }}
       dismissible={!saving}
       title="신청 완료! 한 가지만 더"
       ariaLabel="신청 완료! 한 가지만 더"
@@ -71,7 +79,10 @@ const ProfileModal = ({ open, onComplete, onOpenChange, onSave }: ProfileModalPr
               key={option}
               label={option}
               selected={ageGroup === option}
-              onPress={() => setAgeGroup((current) => (current === option ? undefined : option))}
+              onPress={() => {
+                sendGAEvent("event", "profile_option_click", { field: "age_group", option, selected: ageGroup !== option });
+                setAgeGroup((current) => (current === option ? undefined : option));
+              }}
             />
           ))}
         </div>
@@ -90,7 +101,10 @@ const ProfileModal = ({ open, onComplete, onOpenChange, onSave }: ProfileModalPr
               key={option}
               label={option}
               selected={gender === option}
-              onPress={() => setGender((current) => (current === option ? undefined : option))}
+              onPress={() => {
+                sendGAEvent("event", "profile_option_click", { field: "gender", option, selected: gender !== option });
+                setGender((current) => (current === option ? undefined : option));
+              }}
             />
           ))}
         </div>
@@ -116,7 +130,10 @@ const ProfileModal = ({ open, onComplete, onOpenChange, onSave }: ProfileModalPr
         type="button"
         className="block w-full text-center text-cg-body-sm font-cg-semibold text-cg-caption underline underline-offset-[3px] cursor-pointer mt-cg-3 py-cg-2 disabled:cursor-not-allowed disabled:opacity-cg-disabled"
         disabled={saving}
-        onClick={() => onComplete("skipped")}
+        onClick={() => {
+          sendGAEvent("event", "profile_skip");
+          onComplete("skipped");
+        }}
       >
         건너뛰기
       </button>
