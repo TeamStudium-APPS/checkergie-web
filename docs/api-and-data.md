@@ -171,6 +171,33 @@ TanStack Query는 원격 요청 상태의 원본이다.
 - 개인정보 수집 목적·항목·보유 기간과 실제 DB 컬럼이 달라지면 `packages/docs`와 스키마를 같은 변경에서 검토한다.
 - 삭제·정정 경로를 추가할 때는 UI뿐 아니라 운영 절차와 실제 데이터 삭제 확인까지 정의한다.
 
+## 분석 이벤트
+
+랜딩은 `@next/third-parties`의 `sendGAEvent`로 GA4에 이벤트를 보낸다. `page_view`는 GA 스크립트가 자동으로 수집한다.
+
+| 이벤트 | 수집 시점 | 파라미터 |
+| --- | --- | --- |
+| `nav_click` | 헤더 강의 찾기, 루틴화, 베타 대기 클릭 | `menu`: `features` / `routine` / `waitlist`, `completed`(베타 대기만) |
+| `waitlist_submit_click` | 알림 받기 클릭, Enter 제출 포함 | `form_location`: `hero`(상단) / `beta`(하단) |
+| `waitlist_submit_result` | 대기 등록 제출 결과 | `form_location`, `result`: `success` / `already_registered` / `invalid` / `error` |
+| `sign_up` | 대기 등록 성공 1회, 주요 이벤트 | `method`: `waitlist`, `form_location` |
+| `share` | 친구에게 알려주기 클릭 | `method`: `native`(공유창) / `clipboard`(링크 복사) |
+| `share_result` | 공유 결과 | `method`, `result`: `success` / `cancelled` / `error` |
+| `profile_open` | 맞춤 추천 받기 클릭 | - |
+| `waitlist_reset` | 다른 이메일로 신청하기 클릭 | - |
+| `profile_option_click` | 설문 연령대·성별 선택 클릭 | `field`: `age_group` / `gender`, `option`, `selected` |
+| `profile_submit` | 설문 저장하기 클릭 | `age_group`, `gender`, 미선택은 `none` |
+| `profile_skip` | 설문 건너뛰기 클릭 | - |
+| `profile_dismiss` | 설문 모달을 바깥 클릭, ESC, X로 닫음 | - |
+| `policy_open` | 푸터 이용약관, 개인정보처리방침 클릭 | `policy`: `terms` / `privacy` |
+| `contact_click` | 푸터 문의 메일 클릭 | - |
+
+- 이메일 등 개인을 식별할 수 있는 값은 이벤트에 넣지 않는다. 등록 수와 이메일의 원본은 DB다.
+- 이벤트 이름과 파라미터 값은 GA 보고서와 맞춤 측정기준의 기준이므로 바꾸지 않는다. 바꿔야 하면 기존 데이터와 끊긴다는 점을 PR에 적는다.
+- 파라미터 값은 화면 문구가 아니라 고정 ID를 쓴다. 설문 값은 DB enum과 같은 값을 쓴다.
+- GA에서 `value`, `currency`처럼 의미가 정해진 파라미터 이름은 쓰지 않는다.
+- 파라미터를 추가하면 GA 관리 > 맞춤 정의에 측정기준을 먼저 등록한다. 등록 전 데이터에는 적용되지 않는다.
+
 ## 검증 시나리오
 
 API 또는 DB 변경 PR은 정적 검사 외에 개발용 DB에서 아래를 확인한다.
