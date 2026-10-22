@@ -4,6 +4,7 @@ import { useLayoutEffect, useRef, type MouseEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Check } from "lucide-react";
+import { sendGAEvent } from "@next/third-parties/google";
 import { Button } from "@checkergie/ui";
 
 export interface LandingHeaderProps {
@@ -64,10 +65,11 @@ const LandingHeader = ({ featuresHref, routineHref, subscriptionHref, completed 
         </span>
       </Link>
       <nav aria-label="주요 메뉴" onClick={handleNavigation} className="flex flex-nowrap items-center gap-cg-1 sm:gap-cg-4 [&_a]:h-11 [&_a]:px-cg-2 [&_a]:text-cg-label-sm sm:[&_a]:px-cg-5 sm:[&_a]:text-cg-label-lg">
-        <Button<"a"> href={featuresHref} variant="ghost" className="landing-brand-hover hover:bg-cg-subtle">강의 찾기</Button>
-        <Button<"a"> href={routineHref} variant="ghost" className="landing-brand-hover hover:bg-cg-subtle">루틴화</Button>
+        <Button<"a"> href={featuresHref} variant="ghost" className="landing-brand-hover hover:bg-cg-subtle" onClick={() => sendGAEvent("event", "nav_click", { menu: "features" })}>강의 찾기</Button>
+        <Button<"a"> href={routineHref} variant="ghost" className="landing-brand-hover hover:bg-cg-subtle" onClick={() => sendGAEvent("event", "nav_click", { menu: "routine" })}>루틴화</Button>
         <Button<"a">
           href={subscriptionHref}
+          onClick={() => sendGAEvent("event", "nav_click", { menu: "waitlist", completed })}
           trailingIcon={completed ? <Check size={20} /> : undefined}
           className={completed
             ? "border border-[var(--landing-accent)]/50 [&&]:bg-[var(--landing-accent)]/15 [&&]:text-[var(--landing-accent)] [&&]:hover:bg-[var(--landing-accent)]/25 [&&]:hover:text-[var(--landing-accent)]"

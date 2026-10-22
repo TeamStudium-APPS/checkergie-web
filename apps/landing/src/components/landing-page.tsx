@@ -1,6 +1,7 @@
 "use client";
 
 import { Fragment, useRef, useState, type ReactNode } from "react";
+import { sendGAEvent } from "@next/third-parties/google";
 import { isWaitlistAlreadyRegisteredError } from "@checkergie/api";
 import LandingHeader from "./landing-header/landing-header";
 import LandingHero from "./landing-hero/landing-hero";
@@ -59,12 +60,16 @@ const LandingPage = ({
     pending.current = true;
     try {
       await onSubscribe(value);
+      // 이메일은 GA 약관상 개인 식별 정보라 전송하지 않고 등록 건수만 집계한다.
+      sendGAEvent("event", "sign_up", { method: "waitlist", form_location: location });
+      sendGAEvent("event", "waitlist_submit_result", { form_location: location, result: "success" });
       setSource(location);
       setEmail(value);
       setCompleted(true);
       setOpen(true);
     } catch (error) {
       if (!isWaitlistAlreadyRegisteredError(error)) throw error;
+      sendGAEvent("event", "waitlist_submit_result", { form_location: location, result: "already_registered" });
       setSource(location);
       setEmail(value);
       setAlreadyRegistered(true);
@@ -75,7 +80,7 @@ const LandingPage = ({
     setOpen(false);
     requestAnimationFrame(() => document.getElementById(`${source}-subscription`)?.scrollIntoView({ block: "center", behavior: "instant" }));
   };
-  const common = { completed, alreadyRegistered, onOpenProfile: () => { setSource("beta"); setOpen(true); } };
+  const common = { completed, alreadyRegistered, onOpenProfile: () => { sendGAEvent("event", "profile_open"); setSource("beta"); setOpen(true); } };
 
   return <>
     <LandingHeader subscriptionHref="#hero-subscription-btm" featuresHref="#set1" routineHref="#set2" completed={completed} />
@@ -87,10 +92,14 @@ const LandingPage = ({
       </div>
       <LandingSubscription key={`beta-${formVersion}`} {...common} onReset={() => reset("beta")} onRequestSubscribe={(value) => request(value, "beta")} />
     </main>
-    <LandingFooter onOpenTerms={onOpenTerms ?? (() => setTermsOpen(true))} onOpenPrivacy={onOpenPrivacy ?? (() => setPrivacyOpen(true))} />
+    <LandingFooter
+      onOpenTerms={() => { sendGAEvent("event", "policy_open", { policy: "terms" }); (onOpenTerms ?? (() => setTermsOpen(true)))(); }}
+      onOpenPrivacy={() => { sendGAEvent("event", "policy_open", { policy: "privacy" }); (onOpenPrivacy ?? (() => setPrivacyOpen(true)))(); }}
+    />
     <Fragment key={`survey-${formVersion}`}>{renderSurvey({ open, email, onComplete: complete, onOpenChange: setOpen })}</Fragment>
-    <TermsModal open={termsOpen} onOpenChange={setTermsOpen} />
-    <PrivacyModal open={privacyOpen} onOpenChange={setPrivacyOpen} />
+    {/* Modal은 사용자가 바깥 클릭, ESC, X로 닫을 때만 onOpenChange(false)를 호출한다. */}
+    <TermsModal open={termsOpen} onOpenChange={(next) => { if (!next) sendGAEvent("event", "policy_close", { policy: "terms" }); setTermsOpen(next); }} />
+    <PrivacyModal open={privacyOpen} onOpenChange={(next) => { if (!next) sendGAEvent("event", "policy_close", { policy: "privacy" }); setPrivacyOpen(next); }} />
   </>;
 };
 
