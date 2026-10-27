@@ -9,6 +9,7 @@
 | [architecture.md](./architecture.md) | 모노레포 경계, 앱과 패키지의 책임, 런타임 경계, 의존 방향 |
 | [code-convention.md](./code-convention.md) | TypeScript, React, Next.js, 네이밍, 함수와 컴포넌트 작성 규칙 |
 | [api-and-data.md](./api-and-data.md) | API 계약, 상태 관리, 오류, 환경변수, DB와 대기 등록 흐름 |
+| [email.md](./email.md) | 메일 실행 주체, 검증 계약, 실패 정책, 배포·운영 절차 |
 | [design-system.md](./design-system.md) | 공용 UI, 토큰, Atomic Design, Storybook 기준 |
 | [git-convention.md](./git-convention.md) | 커밋 메시지와 저장소 관리 규칙 |
 | [branch-convention.md](./branch-convention.md) | 브랜치 이름과 기본 작업 흐름 |
