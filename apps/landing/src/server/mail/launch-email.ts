@@ -1,9 +1,6 @@
-import { emailSchema } from "@checkergie/api";
+import { mailRecipientSchema, mailServiceUrlSchema, type MailTemplateOptions } from "./schemas";
 
-export interface LaunchEmailOptions {
-  serviceUrl: string;
-  contactEmail: string;
-}
+export type LaunchEmailOptions = MailTemplateOptions;
 
 const SUBJECT = "[체커기] 기다리던 체커기, 지금 만나보세요";
 
@@ -19,25 +16,12 @@ const COLORS = {
   action: "#ffc857",
 };
 
-const escapeHtml = (value: string) => value.replace(/[&<>"']/g, (character) => ({
+export const escapeHtml = (value: string) => value.replace(/[&<>"']/g, (character) => ({
   "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
 })[character]!);
 
-export const validateEmailAddress = (value: string): string => {
-  const email = value.trim();
-  if (!emailSchema.safeParse(email).success) {
-    throw new Error("이메일 주소 하나를 올바른 형식으로 입력해 주세요.");
-  }
-  return email;
-};
-
-export const validateServiceUrl = (value: string): string => {
-  const url = new URL(value);
-  if (url.protocol !== "https:" || url.username || url.password) {
-    throw new Error("서비스 주소는 인증 정보가 없는 HTTPS 주소여야 합니다.");
-  }
-  return url.href;
-};
+export const validateEmailAddress = (value: string) => mailRecipientSchema.parse(value);
+export const validateServiceUrl = (value: string) => mailServiceUrlSchema.parse(value);
 
 export const renderLaunchEmail = ({ serviceUrl, contactEmail }: LaunchEmailOptions) => {
   const url = validateServiceUrl(serviceUrl);

@@ -7,3 +7,6 @@ export const mailDeliveryStatusSchema = z.enum([
 ]);
 
 export type MailDeliveryStatus = z.infer<typeof mailDeliveryStatusSchema>;
+
+export const mailKindSchema = z.enum(["welcome", "launch"]);
+export type MailKind = z.infer<typeof mailKindSchema>;

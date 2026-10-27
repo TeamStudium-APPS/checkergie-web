@@ -5,7 +5,7 @@ import nodemailer, { type SendMailOptions } from "nodemailer";
 import type SMTPTransport from "nodemailer/lib/smtp-transport";
 
 import { renderLaunchEmail, validateEmailAddress } from "./launch-email";
-import { createLaunchMailer, getMailConfig, getMailPreviewConfig, MailDeliveryError } from "./smtp";
+import { createLaunchMailer, createMailer, getMailConfig, getMailPreviewConfig, MailDeliveryError } from "./smtp";
 
 const environment = {
   SMTP_HOST: "smtp.example.com",
@@ -15,6 +15,31 @@ const environment = {
   MAIL_FROM_ADDRESS: "sender@example.com",
   MAIL_SERVICE_URL: "https://example.com/open?source=email&campaign=launch",
 };
+
+test("신청 확인 발송은 전용 본문과 발신 도메인의 추적 ID를 사용한다", async (context) => {
+  const messages: SendMailOptions[] = [];
+  context.mock.method(nodemailer, "createTransport", () => ({
+    verify: async () => true,
+    sendMail: async (message: SendMailOptions) => {
+      messages.push(message);
+      return { messageId: message.messageId, accepted: ["recipient@example.com"], rejected: [] };
+    },
+    close: () => {},
+  }));
+  const mailer = createMailer("welcome", environment);
+  const jobId = "11111111-1111-4111-8111-111111111111";
+  try {
+    await mailer.send("recipient@example.com", jobId);
+    assert.equal(messages[0].messageId, `<${jobId}@example.com>`);
+    assert.match(String(messages[0].subject), /신청이 완료/);
+    assert.match(String(messages[0].text), /오픈하면/);
+    await assert.rejects(mailer.send("recipient@example.com", "bad\r\nBcc: x@example.com"));
+    assert.equal(messages.length, 1);
+  } finally {
+    mailer.close();
+    context.mock.restoreAll();
+  }
+});
 
 test("HTML과 텍스트에 서비스 주소·문의·수신 거부 안내를 포함한다", () => {
   const email = renderLaunchEmail({ serviceUrl: environment.MAIL_SERVICE_URL, contactEmail: "help@example.com" });
@@ -148,4 +173,35 @@ test("SMTP 실패를 not_sent와 uncertain으로 구분한다", async (context) 
 
   context.mock.restoreAll();
   assert.equal(createTransport.mock.callCount(), 1);
+});
+
+test("일시적 4xx만 재시도하고 5xx·설정 오류·결과 불명을 구분한다", async (context) => {
+  let failure: unknown;
+  context.mock.method(nodemailer, "createTransport", () => ({
+    verify: async () => true,
+    sendMail: async () => { throw failure; },
+    close: () => {},
+  }));
+  const mailer = createMailer("welcome", environment);
+  try {
+    for (const scenario of [
+      { error: { responseCode: 451 }, status: "not_sent", retryable: true, code: "SMTP_TRANSIENT" },
+      { error: { responseCode: 550 }, status: "not_sent", retryable: false, code: "SMTP_REJECTED" },
+      { error: { code: "EAUTH" }, status: "not_sent", retryable: false, code: "SMTP_CONFIGURATION" },
+      { error: { code: "ETIMEDOUT" }, status: "uncertain", retryable: false, code: "SMTP_UNCERTAIN" },
+      { error: null, status: "uncertain", retryable: false, code: "SMTP_UNCERTAIN" },
+    ]) {
+      failure = scenario.error;
+      await assert.rejects(mailer.send("recipient@example.com"), (error: unknown) => {
+        assert.ok(error instanceof MailDeliveryError);
+        assert.equal(error.deliveryStatus, scenario.status);
+        assert.equal(error.retryable, scenario.retryable);
+        assert.equal(error.code, scenario.code);
+        return true;
+      });
+    }
+  } finally {
+    mailer.close();
+    context.mock.restoreAll();
+  }
 });
