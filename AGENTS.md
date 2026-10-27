@@ -68,7 +68,8 @@ packages have real implementations.
 ## Changes and collaboration
 
 - Prefer small, focused changes and preserve unrelated work in the working tree.
-- Treat `docs/git-convention.md` and `docs/branch-convention.md` as the source of truth for Git collaboration.
+- Treat `docs/git-convention.md`, `docs/branch-convention.md`, and `docs/git-project-workflow.md` as the source of truth for Git collaboration.
+- Verify Labels, Assignees, and Projects on both the issue and pull request when creating or updating them.
 - Branch from the latest `develop` using `feature/short-english-name` for features or the matching documented task type, then open a pull request back to `develop`.
 - Do not include issue numbers in branch names. Use the branch name as the pull request title and link the issue in the body with `Closes #N`.
 - Use `feat`, `fix`, `refactor`, `docs`, `test`, `chore`, or `note` commit types with a concise Korean subject. Do not use `style`; classify those changes as `refactor`.
