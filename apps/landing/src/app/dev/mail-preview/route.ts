@@ -1,11 +1,13 @@
+import { renderWelcomeEmail } from "src/server/mail/welcome-email";
 import { renderLaunchEmail } from "src/server/mail/launch-email";
 import { getMailPreviewConfig } from "src/server/mail/smtp";
 
-export const GET = () => {
+export const GET = (request: Request) => {
   if (process.env.NODE_ENV !== "development") {
     return new Response(null, { status: 404 });
   }
-  const email = renderLaunchEmail(getMailPreviewConfig());
+  const render = new URL(request.url).searchParams.get("kind") === "welcome" ? renderWelcomeEmail : renderLaunchEmail;
+  const email = render(getMailPreviewConfig());
   return new Response(email.html, {
     headers: {
       "Content-Type": "text/html; charset=utf-8",

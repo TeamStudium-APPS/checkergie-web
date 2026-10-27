@@ -1,15 +1,8 @@
-import { neon, NeonDbError } from "@neondatabase/serverless";
+import { NeonDbError } from "@neondatabase/serverless";
+import { getDatabase } from "../database";
 import { normalizeEmail, WaitlistStoreUnavailableError, type WaitlistStore } from "./store";
 
 const TRANSIENT_SQLSTATE_PREFIXES = ["08", "53", "57P", "40001", "40P01"];
-
-const getSql = () => {
-  const connectionString = process.env.DATABASE_URL;
-  if (!connectionString) {
-    throw new Error("DATABASE_URL 환경 변수가 필요합니다.");
-  }
-  return neon(connectionString, { fullResults: true });
-};
 
 const isTransient = (error: unknown) => {
   if (!(error instanceof NeonDbError)) return false;
@@ -25,26 +18,34 @@ const run = async <T>(query: () => Promise<T>) => {
   }
 };
 
-export const neonWaitlistStore: WaitlistStore = {
+export const createWaitlistStore = (connect = getDatabase): WaitlistStore => ({
   warmUp: () => run(async () => {
-    const sql = getSql();
+    const sql = connect();
     await sql`SELECT 1`;
   }),
 
   subscribe: (email, policyVersion) => run(async () => {
-    const sql = getSql();
-    const { rowCount } = await sql`
-      INSERT INTO waitlist (email, policy_version) VALUES (${normalizeEmail(email)}, ${policyVersion})
-      ON CONFLICT (email) DO NOTHING
+    const sql = connect();
+    const rows = await sql`
+      WITH registered AS (
+        INSERT INTO waitlist (email, policy_version) VALUES (${normalizeEmail(email)}, ${policyVersion})
+        ON CONFLICT (email) DO NOTHING
+        RETURNING email
+      )
+      INSERT INTO mail_outbox (email, kind)
+      SELECT email, 'welcome' FROM registered
+      RETURNING id
     `;
-    return { created: rowCount === 1 };
+    return { created: rows.length === 1 };
   }),
 
   updateProfile: (email, { ageGroup, gender }) => run(async () => {
-    const sql = getSql();
+    const sql = connect();
     await sql`
       UPDATE waitlist SET age_group = ${ageGroup}, gender = ${gender}
       WHERE email = ${normalizeEmail(email)}
     `;
   }),
-};
+});
+
+export const neonWaitlistStore = createWaitlistStore();

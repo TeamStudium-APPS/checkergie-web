@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "mail:preview": "node --conditions=react-server --import tsx scripts/send-launch-email.ts",
     "mail:send": "node --conditions=react-server --import tsx scripts/send-launch-email.ts --send",
-    "test:mail": "node --conditions=react-server --import tsx --test src/server/mail/mail.test.ts"
+    "test:mail": "node --conditions=react-server --import tsx --test src/server/mail/*.test.ts",
+    "mail:queue": "node --conditions=react-server --import tsx scripts/mail-queue.ts"
   },
   "dependencies": {
     "@checkergie/api": "workspace:*",
