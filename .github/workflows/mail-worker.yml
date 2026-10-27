@@ -1,0 +1,37 @@
+name: Process scheduled mail
+
+on:
+  schedule:
+    - cron: "2-59/5 * * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: mail-queue-processing
+  cancel-in-progress: false
+
+jobs:
+  recover:
+    if: vars.MAIL_WORKER_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - name: Process welcome and scheduled launch mail
+        env:
+          MAIL_WORKER_SECRET: ${{ secrets.MAIL_WORKER_SECRET }}
+        run: |
+          if [ -z "$MAIL_WORKER_SECRET" ]; then
+            echo "MAIL_WORKER_SECRET is required."
+            exit 1
+          fi
+          status=0
+          curl --fail-with-body --silent --show-error --max-time 65 \
+            --proto '=https' --request POST \
+            --header "Authorization: Bearer $MAIL_WORKER_SECRET" \
+            https://checkergie.vercel.app/api/internal/mail || status=1
+          curl --fail-with-body --silent --show-error --max-time 305 \
+            --proto '=https' --request POST \
+            --header "Authorization: Bearer $MAIL_WORKER_SECRET" \
+            https://checkergie.vercel.app/api/internal/mail/launch || status=1
+          exit "$status"
