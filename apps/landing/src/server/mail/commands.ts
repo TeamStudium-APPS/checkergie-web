@@ -1,6 +1,27 @@
 import { parseArgs } from "node:util";
+import { z } from "zod";
+import { mailKindSchema } from "@checkergie/api";
 import { MailOperationError } from "./errors";
-import { mailCommandSchema, mailTestCommandSchema } from "./schemas";
+import { mailCutoffSchema, mailIdSchema, mailLimitSchema, mailRecipientSchema, mailResolutionStatusSchema } from "./schemas";
+
+const commonCommand = { send: z.boolean().default(false) };
+const queueSelection = { kind: mailKindSchema.default("welcome"), before: mailCutoffSchema.optional() };
+const mailCommandSchema = z.discriminatedUnion("command", [
+  z.strictObject({ command: z.literal("status"), ...commonCommand, ...queueSelection }),
+  z.strictObject({
+    command: z.literal("process"), ...commonCommand,
+    kind: mailKindSchema.default("welcome"), limit: mailLimitSchema.default(25),
+  }),
+  z.strictObject({ command: z.literal("launch"), ...commonCommand, before: mailCutoffSchema }),
+  z.strictObject({ command: z.literal("retry"), ...commonCommand, kind: mailKindSchema.default("welcome") }),
+  z.strictObject({ command: z.literal("resolve"), ...commonCommand, id: mailIdSchema, status: mailResolutionStatusSchema }),
+  z.strictObject({ command: z.literal("suppress"), ...commonCommand, email: mailRecipientSchema }),
+]);
+const mailTestCommandSchema = z.strictObject({
+  to: mailRecipientSchema,
+  kind: mailKindSchema.default("launch"),
+  send: z.boolean().default(false),
+});
 
 export const parseQueueCommand = (args: string[]) => {
   let parsed: ReturnType<typeof parseArgs>;

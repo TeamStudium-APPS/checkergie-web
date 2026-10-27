@@ -1,11 +1,13 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
+import { mailEnvironmentSchema, mailPolicySchema } from "./config";
 import { parseQueueCommand, parseTestCommand } from "./commands";
 import { formatMailError, MailDeliveryError, MailOperationError } from "./errors";
 import {
-  mailCutoffSchema, mailEnvironmentSchema, mailIdSchema, mailJobSchema, mailPolicySchema,
+  mailCutoffSchema, mailIdSchema, mailJobSchema,
 } from "./schemas";
-import { createMailOutbox, enqueueLaunchMail } from "./neon-outbox";
+import { createMailOutbox } from "./neon-outbox";
+import { enqueueLaunchMail } from "./operations";
 import { createMailWorkerHandler } from "./worker";
 
 const environment = {

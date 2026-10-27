@@ -1,17 +1,11 @@
-import { existsSync } from "node:fs";
-import { loadEnvFile } from "node:process";
 import { parseQueueCommand } from "../src/server/mail/commands";
 import { deliverMail } from "../src/server/mail/deliver";
-import { formatMailError } from "../src/server/mail/errors";
-import {
-  enqueueLaunchMail, getMailSummary, neonMailOutbox, resolveUncertainMail, retryFailedMail, suppressMail,
-} from "../src/server/mail/neon-outbox";
+import { neonMailOutbox } from "../src/server/mail/neon-outbox";
+import { enqueueLaunchMail, getMailSummary, resolveUncertainMail, retryFailedMail, suppressMail } from "../src/server/mail/operations";
+import { runMailCommand } from "./mail-cli";
 
 const main = async () => {
   const input = parseQueueCommand(process.argv.slice(2));
-  for (const path of [".env.local", ".env"]) {
-    if (existsSync(path)) loadEnvFile(path);
-  }
   if (!input.send || input.command === "status") {
     console.log("조회 모드: 메일 발송·DB 변경 없음. 변경 명령은 --send를 명시해야 실행됩니다.");
     if (input.command === "resolve" || input.command === "suppress") {
@@ -47,7 +41,4 @@ const main = async () => {
   }
 };
 
-main().catch((error: unknown) => {
-  console.error(formatMailError(error));
-  process.exitCode = 1;
-});
+void runMailCommand(main);

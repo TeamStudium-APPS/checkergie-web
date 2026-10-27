@@ -1,6 +1,5 @@
 import { mailRecipientSchema, mailServiceUrlSchema, type MailTemplateOptions } from "./schemas";
-
-export type LaunchEmailOptions = MailTemplateOptions;
+import { escapeHtml } from "./template";
 
 const SUBJECT = "[체커기] 기다리던 체커기, 지금 만나보세요";
 
@@ -16,16 +15,9 @@ const COLORS = {
   action: "#ffc857",
 };
 
-export const escapeHtml = (value: string) => value.replace(/[&<>"']/g, (character) => ({
-  "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
-})[character]!);
-
-export const validateEmailAddress = (value: string) => mailRecipientSchema.parse(value);
-export const validateServiceUrl = (value: string) => mailServiceUrlSchema.parse(value);
-
-export const renderLaunchEmail = ({ serviceUrl, contactEmail }: LaunchEmailOptions) => {
-  const url = validateServiceUrl(serviceUrl);
-  const contact = validateEmailAddress(contactEmail);
+export const renderLaunchEmail = ({ serviceUrl, contactEmail }: MailTemplateOptions) => {
+  const url = mailServiceUrlSchema.parse(serviceUrl);
+  const contact = mailRecipientSchema.parse(contactEmail);
   const safeUrl = escapeHtml(url);
   const safeContact = escapeHtml(contact);
   const unsubscribeUrl = escapeHtml(`mailto:${contact}?subject=${encodeURIComponent("체커기 알림 수신 거부 요청")}`);

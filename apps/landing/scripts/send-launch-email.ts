@@ -1,16 +1,12 @@
-import { existsSync } from "node:fs";
-import { loadEnvFile } from "node:process";
 import { parseTestCommand } from "../src/server/mail/commands";
-import { formatMailError } from "../src/server/mail/errors";
 import { renderLaunchEmail } from "../src/server/mail/launch-email";
-import { createMailer, getMailPreviewConfig } from "../src/server/mail/smtp";
+import { createMailer } from "../src/server/mail/smtp";
+import { getMailPreviewConfig } from "../src/server/mail/config";
 import { renderWelcomeEmail } from "../src/server/mail/welcome-email";
+import { runMailCommand } from "./mail-cli";
 
 const main = async () => {
   const input = parseTestCommand(process.argv.slice(2));
-  for (const path of [".env.local", ".env"]) {
-    if (existsSync(path)) loadEnvFile(path);
-  }
   if (!input.send) {
     const render = input.kind === "welcome" ? renderWelcomeEmail : renderLaunchEmail;
     const email = render(getMailPreviewConfig());
@@ -27,7 +23,4 @@ const main = async () => {
   }
 };
 
-main().catch((error: unknown) => {
-  console.error(formatMailError(error));
-  process.exitCode = 1;
-});
+void runMailCommand(main);

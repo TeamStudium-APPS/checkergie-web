@@ -1,8 +1,9 @@
-import { escapeHtml, validateEmailAddress, validateServiceUrl, type LaunchEmailOptions } from "./launch-email";
+import { mailRecipientSchema, mailServiceUrlSchema, type MailTemplateOptions } from "./schemas";
+import { escapeHtml } from "./template";
 
-export const renderWelcomeEmail = ({ serviceUrl, contactEmail }: LaunchEmailOptions) => {
-  const url = validateServiceUrl(serviceUrl);
-  const contact = validateEmailAddress(contactEmail);
+export const renderWelcomeEmail = ({ serviceUrl, contactEmail }: MailTemplateOptions) => {
+  const url = mailServiceUrlSchema.parse(serviceUrl);
+  const contact = mailRecipientSchema.parse(contactEmail);
   const subject = "[체커기] 오픈 알림 신청이 완료됐어요";
   const text = [
     "안녕하세요. 체커기 팀입니다.",

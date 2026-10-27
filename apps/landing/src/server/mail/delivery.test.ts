@@ -6,10 +6,9 @@ import { POST as runWorker } from "../../app/api/internal/mail/route";
 import type { DatabaseSql } from "../database";
 import { createWaitlistStore } from "../waitlist/neon-store";
 import { deliverMail } from "./deliver";
-import {
-  createMailOutbox, enqueueLaunchMail, getMailSummary, resolveUncertainMail, retryFailedMail, suppressMail,
-} from "./neon-outbox";
-import { MailDeliveryError } from "./smtp";
+import { createMailOutbox } from "./neon-outbox";
+import { enqueueLaunchMail, getMailSummary, resolveUncertainMail, retryFailedMail, suppressMail } from "./operations";
+import { MailDeliveryError } from "./errors";
 import { processScheduledLaunchMail } from "./scheduled-launch";
 import { renderWelcomeEmail } from "./welcome-email";
 

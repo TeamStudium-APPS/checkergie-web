@@ -4,8 +4,11 @@ import { mailDeliveryStatusSchema } from "@checkergie/api";
 import nodemailer, { type SendMailOptions } from "nodemailer";
 import type SMTPTransport from "nodemailer/lib/smtp-transport";
 
-import { renderLaunchEmail, validateEmailAddress } from "./launch-email";
-import { createLaunchMailer, createMailer, getMailConfig, getMailPreviewConfig, MailDeliveryError } from "./smtp";
+import { renderLaunchEmail } from "./launch-email";
+import { createMailer } from "./smtp";
+import { getMailConfig, getMailPreviewConfig } from "./config";
+import { MailDeliveryError } from "./errors";
+import { mailRecipientSchema } from "./schemas";
 
 const environment = {
   SMTP_HOST: "smtp.example.com",
@@ -65,7 +68,7 @@ test("실행 가능한 URL·HTTP 주소·인증 정보가 들어간 URL을 거�
 
 test("수신자 여러 명과 헤더 삽입을 거부한다", () => {
   for (const recipient of ["a@example.com,b@example.com", "a@example.com\r\nBcc: b@example.com", "Name <a@example.com>", "a?b@example.com", "a#b@example.com", "invalid"]) {
-    assert.throws(() => validateEmailAddress(recipient));
+    assert.throws(() => mailRecipientSchema.parse(recipient));
   }
 });
 
@@ -103,7 +106,7 @@ test("단일 수신자에게 HTML·텍스트를 함께 보내고 SMTP 거절을 
     sendMail,
     close,
   }));
-  const mailer = createLaunchMailer(environment);
+  const mailer = createMailer("launch", environment);
   try {
     await mailer.verify();
     assert.deepEqual(await mailer.send("recipient@example.com"), {
@@ -146,7 +149,7 @@ test("SMTP 실패를 not_sent와 uncertain으로 구분한다", async (context) 
     },
     close: context.mock.fn(),
   }));
-  const mailer = createLaunchMailer(environment);
+  const mailer = createMailer("launch", environment);
 
   verifyError = Object.assign(new Error("authentication failed"), { code: "EAUTH" });
   await assert.rejects(

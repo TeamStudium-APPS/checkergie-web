@@ -4,16 +4,14 @@ import nodemailer from "nodemailer";
 import type SMTPTransport from "nodemailer/lib/smtp-transport";
 import { z } from "zod";
 import { mailDeliveryStatusSchema } from "@checkergie/api";
-import { renderLaunchEmail, validateEmailAddress } from "./launch-email";
+import { getMailConfig, type MailEnvironment } from "./config";
+import { renderLaunchEmail } from "./launch-email";
 import { MailDeliveryError } from "./errors";
-import { mailEnvironmentSchema, mailIdSchema, mailTemplateOptionsSchema } from "./schemas";
+import { mailIdSchema, mailRecipientSchema } from "./schemas";
 import type { MailKind } from "./outbox";
 import { renderWelcomeEmail } from "./welcome-email";
 
-export { MailDeliveryError } from "./errors";
 const MAIL_DELIVERY_STATUS = mailDeliveryStatusSchema.enum;
-
-type Environment = Record<string, string | undefined>;
 
 const smtpErrorSchema = z.object({
   code: z.string().optional(),
@@ -37,14 +35,7 @@ const classifySendFailure = (error: unknown) => {
   return new MailDeliveryError("uncertain");
 };
 
-export const getMailPreviewConfig = (env: Environment = process.env) => mailTemplateOptionsSchema.parse({
-  serviceUrl: env.MAIL_SERVICE_URL?.trim() || "https://example.com/checkergie",
-  contactEmail: env.MAIL_CONTACT_EMAIL?.trim() || env.MAIL_FROM_ADDRESS?.trim() || "hello@example.com",
-});
-
-export const getMailConfig = (env: Environment = process.env) => mailEnvironmentSchema.parse(env);
-
-export const createMailer = (kind: MailKind, env: Environment = process.env) => {
+export const createMailer = (kind: MailKind, env: MailEnvironment = process.env) => {
   const config = getMailConfig(env);
   const transport = nodemailer.createTransport({
     host: config.host,
@@ -70,7 +61,7 @@ export const createMailer = (kind: MailKind, env: Environment = process.env) => 
       }
     },
     send: async (recipient: string, deliveryId?: string) => {
-      const to = validateEmailAddress(recipient);
+      const to = mailRecipientSchema.parse(recipient);
       if (deliveryId !== undefined) mailIdSchema.parse(deliveryId);
       let result: SMTPTransport.SentMessageInfo;
       try {
@@ -93,5 +84,3 @@ export const createMailer = (kind: MailKind, env: Environment = process.env) => 
     close: () => transport.close(),
   };
 };
-
-export const createLaunchMailer = (env: Environment = process.env) => createMailer("launch", env);

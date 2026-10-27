@@ -1,6 +1,6 @@
 import { renderWelcomeEmail } from "src/server/mail/welcome-email";
 import { renderLaunchEmail } from "src/server/mail/launch-email";
-import { getMailPreviewConfig } from "src/server/mail/smtp";
+import { getMailPreviewConfig } from "src/server/mail/config";
 
 export const GET = (request: Request) => {
   if (process.env.NODE_ENV !== "development") {

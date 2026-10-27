@@ -1,10 +1,11 @@
 import "server-only";
 
 import { timingSafeEqual } from "node:crypto";
+import { mailWorkerSecretSchema } from "./config";
 import { deliverMail } from "./deliver";
 import { formatMailError } from "./errors";
 import { neonMailOutbox } from "./neon-outbox";
-import { mailSummarySchema, mailWorkerSecretSchema } from "./schemas";
+import { mailSummarySchema } from "./schemas";
 
 const processWelcomeMail = () => deliverMail({ kind: "welcome", limit: 1, outbox: neonMailOutbox });
 
