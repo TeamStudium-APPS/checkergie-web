@@ -104,9 +104,10 @@ migration 도구를 도입하기 전까지도 실행한 SQL과 적용 환경을 
 
 1. 사용자가 이메일을 입력한다.
 2. 클라이언트와 Route Handler가 형식·길이를 검증한다.
-3. 저장소가 정규화한 이메일과 방침 버전을 insert한다.
+3. 저장소가 정규화한 이메일·방침 버전과 신청 확인 메일 작업을 단일 SQL로 함께 저장한다. 메일 작업 저장이 실패하면 신청도 rollback된다.
 4. insert 성공 시 완료 화면과 선택 설문을 연다.
 5. 설문 저장 시 연령대·성별을 update한다.
+6. 응답 후 Next.js `after()`가 해당 신청자의 확인 메일 1건을 발송한다. SMTP 장애는 이미 저장된 신청을 실패로 바꾸지 않는다. 실패 작업은 대기열에 남는다. 일시적인 SMTP 거절만 정기 worker가 재처리하며, 영구 거절·결과 미확인은 운영자가 확인한다.
 
 ### 중복 이메일
 
@@ -146,6 +147,7 @@ Neon이 유휴 상태에서 정지될 수 있어 이메일 입력 focus/input �
 | 변수 | 노출 범위 | 필수 여부 | 용도 |
 | --- | --- | --- | --- |
 | `DATABASE_URL` | 서버 전용 | 런타임 필수 | Neon 연결 문자열 |
+| `MAIL_WORKER_SECRET` | 서버 전용 | 복구 API 사용 시 필수 | 32자 이상 ASCII 무작위 비밀. `/api/internal/mail` POST Bearer 인증 |
 | `NEXT_PUBLIC_API_BASE_URL` | 브라우저 번들 | 선택 | 별도 API origin 사용 시 지정, 기본값 `/api` |
 | `NEXT_PUBLIC_GA_ID` | 브라우저 번들 | 선택 | GA4 측정 ID(`G-`로 시작). Production에만 설정하며, 없으면 GA 스크립트를 로드하지 않는다 |
 
@@ -228,3 +230,15 @@ API 또는 DB 변경 PR은 정적 검사 외에 개발용 DB에서 아래를 확
 - 여러 앱이 공유하는 독립 API origin은 아직 없다.
 
 각 항목을 구현할 때는 별도 이슈로 범위와 acceptance criteria를 정하고 이 문서를 함께 갱신한다.
+
+## 메일 발송 데이터
+
+`mail_outbox`는 신청 확인(`welcome`)·오픈 알림(`launch`)의 작업과 결과를 저장한다. `(email, kind)` 유일성 제약과 원자적 선점으로 같은 작업의 중복 실행을 막는다. `processing` 상태로 기본 5분이 지나면 접수 여부를 알 수 없으므로 `uncertain`으로 격리한다. SMTP 성공은 수신함 도착을 보장하지 않는다.
+
+기존 DB에는 앱 배포 전에 `apps/landing/src/server/mail/migrations/001-mail-outbox.sql`을 적용한다. 신규 DB도 `waitlist/schema.sql` 다음에 같은 migration을 적용한다. 이 migration은 기존 대기 명단을 지우거나 과거 신청자의 확인 메일을 생성하지 않는다. rollback은 이전 앱 버전으로 되돌리되 신규 테이블을 유지한다. 테이블 삭제는 대기 작업·기록을 잃으므로 일반 rollback에 포함하지 않는다.
+
+`mail_suppressions`에 등록된 주소는 신규 선점에서 제외한다. 명단 삭제 시 외래키로 발송 작업·기록도 함께 삭제되며, 개인정보 삭제 요청은 수신 거부 테이블의 주소도 삭제해야 한다. 이미 SMTP 전송 중인 작업은 취소할 수 없다. 운영 명령과 상태별 복구는 [메일 운영](./email.md)을 따른다.
+
+메일의 재시도 가능 여부(`retryable`)와 안전한 실패 코드(`failure_code`)를 접수 상태와 함께 보존한다. SMTP 4xx만 자동 재시도하고 5xx·설정 오류·결과 미확인은 제외한다. 실행 주체는 opt-in GitHub Actions 복구 작업이며 구체적인 설정·정책 기본값·수동 처리 범위는 `docs/email.md`에서 관리한다.
+
+오픈 알림 자동 실행은 Production의 `MAIL_LAUNCH_AT` 예약 시각을 기준으로 한다. 값이 없으면 비활성이며, 시각 이후에만 해당 시각까지 신청한 명단을 유일성 제약으로 대기열에 추가한다. 인증된 `/api/internal/mail/launch`와 기존 확인 메일 복구 경로는 같은 정기 작업이 호출한다. 상세 처리 수·실행 예산·수동 작업 구분은 `docs/email.md`를 따른다.

@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "mail:preview": "node --conditions=react-server --import tsx scripts/send-launch-email.ts",
     "mail:send": "node --conditions=react-server --import tsx scripts/send-launch-email.ts --send",
-    "test:mail": "node --conditions=react-server --import tsx --test src/server/mail/mail.test.ts"
+    "test:mail": "node --conditions=react-server --import tsx --test src/server/mail/*.test.ts",
+    "mail:queue": "node --conditions=react-server --import tsx scripts/mail-queue.ts"
   },
   "dependencies": {
     "@checkergie/api": "workspace:*",
@@ -23,9 +24,11 @@
     "nodemailer": "^10.1.1",
     "react": "19.2.8",
     "react-dom": "19.2.8",
-    "server-only": "^0.0.1"
+    "server-only": "^0.0.1",
+    "zod": "^4.5.4"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.11",
     "@tailwindcss/postcss": "^4",
     "@types/nodemailer": "^8.0.2",
     "tailwindcss": "^4",

@@ -35,6 +35,15 @@
 - PR이 이슈에 연결되면 Project 상태는 `Review`로 자동 변경된다.
 - PR이 병합되면 Project 상태는 `Done`으로 자동 변경된다.
 
+### 메타데이터 확인
+
+- 이슈와 PR을 생성하거나 수정할 때 `Labels`, `Assignees`, `Projects`를 각각 확인하고 누락된 연결을 채운다. 본문에 이름이나 URL을 적는 것으로 대체하지 않는다.
+- Label은 작업의 주목적에 맞게 지정하며 기존의 유효한 Label은 유지한다.
+- 담당자는 사용자가 지정한 사람을 우선한다. 별도 지정이 없으면 기존 담당자를 유지하고, 담당자가 없는 본인 작업은 현재 작업자의 GitHub 계정에 배정한다.
+- Project는 연결된 이슈 또는 저장소에서 사용하는 팀 Project를 따른다. 후보가 여러 개여서 결정할 근거가 없으면 사용자에게 확인한다.
+- PR이 리뷰 대기 상태이면 연결된 이슈와 PR의 Project 상태가 `Review`인지 확인한다. 자동화 실행을 가정하지 않고 실제 결과를 조회한다.
+- 작업 완료 보고 전에 이슈·PR의 Label, 담당자, Project와 closing issue 연결을 다시 확인한다. API 권한이 부족하면 접근 가능한 GitHub 화면에서도 확인할 수 있으며, 확인·수정하지 못한 항목은 원인과 함께 명시한다.
+
 ### Project Status
 
 `Backlog → Todo → In Progress → Review → Done`
